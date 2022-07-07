@@ -103,5 +103,9 @@ dist
 # TernJS port file
 .tern-port
 
-#VsCode
+#SvelteKit
+.svelte-kit/
+
+#VsCode/Idea
 .vscode/
+.idea/
