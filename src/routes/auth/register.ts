@@ -7,7 +7,7 @@ import cookie from "cookie"
 export async function post({request}: RequestEvent) {
     const body = await request.json()
     const user = await db.any("SELECT 'email' FROM ${table:name} WHERE email=$[email]", {
-        table: "user",
+        table: "users",
         email: body.email
     })
     if(user.pop() != undefined) {
