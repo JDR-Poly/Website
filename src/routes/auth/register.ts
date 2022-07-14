@@ -20,7 +20,6 @@ export async function post({request}: RequestEvent) {
     } else {
         if(!validateEmail(body.email)
             || !validateName(body.name)
-            || !validateName(body.surname)
             || !validatePassword(body.password)) {
                 return {
                     status: 406,
@@ -33,7 +32,6 @@ export async function post({request}: RequestEvent) {
             table: "user",
             email: body.email,
             name: body.name,
-            surname: body.surname,
             password: await hash(body.password, 10)
         })
         const profileId = returnData.pop()
@@ -86,6 +84,6 @@ function validatePassword(str?: string): boolean {
     return true
 }
 
-const DB_USER_UPLOAD = "INSERT INTO $[table:name](email, name, surname, password) VALUES" +
-    "($[email],$[name],$[surname],$[password]) RETURNING id"
+const DB_USER_UPLOAD = "INSERT INTO $[table:name](email, name, password) VALUES" +
+    "($[email],$[name],$[password]) RETURNING id"
 const DB_COOKIE_UPLOAD = "INSERT INTO $[table:name](email, cookieId) VALUES($[email],$[cookieId])"

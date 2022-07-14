@@ -5,7 +5,7 @@
         if(event.session.authenticated) {
             return {
                 status: 302,
-                redirect: "/"
+                redirect: "/u/profile/" + event.session.profileId
             }
         } else {
             return {
@@ -16,12 +16,12 @@
     }
 </script>
 
+
 <script lang="ts">
     import { goto } from '$app/navigation';
 
     let email = ""
     let name = ""
-    let surname = ""
     let password = ""
 
     let error: string | undefined
@@ -34,7 +34,6 @@
                 body: JSON.stringify({
                     email,
                     name,
-                    surname,
                     password
                 }),
                 headers: {
@@ -43,7 +42,7 @@
             })
             if(res.ok) {
                 const body = await res.json()
-                await goto("/u/profile/" + body.profileId);
+                location.reload()
             } else {
                 error = "An error occured"
             }
@@ -60,8 +59,7 @@
     <h1>S'inscrire</h1>
 
     <input type="email" bind:value={email} placeholder="Mail">
-    <input type="text" bind:value={name} placeholder="Nom">
-    <input type="text" bind:value={surname} placeholder="Prénom">
+    <input type="text" bind:value={name} placeholder="Nom Prénom">
     <input type="password" bind:value={password} placeholder="Mot de passe">
 
     {#if error}
