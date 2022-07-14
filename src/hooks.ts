@@ -29,7 +29,6 @@ export const handle:Handle = async function({event, resolve}) {
 }
 
 export const getSession: GetSession = async function(event) {
-    console.log(event.locals.authenticated)
     if(!event.locals.authenticated) {
         return {
             authenticated: false

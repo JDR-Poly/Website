@@ -10,4 +10,4 @@ const {id} = $page.params
 
 <button on:click={() => {
     goto("/")
-}}>Acceuil</button>
+}}>Accueil</button>

@@ -28,7 +28,7 @@
 <h1>Acceuil</h1>
 
 {#if $authenticated}
-    <a href="/u/profile/{profileId}">Profile</a>
+    <a href="/u/profile/{$profileId}">Profile</a>
     <button on:click={logout}>Se déconnecter</button>
 {:else}
     <a href="/login">Se connecter</a>
