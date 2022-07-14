@@ -15,7 +15,7 @@ export const handle:Handle = async function({event, resolve}) {
     })).pop()
     if(email) {
         const user = (await db.any("SELECT id, email FROM ${table:name} WHERE email=$[email]", {
-            table: "user",
+            table: "users",
             email: email.email
         })).pop()
         event.locals = {

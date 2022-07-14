@@ -29,7 +29,7 @@ export async function post({request}: RequestEvent) {
                 }
         }
         const returnData = await db.any(DB_USER_UPLOAD, {
-            table: "user",
+            table: "users",
             email: body.email,
             name: body.name,
             password: await hash(body.password, 10)

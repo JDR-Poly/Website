@@ -35,7 +35,7 @@ const CREATE_COOKIE_TABLE = "CREATE TABLE IF NOT EXISTS $[table:name](" +
 
 async function init(db: IDatabase<unknown, IClient>) {
     await db.none(CREATE_USER_TABLE, {
-        table: "user"
+        table: "users"
     })
     await db.none(CREATE_COOKIE_TABLE, {
         table: "cookies"
