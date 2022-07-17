@@ -32,7 +32,8 @@ export async function post({request}: RequestEvent) {
             table: "users",
             email: body.email,
             name: body.name,
-            password: await hash(body.password, 10)
+            password: await hash(body.password, 10),
+            role: "USER"
         })
         const profileId = returnData.pop()
         if(profileId == undefined) {
@@ -84,6 +85,6 @@ function validatePassword(str?: string): boolean {
     return true
 }
 
-const DB_USER_UPLOAD = "INSERT INTO $[table:name](email, name, password) VALUES" +
-    "($[email],$[name],$[password]) RETURNING id"
+const DB_USER_UPLOAD = "INSERT INTO $[table:name](email, name, password, role) VALUES" +
+    "($[email],$[name],$[password],$[role]) RETURNING id"
 const DB_COOKIE_UPLOAD = "INSERT INTO $[table:name](email, cookieId) VALUES($[email],$[cookieId])"

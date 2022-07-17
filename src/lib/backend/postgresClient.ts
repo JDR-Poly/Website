@@ -20,6 +20,7 @@ const CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS $[table:name](" +
     "email VARCHAR(255) NOT NULL," +
     "name VARCHAR(255) NOT NULL," +
     "password VARCHAR(255) NOT NULL," +
+    "role VARCHAR(255) NOT NULL," +
     "account_creation DATE NOT NULL DEFAULT CURRENT_DATE," +
     "discordId VARCHAR(255)," +
     "avatarId VARCHAR(50)," +

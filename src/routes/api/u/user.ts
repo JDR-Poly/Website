@@ -34,4 +34,4 @@ import type { User } from "src/types";
     
 }
 
-const USER_GET = "SELECT id, email, name, account_creation, discordId, avatarId, bioText, memberStart, memberStop FROM ${table:name} WHERE id=$[id];"
+const USER_GET = "SELECT id, email, name, role, account_creation, discordId, avatarId, bioText, memberStart, memberStop FROM ${table:name} WHERE id=$[id];"

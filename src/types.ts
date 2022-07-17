@@ -1,3 +1,4 @@
+import type { Role } from "$lib/userPermissions"
 
 type Event = {
     name: string,
@@ -12,12 +13,13 @@ type User = {
     id: number,
     email: string,
     name?: string,
+    role?: Role,
     accountCreation?: Date,
-    discordId?: string | undefined,
-    avatarId?: string | undefined,
-    bioText?: string | undefined,
-    memberStart?: Date | undefined,
-    memberStop?: Date | undefined
+    discordId?: string,
+    avatarId?: string,
+    bioText?: string,
+    memberStart?: Date,
+    memberStop?: Date
 }
 
 export type {User, Event}

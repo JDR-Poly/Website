@@ -1,6 +1,7 @@
 import cookie from "cookie"
 import {db} from "$lib/backend/postgresClient"
 import type { GetSession, Handle } from "@sveltejs/kit"
+import { Roles } from "$lib/userPermissions"
 
 export const handle:Handle = async function({event, resolve}) {
     const cookies = cookie.parse(event.request.headers.get('cookie') || "")
@@ -14,15 +15,23 @@ export const handle:Handle = async function({event, resolve}) {
         cookieId: cookies.session_id
     })).pop()
     if(email) {
-        const user = (await db.any("SELECT id, email FROM ${table:name} WHERE email=$[email]", {
+        const user = (await db.any("SELECT id, email, role FROM ${table:name} WHERE email=$[email]", {
             table: "users",
             email: email.email
         })).pop()
-        event.locals = {
-            authenticated: true,
-            email: user.email,
-            profileId: user.id
+        //Check that the role is correct
+        const role = Roles[user.role]
+        if(role) {
+            event.locals = {
+                authenticated: true,
+                email: user.email,
+                profileId: user.id,
+                role: role
+            }
+        } else {
+            console.error("User with email,id %f,%f has an invalid role %f", user.email, user.id, user.role)
         }
+        
     } 
     return resolve(event);
 
@@ -37,7 +46,8 @@ export const getSession: GetSession = async function(event) {
         return {
             authenticated: true,
             email: event.locals.email,
-            profileId: event.locals.profileId
+            profileId: event.locals.profileId,
+            role: event.locals.role.toJSON()
         }
     }
 }
