@@ -1,5 +1,5 @@
 import type {RequestEvent} from "@sveltejs/kit";
-import {db} from "$lib/postgresClient"
+import {db} from "$lib/backend/postgresClient"
 import type { User } from "src/types";
 
 

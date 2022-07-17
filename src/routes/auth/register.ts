@@ -1,4 +1,4 @@
-import {db} from "$lib/postgresClient"
+import {db} from "$lib/backend/postgresClient"
 import type {RequestEvent} from "@sveltejs/kit";
 import {hash} from "bcrypt"
 import {v4 as uuid} from "uuid"

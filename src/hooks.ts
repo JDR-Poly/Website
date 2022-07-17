@@ -1,5 +1,5 @@
 import cookie from "cookie"
-import {db} from "$lib/postgresClient"
+import {db} from "$lib/backend/postgresClient"
 import type { GetSession, Handle } from "@sveltejs/kit"
 
 export const handle:Handle = async function({event, resolve}) {
