@@ -1,22 +1,17 @@
 <script context="module"  lang="ts">
     import type { Load } from '@sveltejs/kit'
     import { writable } from 'svelte/store';
-    
+    import { getUserSessionData } from '$lib/frontend/userSession';
+
     const authenticated = writable(false);
     const profileId = writable(0);
 
     export const load: Load = async (event) => {
-        if(event.session.authenticated) {
-            authenticated.set(true)
-            profileId.set(event.session.profileId || 0)
-        } 
-        return {
-            status: 200
-        }
+        getUserSessionData(event, {authenticated, profileId})
+        return {status: 200}
     }
 </script>
 <script lang="ts">
-
     async function logout() {
         const res = await fetch("auth/logout", {method: "POST"})
         authenticated.set(false)
@@ -25,7 +20,7 @@
     }
 </script>
 
-<h1>Acceuil</h1>
+<h1>Accueil</h1>
 
 {#if $authenticated}
     <a href="/u/profile/{$profileId}">Profile</a>
