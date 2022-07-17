@@ -1,24 +1,14 @@
 <script context="module" lang="ts">
     import type { Load } from '@sveltejs/kit'
+    import { redirectIfAuthenticated } from '$lib/frontend/redirect';
 
     export const load: Load = async (event) => {
-        if(event.session.authenticated) {
-            return {
-                status: 302,
-                redirect: "/u/profile/" + event.session.profileId
-            }
-        } else {
-            return {
-                status: 200
-            }
-        }
-
+        return redirectIfAuthenticated(event, "/u/profile/" + event.session.profileId)
     }
 </script>
 
 
 <script lang="ts">
-    import { goto } from '$app/navigation';
 
     let email = ""
     let name = ""

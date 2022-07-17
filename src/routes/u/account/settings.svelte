@@ -1,18 +1,9 @@
 <script context="module" lang="ts">
     import type { Load } from '@sveltejs/kit'
+    import { redirectIfNotAuthenticated } from '$lib/frontend/redirect';
 
     export const load: Load = async (event) => {
-        if(!event.session.authenticated) {
-            return {
-                status: 302,
-                redirect: "/login"
-            }
-        } else {
-            return {
-                status: 200
-            }
-        }
-
+        return redirectIfNotAuthenticated(event, "/login")
     }
 </script>
 
