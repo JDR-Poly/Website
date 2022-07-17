@@ -23,7 +23,7 @@ import type { User } from "src/types";
                 "Content-Type" : "application/json"
             },
             body: {
-                users: res
+                user: res
             }
         }
     } else {
