@@ -15,7 +15,7 @@ export const handle:Handle = async function({event, resolve}) {
         cookieId: cookies.session_id
     })).pop()
     if(email) {
-        const user = (await db.any("SELECT id, email, role FROM ${table:name} WHERE email=$[email]", {
+        const user = (await db.any("SELECT id, email, name, role, account_creation  FROM ${table:name} WHERE email=$[email]", {
             table: "users",
             email: email.email
         })).pop()
@@ -24,9 +24,13 @@ export const handle:Handle = async function({event, resolve}) {
         if(role) {
             event.locals = {
                 authenticated: true,
-                email: user.email,
-                profileId: user.id,
-                role: role
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    role: role.toJSON(),
+                    name: user.name,
+                    accountCreation: user.account_creation
+                }
             }
         } else {
             console.error("User with email,id %f,%f has an invalid role %f", user.email, user.id, user.role)
@@ -45,9 +49,7 @@ export const getSession: GetSession = async function(event) {
     } else {
         return {
             authenticated: true,
-            email: event.locals.email,
-            profileId: event.locals.profileId,
-            role: event.locals.role.toJSON()
+            user: event.locals.user
         }
     }
 }

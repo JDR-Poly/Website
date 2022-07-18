@@ -1,7 +1,17 @@
+<script context="module"  lang="ts">
+    import { redirectIfNotAuthenticated } from "$lib/frontend/redirect";
+    import type { Load } from "@sveltejs/kit";
+
+    export const load: Load = async (event) => {
+        redirectIfNotAuthenticated(event, "/")
+        return {status: 200}
+    }
+
+</script>
 <script lang="ts">
     import { page } from "$app/stores";
     import type { Role } from "$lib/userPermissions";
-import type { User } from "src/types";
+    import type { User } from "src/types";
     
     const {id} = $page.params
     let error: string | undefined

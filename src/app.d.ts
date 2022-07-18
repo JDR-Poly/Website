@@ -2,6 +2,7 @@
 // for information about these interfaces
 
 import type { Role } from "$lib/backend/userPermission"
+import type { User } from "./types"
 
 // and what to do when importing types
 declare global {
@@ -9,15 +10,11 @@ declare global {
 		
 		interface Locals {
 			authenticated: boolean,
-			email?: string,
-			profileId?: number,
-			role?: Role
+			user?: User
 		}
 		interface Session {
 			authenticated: boolean,
-			email?: string,
-			profileId?: number,
-			role?: Role
+			user?: User
 		}
 		// interface Platform {}
 		// interface Stuff {}

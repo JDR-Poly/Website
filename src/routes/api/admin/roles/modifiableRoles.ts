@@ -11,14 +11,14 @@ import { getUserRole, hasRolePermission } from "$lib/backend/backendPermissions"
 export async function post({request, locals}: RequestEvent) {
     if(!locals.authenticated) return {status: 401}
     const body = await request.json()
-    if(body.id && !hasRolePermission(locals.role, "GRANT_ROLE_" + (await getUserRole({id: body.id}))?.name)) {
+    if(body.id && !hasRolePermission(locals.user?.role!, "GRANT_ROLE_" + (await getUserRole({id: body.id}))?.name)) {
         return {status: 401}
     }
 
     const result: Role[] = []
     const rolesKey = Object.keys(Roles)
     rolesKey.forEach(roleKey => {
-        if(hasRolePermission(locals.role, "GRANT_ROLE_" + roleKey)) {
+        if(hasRolePermission(locals.user?.role!, "GRANT_ROLE_" + roleKey)) {
             result.push(Roles[roleKey])
         }
     });

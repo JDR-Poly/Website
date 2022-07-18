@@ -1,21 +1,21 @@
 <script context="module"  lang="ts">
     import type { Load } from '@sveltejs/kit'
     import { getUserSessionData } from '$lib/frontend/userSession';
-    import {authenticated, profileId, email, role} from "./stores"
+    import {authenticated, user} from "./stores"
     import { UserPermission } from '$lib/userPermissions';
 
     
 
     export const load: Load = async (event) => {
-        getUserSessionData(event, {authenticated, profileId, email, role})
+        getUserSessionData(event, {authenticated, user})
         return {status: 200}
     }
 </script>
 <script lang="ts">
     async function logout() {
-        const res = await fetch("auth/logout", {method: "POST"})
+        const res = await fetch("/auth/logout", {method: "POST"})
         authenticated.set(false)
-        profileId.set(0)
+        user.set({id: 0})
         location.reload()
     }
 </script>
@@ -35,14 +35,15 @@
             <li>Documents officiel</li>
         </ul>
 
-        {#if $authenticated && $role.permissions.has(UserPermission.ADMIN_PANEL)}
+
+        {#if $authenticated && $user.role?.permissions.has(UserPermission.ADMIN_PANEL)}
             <p>Panel admin</p>
         {/if}
         <br>
         {#if $authenticated} 
-            <p>{$email}</p>
+            <p>{$user.name}</p>
             <ul>
-                <li><a href="/u/profile/{$profileId}">Profile</a></li>
+                <li><a href="/u/profile/{$user.id}">Profile</a></li>
                 <li><button on:click={logout}>Se déconnecter</button></li>
             </ul>
         {:else}

@@ -3,7 +3,7 @@
     import { page } from "$app/stores";
     import { Role, Roles, UserPermission } from "$lib/userPermissions";
     import type { User } from "src/types";
-    import {role} from "../../stores"
+    import {user} from "../../stores"
 
 const {id} = $page.params
 let userRole: Role
@@ -21,15 +21,15 @@ const userPromise: Promise<User> = fetch("/api/u/user", {
 
 {#await userPromise}
     <h2>Loading user</h2>
-{:then user}
+{:then profileUser}
 
     <h1>Profile</h1>
-    <p>Email: {user.email}</p>
-    <p>Nom: {user.name}</p>
-    <p>Role: {user.role?.name} </p>
-    <p>Date de création: {user.accountCreation} </p>
+    <p>Email: {profileUser.email}</p>
+    <p>Nom: {profileUser.name}</p>
+    <p>Role: {profileUser.role?.name} </p>
+    <p>Date de création: {profileUser.accountCreation} </p>
 
-    {#if ($role && $role.permissions.has(UserPermission.MODIFY_USERS_DATA))}
+    {#if ($user.role?.permissions.has(UserPermission.MODIFY_USERS_DATA))}
         <a href="/admin/profile/{id}">Modifier les données de cet utilisateur</a>
     {/if}
 {:catch err} 

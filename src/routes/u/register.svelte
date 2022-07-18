@@ -3,7 +3,7 @@
     import { redirectIfAuthenticated } from '$lib/frontend/redirect';
 
     export const load: Load = async (event) => {
-        return redirectIfAuthenticated(event, "/u/profile/" + event.session.profileId)
+        return redirectIfAuthenticated(event, "/u/profile/" + event.session.user?.id)
     }
 </script>
 
