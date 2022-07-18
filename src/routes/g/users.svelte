@@ -44,7 +44,7 @@
     async function search(number: number, index: number): Promise<User[] | undefined> {
         try {
 
-            const res = await fetch("/api/users", {
+            const res = await fetch("/api/g/users", {
                 method: "POST",
                 body: JSON.stringify({
                     number: number,
