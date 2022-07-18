@@ -1,6 +1,7 @@
 import type {RequestEvent} from "@sveltejs/kit";
 import {db} from "$lib/backend/postgresClient"
 import type { User } from "src/types";
+import { getUserRole } from "$lib/backend/backendPermissions";
 
 
 /**
@@ -16,6 +17,7 @@ import type { User } from "src/types";
         table: "users",
         id: body.id
     })).pop()
+    res.role = await getUserRole(res)
     if(res) {
         return {
             status: 200,
@@ -34,4 +36,4 @@ import type { User } from "src/types";
     
 }
 
-const USER_GET = "SELECT id, email, name, role, account_creation, discordId, avatarId, bioText, memberStart, memberStop FROM ${table:name} WHERE id=$[id];"
+const USER_GET = "SELECT id, email, name, account_creation, discordId, avatarId, bioText, memberStart, memberStop FROM ${table:name} WHERE id=$[id];"
