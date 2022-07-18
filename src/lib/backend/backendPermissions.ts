@@ -3,23 +3,22 @@ import { UserPermission, Role, Roles } from "../userPermissions";
 import { db } from "./postgresClient";
 
 /**
- * Return true if the user has a permission, else false
+ * Return the user role if found
  * @param {User} user a user 
- * @param {UserPermission} permission a permission to check 
- * @returns {Promise<boolean>} true if it has the permissions, false otherwise
+ * @returns {Promise<boolean>} user's role if found, undefined otherwise
  */
-async function hasPermission(user: User, permission: UserPermission): Promise<boolean> {
-    const userData = (await db.any("SELECT id, role FROM ${table:name} WHERE email=$[email]", {
+async function getUserRole(user: User): Promise<Role | undefined> {
+    const userData = (await db.any("SELECT id, role FROM ${table:name} WHERE id=$[id]", {
         table: "users",
-        email: user.email
+        id: user.id
     })).pop()
 
-    if(!userData) return false
+    if(!userData) return
 
     const role = Roles[userData["role"]]
-    if(!role) return false
+    if(!role) return
     
-    return role.permissions.has(permission)
+    return role
 }
 
 
