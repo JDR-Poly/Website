@@ -1,6 +1,7 @@
 enum UserPermission {
-    COMMITTEE_ASSIGN,
-    MEMBER_ASSIGN,
+    GRANT_ROLE_USER,
+    GRANT_ROLE_MEMBER,
+    GRANT_ROLE_COMMITTEE,
     CREATE_EVENT,
     JOIN_EVENT,
     MODIFY_EVENT,
@@ -63,8 +64,8 @@ enum UserPermission {
 const Roles: Record<string, Role> = {
     USER: Role.createRole("USER", []),
     MEMBER: Role.createRole("MEMBER", [UserPermission.JOIN_EVENT], ["USER"]),
-    COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.MEMBER_ASSIGN, UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT], ["MEMBER"]),
-    ADMIN: Role.createRole("ADMIN", [UserPermission.COMMITTEE_ASSIGN], ["COMMITTEE"])
+    COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER, UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT], ["MEMBER"]),
+    ADMIN: Role.createRole("ADMIN", [UserPermission.GRANT_ROLE_COMMITTEE], ["COMMITTEE"])
 }
 
 export {UserPermission, Role, Roles}
