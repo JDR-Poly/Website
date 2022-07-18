@@ -11,7 +11,7 @@ type Event = {
 
 type User = {
     id: number,
-    email: string,
+    email?: string,
     name?: string,
     role?: Role,
     accountCreation?: Date,
