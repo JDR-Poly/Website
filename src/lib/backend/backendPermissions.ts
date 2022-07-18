@@ -1,5 +1,5 @@
 import type { User } from "src/types";
-import { UserPermission, Role, Roles } from "../userPermissions";
+import {Role, Roles, UserPermission } from "../userPermissions";
 import { db } from "./postgresClient";
 
 /**
@@ -21,6 +21,10 @@ async function getUserRole(user: User): Promise<Role | undefined> {
     return role
 }
 
-
-
-export {hasPermission}
+function hasRolePermission(role: Role, permission: UserPermission | string): boolean {
+    if(typeof permission === "string") {
+        permission = (UserPermission as any)[permission]
+    }
+    return role.permissions.has((permission as UserPermission))
+}
+export {getUserRole, hasRolePermission}
