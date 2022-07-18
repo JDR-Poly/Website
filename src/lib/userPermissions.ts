@@ -5,7 +5,8 @@ enum UserPermission {
     CREATE_EVENT,
     JOIN_EVENT,
     MODIFY_EVENT,
-    MODIFY_USERS_DATA
+    MODIFY_USERS_DATA,
+    ADMIN_PANEL
 }
 
 /**
