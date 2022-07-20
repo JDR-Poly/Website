@@ -3,7 +3,7 @@
     import type { Load } from '@sveltejs/kit'
 
     export const load: Load = async (event) => {
-        return redirectIfAuthenticated(event, "/u/profile/" + event.session.profileId)
+        return redirectIfAuthenticated(event, "/u/profile/" + event.session.user?.id)
     }
 </script>
 
@@ -17,7 +17,7 @@
         error = undefined
         try {
 
-            const res = await fetch("auth/login", {
+            const res = await fetch("/auth/login", {
                 method: "POST",
                 body: JSON.stringify({
                     email,
