@@ -22,7 +22,7 @@ if(import.meta.env.DEV) {
         secure: (process.env.MAIL_PORT === "465" || process.env.MAIL_PORT === undefined),
         auth: {
             user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS
+            pass: process.env.MAIL_PASSWORD
         }
     });
 }
