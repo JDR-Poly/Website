@@ -14,6 +14,7 @@ type User = {
     email?: string,
     name?: string,
     role?: Role,
+    isEmailValidated?: boolean, 
     accountCreation?: Date,
     discordId?: string,
     avatarId?: string,

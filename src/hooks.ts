@@ -15,7 +15,7 @@ export const handle:Handle = async function({event, resolve}) {
         cookieId: cookies.session_id
     })).pop()
     if(email) {
-        const user = (await db.any("SELECT id, email, name, role, account_creation  FROM ${table:name} WHERE email=$[email]", {
+        const user = (await db.any("SELECT id, email, name, role, account_creation, is_email_validated  FROM ${table:name} WHERE email=$[email]", {
             table: "users",
             email: email.email
         })).pop()
@@ -29,7 +29,8 @@ export const handle:Handle = async function({event, resolve}) {
                     email: user.email,
                     role: role.toJSON(),
                     name: user.name,
-                    accountCreation: user.account_creation
+                    accountCreation: user.account_creation,
+                    isEmailValidated: user.is_email_validated
                 }
             }
         } else {

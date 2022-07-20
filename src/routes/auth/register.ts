@@ -66,7 +66,7 @@ export async function post({request}: RequestEvent) {
             headers,
             body: {
                 message: "Success: account created",
-                profileId: profileId["id"]
+                profileId: profileId.id
             }
         }
 
@@ -85,6 +85,6 @@ function validatePassword(str?: string): boolean {
     return true
 }
 
-const DB_USER_UPLOAD = "INSERT INTO $[table:name](email, name, password, role) VALUES" +
-    "($[email],$[name],$[password],$[role]) RETURNING id"
+const DB_USER_UPLOAD = "INSERT INTO $[table:name](email, name, password, role, is_email_validated) VALUES" +
+    "($[email],$[name],$[password],$[role], FALSE) RETURNING id"
 const DB_COOKIE_UPLOAD = "INSERT INTO $[table:name](email, cookieId) VALUES($[email],$[cookieId])"

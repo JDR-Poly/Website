@@ -12,12 +12,10 @@ const db = pgp({
     max: 50
 });
 
-
-
-
 const CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS $[table:name](" +
     "id SERIAL PRIMARY KEY," +
     "email VARCHAR(255) NOT NULL," +
+    "is_email_validated BOOLEAN NOT NULL," +
     "name VARCHAR(255) NOT NULL," +
     "password VARCHAR(255) NOT NULL," +
     "role VARCHAR(255) NOT NULL," +
@@ -34,12 +32,20 @@ const CREATE_COOKIE_TABLE = "CREATE TABLE IF NOT EXISTS $[table:name](" +
     "cookieId VARCHAR(255) NOT NULL" +
     ")"
 
+const CREATE_EMAIL_VALIDATION_TABLE = "CREATE TABLE IF NOT EXISTS $[table:name](" +
+    "id INT PRIMARY KEY NOT NULL," +
+    "validation_token VARCHAR(255) NOT NULL" +
+    ")"
+
 async function init(db: IDatabase<unknown, IClient>) {
     await db.none(CREATE_USER_TABLE, {
         table: "users"
     })
     await db.none(CREATE_COOKIE_TABLE, {
         table: "cookies"
+    })
+    await db.none(CREATE_EMAIL_VALIDATION_TABLE, {
+        table: "email_validation"
     })
 }
 
