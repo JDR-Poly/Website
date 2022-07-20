@@ -12,11 +12,12 @@
     }
 </script>
 <script lang="ts">
+    import {session} from "$app/stores"
     async function logout() {
         const res = await fetch("/auth/logout", {method: "POST"})
-        authenticated.set(false)
-        user.set({id: 0})
-        location.reload()
+        $session = {authenticated: false, user: undefined}
+        $authenticated = false
+        $user = {id: 0}
     }
 </script>
 
