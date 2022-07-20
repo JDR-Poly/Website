@@ -54,6 +54,7 @@
 
 </div>
 
+<a href="/u/register">Vous ne possédez pas de compte ?</a>
 
 <style>
     div {

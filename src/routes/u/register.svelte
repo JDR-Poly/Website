@@ -19,7 +19,7 @@
     async function register() {
         error = undefined
         try {
-            const res = await fetch("auth/register", {
+            const res = await fetch("/auth/register", {
                 method: "POST",
                 body: JSON.stringify({
                     email,
@@ -31,7 +31,6 @@
                 }
             })
             if(res.ok) {
-                const body = await res.json()
                 location.reload()
             } else {
                 error = "An error occured"
