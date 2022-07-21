@@ -15,8 +15,8 @@ export async function post({request, locals}: RequestEvent) {
     const role = await getUserRole(body.user)
     if(!role) return {status: 400}
     
-    if(!hasRolePermission(locals.role, "GRANT_ROLE_" + body.role)
-        || !hasRolePermission(locals.role, "GRANT_ROLE_" + role.name)) return {status: 401}
+    if(!hasRolePermission(locals.user?.role!, "GRANT_ROLE_" + body.role)
+        || !hasRolePermission(locals.user?.role!, "GRANT_ROLE_" + role.name)) return {status: 401}
 
     await db.none(UPDATE_USER_ROLE, {
         table: "users",
