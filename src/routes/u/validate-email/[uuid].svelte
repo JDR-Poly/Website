@@ -22,7 +22,7 @@
 
 <script lang="ts">
     import { page } from "$app/stores";
-    import { user } from '../../stores';
+    import { user } from '$lib/stores';
     import { goto } from '$app/navigation';
 
     const {uuid} = $page.params

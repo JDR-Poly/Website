@@ -1,7 +1,7 @@
 <script context="module"  lang="ts">
     import type { Load } from '@sveltejs/kit'
     import { getUserSessionData } from '$lib/frontend/userSession';
-    import {authenticated, user} from "./stores"
+    import {authenticated, user} from "$lib/stores"
     import { UserPermission } from '$lib/userPermissions';
 
     

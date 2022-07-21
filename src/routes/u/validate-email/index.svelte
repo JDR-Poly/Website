@@ -21,7 +21,7 @@
 </script>
 
 <script lang="ts">
-    import { authenticated, user } from "../../stores";
+    import { authenticated, user } from "$lib/stores";
 </script>
 
 <h>En attente de validation du mail</h>

@@ -3,7 +3,7 @@
     import { page } from "$app/stores";
     import { Role, Roles, UserPermission } from "$lib/userPermissions";
     import type { User } from "src/types";
-    import {user} from "../../stores"
+    import {user} from "$lib/stores"
 
 const {id} = $page.params
 let userRole: Role
