@@ -4,4 +4,4 @@ import { writable, type Writable } from "svelte/store";
 const authenticated = writable(false);
 const user: Writable<User> = writable()
 
-export {authenticated, user}
+export { authenticated, user }
