@@ -3,8 +3,7 @@
     import type { Load } from "@sveltejs/kit";
 
     export const load: Load = async (event) => {
-        redirectIfNotAuthenticated(event, "/")
-        return {status: 200}
+        return redirectIfNotAuthenticated(event, "/")
     }
 
 </script>
@@ -19,7 +18,7 @@
     let user: User
     let roles: Role[]
 
-    let roleName: string = ""
+    let roleName = ""
     const dataPromise = async () => {
         
         user = await fetch("/api/u/user", {
