@@ -5,14 +5,14 @@
 
 	let roleName = user.role?.name;
 
-	const rolesQuery = fetch('/api/admin/roles/modifiableRoles', {
+	const rolesQuery = fetch('/api/admin/roles/list', {
 		method: 'POST',
 		body: JSON.stringify({ id: user.id }),
 		headers: { 'Content-Type': 'application/json' }
 	}).then((res) => (res.ok ? res.json().then((json) => json.roles) : []));
 
 	async function submitRoleChange() {
-		const res = await fetch('/api/admin/roles/changeRole', {
+		const res = await fetch('/api/admin/roles/change', {
 				method: 'POST',
 				body: JSON.stringify({ user, role: roleName }),
 				headers: { 'Content-Type': 'application/json' }
@@ -39,4 +39,8 @@
 		</select>
 		<button>Changer</button>
 	</form>
+
+	{#if roleName === "MEMBER"}
+		<p>test</p>
+	{/if}
 {/await}
