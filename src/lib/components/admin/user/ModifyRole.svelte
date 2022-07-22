@@ -7,16 +7,14 @@ import { page } from '$app/stores';
 
 	let roleName = user.role?.name;
 
-	const rolesQuery = fetch('/api/admin/roles/list', {
-		method: 'POST',
-		body: JSON.stringify({ id: user.id }),
-		headers: { 'Content-Type': 'application/json' }
-	}).then((res) => (res.ok ? res.json().then((json) => json.roles) : []));
+	let roleListUrl = new URL($page.url.origin + '/api/admin/roles/role')
+	roleListUrl.searchParams.append("id", user.id as any)
+	const rolesQuery = fetch(roleListUrl).then((res) => (res.ok ? res.json().then((json) => json.roles) : []));
 
 	async function submitRoleChange() {
-		const res = await fetch('/api/admin/roles/change', {
+		const res = await fetch('/api/admin/roles/role', {
 				method: 'POST',
-				body: JSON.stringify({ user, role: roleName }),
+				body: JSON.stringify({ id: user.id, roleName}),
 				headers: { 'Content-Type': 'application/json' }
 			});
 			if (res.ok) {
