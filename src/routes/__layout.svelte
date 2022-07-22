@@ -39,7 +39,7 @@
 			<p>Panel admin</p>
 		{/if}
 		<br />
-		{#if $authenticated && $user.isEmailValidated}
+		{#if $authenticated && $user.is_email_validated}
 			<p>{$user.name}</p>
 			<ul>
 				<li><a href="/u/profile/{$user.id}">Profile</a></li>

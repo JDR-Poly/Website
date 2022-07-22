@@ -27,7 +27,7 @@ const userPromise: Promise<User> = fetch("/api/u/user", {
     <p>Email: {profileUser.email}</p>
     <p>Nom: {profileUser.name}</p>
     <p>Role: {profileUser.role?.name} </p>
-    <p>Date de création: {profileUser.accountCreation} </p>
+    <p>Date de création: {profileUser.account_creation} </p>
 
     {#if ($user.role?.permissions.has(UserPermission.MODIFY_USERS_DATA))}
         <a href="/admin/profile/{id}">Modifier les données de cet utilisateur</a>

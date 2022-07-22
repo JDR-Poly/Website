@@ -36,4 +36,4 @@ export async function post({ request }: RequestEvent) {
 
 }
 
-const USER_GET = "SELECT id, email, name, account_creation, discordId, avatarId, bioText, memberStart, memberStop FROM ${table:name} WHERE id=$[id];"
+const USER_GET = "SELECT id, email, name, account_creation, discord_id, avatar_id, bio, member_start, member_stop FROM ${table:name} WHERE id=$[id];"

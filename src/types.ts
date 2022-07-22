@@ -9,18 +9,22 @@ type Event = {
 	subscribed: Array<string>
 }
 
+/**
+ * A user with the same key/type
+ * of the database
+ */
 type User = {
 	id: number,
 	email?: string,
 	name?: string,
 	role?: Role,
-	isEmailValidated?: boolean,
-	accountCreation?: Date,
-	discordId?: string,
-	avatarId?: string,
-	bioText?: string,
-	memberStart?: Date,
-	memberStop?: Date
+	is_email_validated?: boolean,
+	account_creation?: Date,
+	discord_id?: string,
+	avatar_id?: string,
+	bio?: string,
+	member_start?: Date,
+	member_stop?: Date
 }
 
 export type { User, Event }

@@ -29,8 +29,8 @@ export const handle: Handle = async function ({ event, resolve }) {
 					email: user.email,
 					role: role.toJSON(),
 					name: user.name,
-					accountCreation: user.account_creation,
-					isEmailValidated: user.is_email_validated
+					account_creation: user.account_creation,
+					is_email_validated: user.is_email_validated
 				}
 			}
 		} else {

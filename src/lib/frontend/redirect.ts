@@ -12,7 +12,7 @@ function redirectIfNotAuthenticated(event: LoadEvent, redirection: string): Load
 			status: 302, //Status 302 automatically redirect
 			redirect: redirection
 		}
-	} else if(event.session.authenticated && !event.session.user?.isEmailValidated) {
+	} else if(event.session.authenticated && !event.session.user?.is_email_validated) {
 		return {
 			status: 302, //Status 302 automatically redirect
 			redirect: "/u/validate-email"
@@ -29,12 +29,12 @@ function redirectIfNotAuthenticated(event: LoadEvent, redirection: string): Load
  * @returns {LoadOutput} a load response
  */
 function redirectIfAuthenticated(event: LoadEvent, redirection: string): LoadOutput {
-	if(event.session.authenticated && event.session.user?.isEmailValidated) {
+	if(event.session.authenticated && event.session.user?.is_email_validated) {
 		return {
 			status: 302, //Status 302 automatically redirect
 			redirect: redirection
 		}
-	} else if(event.session.authenticated && !event.session.user?.isEmailValidated) {
+	} else if(event.session.authenticated && !event.session.user?.is_email_validated) {
 		return {
 			status: 302, //Status 302 automatically redirect
 			redirect: "/u/validate-email"

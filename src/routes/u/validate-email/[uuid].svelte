@@ -7,7 +7,7 @@
                 status: 302,
                 redirect: "/u/login"
             }
-        } else if(event.session.user?.isEmailValidated !== false) {
+        } else if(event.session.user?.is_email_validated !== false) {
             return {
                 status: 302,
                 redirect: "/"

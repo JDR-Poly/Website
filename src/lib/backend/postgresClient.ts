@@ -20,11 +20,11 @@ const CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS $[table:name](" +
 	"password VARCHAR(255) NOT NULL," +
 	"role VARCHAR(255) NOT NULL," +
 	"account_creation DATE NOT NULL DEFAULT CURRENT_DATE," +
-	"discordId VARCHAR(255)," +
-	"avatarId VARCHAR(50)," +
-	"bioText TEXT," +
-	"memberStart DATE," +
-	"memberStop DATE" +
+	"discord_id VARCHAR(255)," +
+	"avatar_id VARCHAR(50)," +
+	"bio TEXT," +
+	"member_start DATE," +
+	"member_stop DATE" +
 	")"
 
 const CREATE_COOKIE_TABLE = "CREATE TABLE IF NOT EXISTS $[table:name](" +
