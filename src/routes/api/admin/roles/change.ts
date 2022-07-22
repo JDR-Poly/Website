@@ -29,4 +29,4 @@ export async function post({ request, locals }: RequestEvent) {
 	}
 }
 
-const UPDATE_USER_ROLE = "UPDATE $[table:name] SET role = $[role] WHERE id= $[id]"
+const UPDATE_USER_ROLE = "UPDATE $[table:name] SET role = $[role], member_start=NULL, member_stop=NULL WHERE id=$[id]"
