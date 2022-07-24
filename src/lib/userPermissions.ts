@@ -65,7 +65,7 @@ class Role {
 const Roles: Record<string, Role> = {
 	USER: Role.createRole("USER", []),
 	MEMBER: Role.createRole("MEMBER", [UserPermission.JOIN_EVENT], ["USER"]),
-	COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER, UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT], ["MEMBER"]),
+	COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER, UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT, UserPermission.ADMIN_PANEL], ["MEMBER"]),
 	ADMIN: Role.createRole("ADMIN", [UserPermission.GRANT_ROLE_COMMITTEE], ["COMMITTEE"])
 }
 
