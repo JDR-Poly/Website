@@ -47,6 +47,7 @@
 			<p>{$user.name}</p>
 			<ul>
 				<li><a href="/u/profile/{$user.id}">Profile</a></li>
+				<li><a href="/u/account/settings">Paramètres</a></li>
 				<li><button on:click={logout}>Se déconnecter</button></li>
 			</ul>
 		{:else}
