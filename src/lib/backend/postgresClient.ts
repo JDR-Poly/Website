@@ -36,6 +36,11 @@ const CREATE_EMAIL_VALIDATION_TABLE = "CREATE TABLE IF NOT EXISTS $[table:name](
 	"id INT PRIMARY KEY NOT NULL," +
 	"validation_token VARCHAR(255) NOT NULL" +
 	")"
+const CREATE_MEMBER_CODE_TABLE = "CREATE TABLE IF NOT EXISTS $[table:name](" +
+	"validation_token VARCHAR(255) PRIMARY KEY NOT NULL," +
+	"periods INT NOT NULL," +
+	"code_creation DATE NOT NULL DEFAULT CURRENT_DATE" +
+	")"
 
 async function init(db: IDatabase<unknown, IClient>) {
 	await db.none(CREATE_USER_TABLE, {
@@ -46,6 +51,9 @@ async function init(db: IDatabase<unknown, IClient>) {
 	})
 	await db.none(CREATE_EMAIL_VALIDATION_TABLE, {
 		table: "email_validation"
+	})
+	await db.none(CREATE_MEMBER_CODE_TABLE, {
+		table: "members_code"
 	})
 }
 
