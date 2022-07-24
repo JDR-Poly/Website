@@ -37,7 +37,7 @@ if (transporter == undefined) {
 	ethereal = true
 }
 
-async function sendEmail(to: any, subject: string, html: string): Promise<any> {
+async function sendMail(to: any, subject: string, html: string): Promise<any> {
 	try {
 		const result = await transporter!.sendMail({
 			from: '"JDRPoly Info" <informatique@jdrpoly.ch>',
@@ -54,7 +54,7 @@ async function sendEmail(to: any, subject: string, html: string): Promise<any> {
 
 }
 
-async function sendEmailValidationToken(userId: number, mail: string, origin: string) {
+async function sendMailValidationToken(userId: number, mail: string, origin: string) {
 	const emailValidationToken = uuid()
 
 	await db.none(DB_EMAIL_VALIDATION_TOKEN, {
@@ -62,10 +62,10 @@ async function sendEmailValidationToken(userId: number, mail: string, origin: st
 		id: userId,
 		validation_token: emailValidationToken
 	})
-	sendEmail(mail, "JDRPoly: Validez votre mail", '<a href="' + origin + '/u/validate-email/' + emailValidationToken + '" target="_blank">Valider</a>')
+	sendMail(mail, "JDRPoly: Validez votre mail", '<a href="' + origin + '/u/validate-email/' + emailValidationToken + '" target="_blank">Valider</a>')
 }
 
-export { sendEmailValidationToken, sendEmail }
+export { sendMailValidationToken, sendMail }
 
 const DB_EMAIL_VALIDATION_TOKEN = "INSERT INTO $[table:name](id, validation_token) VALUES($[id],$[validation_token])" +
 	"ON CONFLICT (id) DO UPDATE SET validation_token=$[validation_token]"

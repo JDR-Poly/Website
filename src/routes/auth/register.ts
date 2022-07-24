@@ -3,7 +3,7 @@ import type { RequestEvent } from "@sveltejs/kit";
 import { hash } from "bcrypt"
 import { v4 as uuid } from "uuid"
 import cookie from "cookie"
-import { sendEmailValidationToken } from "$lib/backend/mailClient";
+import { sendMailValidationToken } from "$lib/backend/mailClient";
 
 export async function post({ request, url }: RequestEvent) {
 	const body = await request.json()
@@ -46,7 +46,7 @@ export async function post({ request, url }: RequestEvent) {
 			}
 		}
 
-		sendEmailValidationToken(profileId.id, body.email, url.origin)
+		sendMailValidationToken(profileId.id, body.email, url.origin)
 
 		const cookieId = uuid()
 		await db.none(DB_COOKIE_UPLOAD, {

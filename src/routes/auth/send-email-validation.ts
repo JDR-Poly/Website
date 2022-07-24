@@ -1,4 +1,4 @@
-import { sendEmailValidationToken } from "$lib/backend/mailClient"
+import { sendMailValidationToken } from "$lib/backend/mailClient"
 import { db } from "$lib/backend/postgresClient"
 import type { RequestEvent } from "@sveltejs/kit"
 
@@ -11,7 +11,7 @@ export async function post({ request, url }: RequestEvent) {
 	})).pop()
 	if (!result) return { status: 404 }
 
-	sendEmailValidationToken(result.id, result.email, url.origin)
+	sendMailValidationToken(result.id, result.email, url.origin)
 
 	return { status: 200 }
 }
