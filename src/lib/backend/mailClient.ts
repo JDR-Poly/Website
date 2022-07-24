@@ -50,7 +50,7 @@ async function sendEmailValidationToken(userId: number, mail: string, origin: st
 
 }
 
-export { sendEmailValidationToken }
+export { sendEmailValidationToken, transporter }
 
 const DB_EMAIL_VALIDATION_TOKEN = "INSERT INTO $[table:name](id, validation_token) VALUES($[id],$[validation_token])" +
 	"ON CONFLICT (id) DO UPDATE SET validation_token=$[validation_token]"
