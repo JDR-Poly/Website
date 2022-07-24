@@ -34,12 +34,16 @@
 			<li>Commission</li>
 			<li>Documents officiel</li>
 		</ul>
-
-		{#if $authenticated && $user.role?.permissions.has(UserPermission.ADMIN_PANEL)}
-			<p>Panel admin</p>
-		{/if}
-		<br />
+		
 		{#if $authenticated && $user.is_email_validated}
+			{#if $user.role?.permissions.has(UserPermission.ADMIN_PANEL)}
+				<p>Panel admin</p>
+				<ul>
+					<li><a href="/admin/member-semester">Ajouter un membre</a></li>
+				</ul>
+				<br />	
+			{/if}
+		
 			<p>{$user.name}</p>
 			<ul>
 				<li><a href="/u/profile/{$user.id}">Profile</a></li>
