@@ -1,16 +1,20 @@
+import type { User } from "src/types"
+import { sendMail } from "./mailClient"
+import { db } from "./postgresClient"
+
 /**
  * Increse the end of the period to next closest period's end
  * without changing the period start (except if not existing)
  * @param {Period} period the period to increase
  * @returns {Period} the next period
  */
- function getNextPeriod(period: Period): Period {
+function getNextPeriod(period: Period): Period {
 	let closestNextPeriod: Period = {}
-	if(!period.stop) { period = {start: period.start, stop: new Date(Date.now())} }
+	if (!period.stop) { period = { start: period.start, stop: new Date(Date.now()) } }
 
 	periods.forEach(newPeriod => {
-		if(newPeriod.stop) {
-			if(newPeriod.stop > period.stop! && (!closestNextPeriod.stop || newPeriod.stop < closestNextPeriod.stop)) {
+		if (newPeriod.stop) {
+			if (newPeriod.stop > period.stop! && (!closestNextPeriod.stop || newPeriod.stop < closestNextPeriod.stop)) {
 				closestNextPeriod = newPeriod
 			}
 		}
@@ -28,8 +32,25 @@ type Period = {
 }
 
 const periods: Period[] = [
-	{start: new Date(2022, 8, 10), stop: new Date(2023, 0, 10)},
-	{start: new Date(2023, 0, 10), stop: new Date(2023, 6, 10)}
+	{ start: new Date(2022, 8, 10), stop: new Date(2023, 0, 10) },
+	{ start: new Date(2023, 0, 10), stop: new Date(2023, 6, 10) }
 ]
 
-export {type Period, getNextPeriod}
+function updateMemberPeriod(user: User, period: Period) {
+	const now = new Date(Date.now())
+
+	//Define if the member period already started
+	const newRole = period.start && period.start! <= now ? "MEMBER" : "USER"
+
+	db.none("UPDATE $[table:name] SET role=$[role], member_start=$[member_start], member_stop=$[member_stop] WHERE id=$[id]", {
+		table: "users",
+		member_start: period.start,
+		member_stop: period.stop,
+		role: newRole,
+		id: user.id
+	})
+
+	sendMail(user.email, "JDRPoly: Vous êtes membres", "<p>Member start: " + period.start + "</p><p>Member stop:" + period.stop + "</p>")
+}
+
+export { type Period, getNextPeriod, updateMemberPeriod }
