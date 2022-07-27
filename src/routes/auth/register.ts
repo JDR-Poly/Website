@@ -15,7 +15,7 @@ export async function post({ request, url }: RequestEvent) {
 		return {
 			status: 409,
 			body: {
-				message: "Un utilisateur avec cet email existe déjà."
+				message: "User already exist"
 			}
 		}
 	} else {

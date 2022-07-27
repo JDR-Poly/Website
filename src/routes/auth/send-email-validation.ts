@@ -9,9 +9,19 @@ export async function post({ request, url }: RequestEvent) {
 		table: "users",
 		id: body.id
 	})).pop()
-	if (!result) return { status: 404 }
+	if (!result) return {
+		status: 404,
+		body: {
+			message: "User with id " + body.id + " could not be found"
+		}
+	}
 
 	sendMailValidationToken(result.id, result.email, url.origin)
 
-	return { status: 200 }
+	return {
+		status: 200,
+		body: {
+			message: "Email validation sent"
+		}
+	}
 }

@@ -18,6 +18,9 @@ export async function post() {
 
 	return {
 		status: 200,
-		headers
+		headers,
+		body: {
+			message: "Successfully logged out"
+		}
 	}
 }

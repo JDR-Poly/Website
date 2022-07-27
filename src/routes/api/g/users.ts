@@ -29,7 +29,8 @@ export async function post({ request }: RequestEvent) {
 			"Content-Type": "application/json"
 		},
 		body: {
-			users: res
+			users: res,
+			message: "Successfully queried users"
 		}
 	}
 }

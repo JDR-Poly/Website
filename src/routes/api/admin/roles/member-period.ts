@@ -41,7 +41,12 @@ export async function get({ url }: RequestEvent) {
  * @returns user's id, member_start and member_stop
  */
 export async function post({ request, locals }: RequestEvent) {
-	if (!locals.authenticated) return { status: 401 }
+	if (!locals.authenticated) return {
+		status: 401,
+		body: {
+			message: "User is not authenticated"
+		}
+	}
 
 	const body = await request.json()
 
@@ -50,7 +55,12 @@ export async function post({ request, locals }: RequestEvent) {
 		table: "users",
 		id: body.id
 	})).pop()
-	if (!userResult) return { status: 404 }
+	if (!userResult) return {
+		status: 404,
+		body: {
+			message: "User does not exist"
+		}
+	}
 
 
 	const periodsNumber = parseInt(body.periods || "1")
@@ -70,7 +80,8 @@ export async function post({ request, locals }: RequestEvent) {
 				id: body.id,
 				member_start: period.start,
 				member_stop: period.stop
-			}
+			},
+			message: "Added period to user"
 		}
 	}
 

@@ -8,7 +8,12 @@ export async function post({ request }: RequestEvent) {
 		table: "email_validation",
 		validation_token: body.uuid
 	})).pop()
-	if (!result) return { status: 404 }
+	if (!result) return {
+		status: 404,
+		body: {
+			message: "Invalid email validation token"
+		}
+	}
 
 	db.none("DELETE FROM $[table:name] WHERE id=$[id]", {
 		table: "email_validation",
@@ -19,5 +24,10 @@ export async function post({ request }: RequestEvent) {
 		table: "users",
 		id: result.id
 	})
-	return { status: 200 }
+	return {
+		status: 200,
+		body: {
+			message: "Email validated by token verification"
+		}
+	}
 }

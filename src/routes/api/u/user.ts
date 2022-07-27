@@ -25,12 +25,16 @@ export async function post({ request }: RequestEvent) {
 				"Content-Type": "application/json"
 			},
 			body: {
-				user: res
+				user: res,
+				message: "Successfully queried user data"
 			}
 		}
 	} else {
 		return {
-			status: 404
+			status: 404,
+			body: {
+				message: "User could not be found"
+			}
 		}
 	}
 

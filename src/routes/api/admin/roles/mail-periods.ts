@@ -15,8 +15,18 @@ import { v4 as uuid } from "uuid"
  * @returns list of mails that are not found and who can't get emails
  */
 export async function post({ request, locals }: RequestEvent) {
-	if (!locals.authenticated) return { status: 401 }
-	if (!hasRolePermission(locals.user?.role!, UserPermission.GRANT_ROLE_MEMBER)) return { status: 403 }
+	if (!locals.authenticated) return {
+		status: 401,
+		body: {
+			message: "User is not authenticated"
+		}
+	}
+	if (!hasRolePermission(locals.user?.role!, UserPermission.GRANT_ROLE_MEMBER)) return {
+		status: 403,
+		body: {
+			message: "User doesn't have the permission to do that"
+		}
+	}
 
 	const body = await request.json()
 	const periodsNumber = parseInt(body.periods || "1")
@@ -29,7 +39,7 @@ export async function post({ request, locals }: RequestEvent) {
 
 	const emailsFound = users.flatMap(element => element.email) //Temp variable only useful for finding the emails not found
 	const emailsNotFound = (body.emails as string[]).filter(element => !emailsFound.includes(element))
-	
+
 	//Add periods to users with account
 	users.forEach(user => {
 		let period: Period = { start: user.member_start, stop: user.member_stop }
@@ -45,7 +55,8 @@ export async function post({ request, locals }: RequestEvent) {
 	return {
 		status: 200,
 		body: {
-			errorMails: errorMails
+			errorMails: errorMails,
+			message: "Sucessfully added periods"
 		}
 	}
 }
