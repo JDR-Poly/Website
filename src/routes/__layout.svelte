@@ -11,6 +11,7 @@
 </script>
 
 <script lang="ts">
+	import AlertDisplay from "$lib/components/AlertDisplay.svelte";
 	import { session } from '$app/stores';
 	async function logout() {
 		const res = await fetch('/auth/logout', { method: 'POST' });
@@ -57,3 +58,6 @@
 </nav>
 
 <slot />
+
+
+<AlertDisplay/>
