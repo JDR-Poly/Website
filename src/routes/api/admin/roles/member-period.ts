@@ -1,5 +1,8 @@
+import { hasRolePermission } from "$lib/backend/backendPermissions"
 import { getNextPeriod, updateMemberPeriod, type Period } from "$lib/backend/memberPeriod"
 import { db } from "$lib/backend/postgresClient"
+import { user } from "$lib/stores"
+import { UserPermission } from "$lib/userPermissions"
 import type { RequestEvent } from "@sveltejs/kit"
 
 /**
@@ -48,6 +51,14 @@ export async function post({ request, locals }: RequestEvent) {
 		}
 	}
 
+	if (!hasRolePermission(locals.user?.role!, UserPermission.GRANT_ROLE_MEMBER)) {
+		return {
+			status: 403,
+			body: {
+				message: "User doesn't have the permission to do that"
+			}
+		}
+	}
 	const body = await request.json()
 
 	//Query user data
@@ -59,6 +70,14 @@ export async function post({ request, locals }: RequestEvent) {
 		status: 404,
 		body: {
 			message: "User does not exist"
+		}
+	}
+	if (userResult.role !== "USER" && userResult.role !== "MEMBER") {
+		return {
+			status: 400,
+			body: {
+				message: "The user to modify needs to be a USER or a MEMBER"
+			}
 		}
 	}
 
