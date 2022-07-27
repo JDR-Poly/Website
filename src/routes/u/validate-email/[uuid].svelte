@@ -22,7 +22,7 @@
 
 <script lang="ts">
     import { page } from "$app/stores";
-    import { user } from '$lib/stores';
+    import { user, info, error } from '$lib/stores';
     import { goto } from '$app/navigation';
 
     const {uuid} = $page.params
@@ -56,10 +56,11 @@
                     headers: {"Content-Type" : "application/json"}
                 })
                 if(res.ok) {
-                    console.log("mail envoyé")
-                    goto("/u/validate-email")
+					$info = "Le mail vient d'être envoyé"
+					setTimeout(() => goto("/u/validate-email"), 3000)
                 }
             } catch(err) {
+				$error = "An error occured"
                 console.error(err)
             }
         }}>Envoyer un nouveau mail</button>

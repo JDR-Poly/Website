@@ -21,7 +21,7 @@
 </script>
 
 <script lang="ts">
-    import { authenticated, user } from "$lib/stores";
+    import { authenticated, user, info } from "$lib/stores";
 </script>
 
 <h>En attente de validation du mail</h>
@@ -38,7 +38,8 @@
             headers: {"Content-Type" : "application/json"}
         })
         if(res.ok) {
-            console.log("mail envoyé")        }
+            $info = "Le mail vient d'être envoyé"
+		}
     } catch(err) {
         console.error(err)
     }

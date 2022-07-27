@@ -8,6 +8,7 @@
 </script>
 
 <script lang="ts">
+	import {warning, info} from "$lib/stores"
 	let memberCode = ""
 
 	let result: string
@@ -19,9 +20,9 @@
 			})
 		const body = await res.json()
 		if(res.ok) {
-			result = "Vous avez reçu " + body.periodsNumber + " semestre(s) de membre."
+			$info = "Vous avez reçu " + body.periodsNumber + " semestre(s) de membre."
 		} else {
-			result = "Ce code n'est pas valide"
+			$warning = "Ce code n'est pas valide"
 		}
 	}
 </script>

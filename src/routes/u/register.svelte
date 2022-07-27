@@ -9,15 +9,14 @@
 
 
 <script lang="ts">
-
-    let email = ""
+	import {error} from  "$lib/stores"
+    
+	let email = ""
     let name = ""
     let password = ""
 
-    let error: string | undefined
 
     async function register() {
-        error = undefined
         try {
             const res = await fetch("/auth/register", {
                 method: "POST",
@@ -33,11 +32,12 @@
             if(res.ok) {
                 location.reload()
             } else {
-                error = "An error occured"
+				const body = await res.json()
+                $error = body.message
             }
         } catch (err) {
             console.log(err)
-            error = "An error occured"
+            $error = "An error occured"
         }
 
     }

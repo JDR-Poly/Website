@@ -9,12 +9,11 @@
 
 
 <script lang="ts">
+	import {error} from  "$lib/stores"
     let email = "";
     let password = "";
-    let error: string|undefined;
 
     async function login() {
-        error = undefined
         try {
 
             const res = await fetch("/auth/login", {
@@ -31,11 +30,11 @@
             if(res.ok) {
                 location.reload()
             } else {
-                error = body.message
+                $error = body.message
             }
         } catch (err) {
             console.log(err)
-            error = "An error occured"
+            $error = "An error occured"
         }
     }
 </script>

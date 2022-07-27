@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { User } from 'src/types';
-
+	import {error} from "$lib/stores"
 	//Search completion variables
 	let searchCompletion: User[] = [];
 	let selectedIndex = -1;
@@ -58,10 +58,11 @@
 			if (res.ok && body.users.length > 0) {
 				return body.users;
 			} else if (!res.ok) {
-				console.log(body.message);
+				$error = body.message
 			}
 		} catch (err) {
 			console.log(err);
+			$error = "An error occured"
 		}
 		return undefined;
 	}
