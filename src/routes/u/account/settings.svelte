@@ -1,28 +1,28 @@
 <script context="module" lang="ts">
-    import type { Load } from '@sveltejs/kit'
-    import { redirectIfNotAuthenticated } from '$lib/frontend/redirect';
+	import type { Load } from '@sveltejs/kit';
+	import { redirectIfNotAuthenticated } from '$lib/frontend/redirect';
 
-    export const load: Load = async (event) => {
-        return redirectIfNotAuthenticated(event, "/u/login")
-    }
+	export const load: Load = async (event) => {
+		return redirectIfNotAuthenticated(event, '/u/login');
+	};
 </script>
 
 <script lang="ts">
-	import {warning, info} from "$lib/stores"
-	let memberCode = ""
+	import { warning, info } from '$lib/stores';
+	let memberCode = '';
 
-	let result: string
+	let result: string;
 	async function validateMembershipCode() {
 		const res = await fetch('/api/u/validate-membership-code', {
-				method: 'POST',
-				body: JSON.stringify({validation_token: memberCode}),
-				headers: { 'Content-Type': 'application/json' }
-			})
-		const body = await res.json()
-		if(res.ok) {
-			$info = "Vous avez reçu " + body.periodsNumber + " semestre(s) de membre."
+			method: 'POST',
+			body: JSON.stringify({ validation_token: memberCode }),
+			headers: { 'Content-Type': 'application/json' }
+		});
+		const body = await res.json();
+		if (res.ok) {
+			$info = 'Vous avez reçu ' + body.periodsNumber + ' semestre(s) de membre.';
 		} else {
-			$warning = "Ce code n'est pas valide"
+			$warning = "Ce code n'est pas valide";
 		}
 	}
 </script>
@@ -30,7 +30,7 @@
 <h2>Account setting</h2>
 
 <p>Valider un semestre de membre</p>
-<input type="text" placeholder="code" bind:value={memberCode}> 
+<input type="text" placeholder="code" bind:value={memberCode} />
 <button on:click={validateMembershipCode}>Valider</button>
 
 {#if result}
