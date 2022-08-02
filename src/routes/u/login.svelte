@@ -45,10 +45,6 @@
     <input type="email" bind:value={email} placeholder="Mail">
     <input type="password" bind:value={password} placeholder="Mot de passe">
 
-    {#if error}
-        <h3>{error}</h3>
-    {/if}
-
     <button on:click={login}>Se connecter</button>
 
 </div>
