@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { error } from '$lib/stores';
+	import { Roles } from '$lib/userPermissions';
 	import type { User } from 'src/types';
 
 	export let user: User;
@@ -74,7 +75,7 @@
 	</select>
 
 	{#if memberPeriod}
-		{#if roleName === 'MEMBER'}
+		{#if roleName === Roles.USER.name}
 			<p>Début de membre: {memberPeriod.start}</p>
 			<p>Fin de membre: {memberPeriod.stop}</p>
 
@@ -95,7 +96,7 @@
 			<br />
 			<button on:click={submitMemberPeriodChange}>Ajouter {numberOfPeriods} semestre(s)</button>
 		{:else}
-			{#if roleName === 'USER' && memberPeriod.start}
+			{#if roleName === Roles.USER.name && memberPeriod.start}
 				<p>Début de membre: {memberPeriod.start}</p>
 				<p>Fin de membre: {memberPeriod.stop}</p>
 
