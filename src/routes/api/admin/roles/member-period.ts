@@ -4,11 +4,12 @@ import { db } from "$lib/backend/postgresClient"
 import { user } from "$lib/stores"
 import { UserPermission } from "$lib/userPermissions"
 import type { RequestEvent } from "@sveltejs/kit"
+import type { Id } from "src/types"
 
 /**
  * Return the period of membership of the user depending
  * of how many periods added to the user
- * @param {number} url.searchParams.id id of the period's user
+ * @param {Id} url.searchParams.id id of the period's user
  * @param {number?} url.searchParams.periods how many periods added 
  * @returns {Period} 
  */
@@ -39,7 +40,7 @@ export async function get({ url }: RequestEvent) {
 /**
  * Change the period of membership and the role of the user
  * depending of how many periods of membership are added to the user
- * @param {number} request.id the id of the user
+ * @param {Id} request.id the id of the user
  * @param {number} request.periods the number of periods to add
  * @returns user's id, member_start and member_stop
  */

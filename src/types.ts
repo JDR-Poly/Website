@@ -6,7 +6,7 @@ type Event = {
 	date: Date,
 	inscriptionStart: Date,
 	inscriptionStop: Date | undefined,
-	subscribed: Array<string>
+	subscribed: Array<Id>
 }
 
 /**
@@ -14,7 +14,7 @@ type Event = {
  * of the database
  */
 type User = {
-	id: number,
+	id: Id,
 	email?: string,
 	name?: string,
 	role?: Role,
@@ -27,4 +27,6 @@ type User = {
 	member_stop?: Date
 }
 
-export type { User, Event }
+type Id = number
+
+export type { User, Event, Id }

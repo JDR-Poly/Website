@@ -2,11 +2,12 @@ import type { RequestEvent } from "@sveltejs/kit";
 import { Role, Roles } from "$lib/userPermissions";
 import { getUserRole, hasRolePermission } from "$lib/backend/backendPermissions";
 import { db } from "$lib/backend/postgresClient";
+import type { Id } from "src/types";
 
 /**
  * See all the roles that the user can grant
  * @param {RequestEvent} request 
- * @param {number} request.id id of the user of whom to change role
+ * @param {Id} request.id id of the user of whom to change role
  * @returns all the roles that the user has the permission to grant
  */
 export async function get({ url, locals }: RequestEvent) {
@@ -47,7 +48,7 @@ export async function get({ url, locals }: RequestEvent) {
 /**
  * Modify the role of a user
  * @param {RequestEvent} request
- * @param {number} request.id the id of the user whom role will be changed 
+ * @param {Id} request.id the id of the user whom role will be changed 
  * @param {string} request.roleName the new role name
 */
 export async function post({ request, locals }: RequestEvent) {

@@ -1,4 +1,5 @@
 import { createTestAccount, createTransport, type Transporter, getTestMessageUrl } from "nodemailer";
+import type { Id } from "src/types";
 import { v4 as uuid } from "uuid"
 import { db } from "./postgresClient";
 
@@ -54,7 +55,7 @@ async function sendMail(to: any, subject: string, html: string): Promise<any> {
 
 }
 
-async function sendMailValidationToken(userId: number, mail: string, origin: string) {
+async function sendMailValidationToken(userId: Id, mail: string, origin: string) {
 	const emailValidationToken = uuid()
 
 	await db.none(DB_EMAIL_VALIDATION_TOKEN, {

@@ -1,13 +1,13 @@
 import type { RequestEvent } from "@sveltejs/kit";
 import { db } from "$lib/backend/postgresClient"
-import type { User } from "src/types";
+import type { Id, User } from "src/types";
 import { getUserRole } from "$lib/backend/backendPermissions";
 
 
 /**
  * Get data of an user from its id
  * @param {RequestEvent} request  
- * @param {number} request.id id of the user
+ * @param {Id} request.id id of the user
  * @return {User?} user with every data if found
  */
 export async function post({ request }: RequestEvent) {
