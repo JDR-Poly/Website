@@ -13,26 +13,26 @@ CREATE TABLE public.users(
 	bio TEXT,
 	member_start DATE,
 	member_stop DATE
-)
+);
 
------ COOKIES TABLE -----
+---- COOKIES TABLE -----
 
 CREATE TABLE public.cookies(
 	email VARCHAR(255) PRIMARY KEY NOT NULL,
 	cookieId VARCHAR(255) NOT NULL
-)
+);
 
------ EMAIL VALIDATION CODE TABLE -----
+ ----- EMAIL VALIDATION CODE TABLE -----
 
 CREATE TABLE public.email_validation(
 	id INT PRIMARY KEY NOT NULL,
 	validation_token VARCHAR(255) NOT NULL
-)
+);
 
------ MEMBER CODE TABLE -----
+ ----- MEMBER CODE TABLE -----
 
 CREATE TABLE public.members_code(
 	validation_token VARCHAR(255) PRIMARY KEY NOT NULL,
 	periods INT NOT NULL,
 	code_creation DATE NOT NULL DEFAULT CURRENT_DATE
-)
+);
