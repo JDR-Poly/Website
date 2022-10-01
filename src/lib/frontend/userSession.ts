@@ -7,7 +7,6 @@ import type { Writable } from 'svelte/store';
  * @param {Record<string, Writable<any>>} data dictionary of writable, where the name of the writables are the same as the data of the session  
  */
 function getUserSessionData(event: LoadEvent, data: Record<string, Writable<any>>) {
-	if(!event.session.authenticated) return
 	const keys = Object.keys(data)
 	for (const key in data) {
 		data[key].set((event.session as any)[key])

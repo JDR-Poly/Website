@@ -51,8 +51,8 @@
 				<li><a href="/u/account/settings">Paramètres</a></li>
 				<li><button on:click={logout}>Se déconnecter</button></li>
 			</ul>
-		{:else}
-			<a href="/u/login">Se connecter</a>
+		{:else if !$authenticated}
+			<a href="/auth/login">Se connecter</a>
 		{/if}
 	</ul>
 </nav>

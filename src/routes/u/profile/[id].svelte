@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { Role, Roles, UserPermission } from '$lib/userPermissions';
 	import type { User } from 'src/types';
-	import { user, error } from '$lib/stores';
+	import { authenticated, user, error } from '$lib/stores';
 
 	const { id } = $page.params;
 	let userRole: Role;
@@ -17,12 +17,8 @@
 			if(!res.ok) {
 				$error = body.message
 			}
-			return body
+			return body.user
 		})
-		.then((json) => {
-			userRole = Roles[json.user.role];
-			return json.user;
-		});
 </script>
 
 {#await userPromise}
@@ -34,7 +30,7 @@
 	<p>Role: {profileUser.role?.name}</p>
 	<p>Date de création: {profileUser.account_creation}</p>
 
-	{#if $user.role?.permissions.has(UserPermission.MODIFY_USERS_DATA)}
+	{#if $authenticated && $user.role?.permissions.has(UserPermission.MODIFY_USERS_DATA)}
 		<a href="/admin/profile/{id}">Modifier les données de cet utilisateur</a>
 	{/if}
 {:catch err}
