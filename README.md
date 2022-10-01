@@ -24,4 +24,5 @@ MAIL_PASSWORD=
 ```
 `In a DEV environment, MAIL_HOST, MAIL_PORT, MAIL_USER and MAIL_PASSWORD are optional`
 
-5. Run using `npm run dev`
+5. Run initialize-up migration file in your postgresql database
+6. Run using `npm run dev`
