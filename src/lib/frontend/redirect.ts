@@ -37,7 +37,7 @@ function redirectIfAuthenticated(event: LoadEvent, redirection: string): LoadOut
 	} else if(event.session.authenticated && !event.session.user?.is_email_validated) {
 		return {
 			status: 302, //Status 302 automatically redirect
-			redirect: "/u/validate-email"
+			redirect: "/auth/validate-email"
 		}
 	} else {
 		return { status: 200 }

@@ -14,7 +14,7 @@
 	import AlertDisplay from "$lib/components/AlertDisplay.svelte";
 	import { session } from '$app/stores';
 	async function logout() {
-		const res = await fetch('/auth/logout', { method: 'POST' });
+		const res = await fetch('/api/auth/logout', { method: 'POST' });
 		$session = { authenticated: false, user: undefined };
 		$authenticated = false;
 		$user = { id: 0 };

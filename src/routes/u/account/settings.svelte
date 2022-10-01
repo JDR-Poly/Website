@@ -3,7 +3,7 @@
 	import { redirectIfNotAuthenticated } from '$lib/frontend/redirect';
 
 	export const load: Load = async (event) => {
-		return redirectIfNotAuthenticated(event, '/u/login');
+		return redirectIfNotAuthenticated(event, '/auth/login');
 	};
 </script>
 

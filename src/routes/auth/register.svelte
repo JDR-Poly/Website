@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
-	import { redirectIfAuthenticated } from '$lib/frontend/redirect';
 	import type { Load } from '@sveltejs/kit';
+	import { redirectIfAuthenticated } from '$lib/frontend/redirect';
 
 	export const load: Load = async (event) => {
 		return redirectIfAuthenticated(event, '/u/profile/' + event.session.user?.id);
@@ -9,25 +9,28 @@
 
 <script lang="ts">
 	import { error } from '$lib/stores';
+
 	let email = '';
+	let name = '';
 	let password = '';
 
-	async function login() {
+	async function register() {
 		try {
-			const res = await fetch('/auth/login', {
+			const res = await fetch('/api/auth/register', {
 				method: 'POST',
 				body: JSON.stringify({
 					email,
+					name,
 					password
 				}),
 				headers: {
 					'Content-Type': 'application/json'
 				}
 			});
-			const body = await res.json();
 			if (res.ok) {
 				location.reload();
 			} else {
+				const body = await res.json();
 				$error = body.message;
 			}
 		} catch (err) {
@@ -38,15 +41,13 @@
 </script>
 
 <div>
-	<h1>Se connecter</h1>
+	<h1>S'inscrire</h1>
 
 	<input type="email" bind:value={email} placeholder="Mail" />
+	<input type="text" bind:value={name} placeholder="Nom Prénom" />
 	<input type="password" bind:value={password} placeholder="Mot de passe" />
-
-	<button on:click={login}>Se connecter</button>
+	<button on:click={register}>S'inscrire</button>
 </div>
-
-<a href="/u/register">Vous ne possédez pas de compte ?</a>
 
 <style>
 	div {

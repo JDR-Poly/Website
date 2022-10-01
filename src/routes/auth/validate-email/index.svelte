@@ -5,7 +5,7 @@
 		if (!event.session.authenticated) {
 			return {
 				status: 302,
-				redirect: '/u/login'
+				redirect: '/auth/login'
 			};
 		} else if (event.session.user?.is_email_validated !== false) {
 			return {
@@ -31,7 +31,7 @@
 <button
 	on:click={async () => {
 		try {
-			const res = await fetch('/auth/send-email-validation', {
+			const res = await fetch('/api/auth/send-email-validation', {
 				method: 'POST',
 				body: JSON.stringify({
 					id: $user.id
@@ -49,7 +49,7 @@
 
 <button
 	on:click={async () => {
-		const res = await fetch('/auth/logout', { method: 'POST' });
+		const res = await fetch('/api/auth/logout', { method: 'POST' });
 		authenticated.set(false);
 		user.set({ id: 0 });
 		location.reload();

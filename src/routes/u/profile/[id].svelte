@@ -5,7 +5,6 @@
 	import { authenticated, user, error } from '$lib/stores';
 
 	const { id } = $page.params;
-	let userRole: Role;
 
 	const userPromise: Promise<User> = fetch('/api/u/user', {
 		method: 'POST',

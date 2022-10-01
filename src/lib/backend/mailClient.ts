@@ -63,7 +63,7 @@ async function sendMailValidationToken(userId: Id, mail: string, origin: string)
 		id: userId,
 		validation_token: emailValidationToken
 	})
-	sendMail(mail, "JDRPoly: Validez votre mail", '<a href="' + origin + '/u/validate-email/' + emailValidationToken + '" target="_blank">Valider</a>')
+	sendMail(mail, "JDRPoly: Validez votre mail", '<a href="' + origin + '/auth/validate-email/' + emailValidationToken + '" target="_blank">Valider</a>')
 }
 
 export { sendMailValidationToken, sendMail }

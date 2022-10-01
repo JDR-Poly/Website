@@ -5,7 +5,7 @@
 		if (!event.session.authenticated) {
 			return {
 				status: 302,
-				redirect: '/u/login'
+				redirect: '/auth/login'
 			};
 		} else if (event.session.user?.is_email_validated !== false) {
 			return {
@@ -27,7 +27,7 @@
 
 	const { uuid } = $page.params;
 
-	const emailValidationResult = fetch('/auth/validate-email', {
+	const emailValidationResult = fetch('/api/auth/validate-email', {
 		method: 'POST',
 		body: JSON.stringify({ uuid }),
 		headers: { 'Content-Type': 'application/json' }
@@ -49,7 +49,7 @@
 		<button
 			on:click={async () => {
 				try {
-					const res = await fetch('/auth/send-email-validation', {
+					const res = await fetch('/api/auth/send-email-validation', {
 						method: 'POST',
 						body: JSON.stringify({
 							id: $user.id
@@ -58,7 +58,7 @@
 					});
 					if (res.ok) {
 						$info = "Le mail vient d'être envoyé";
-						setTimeout(() => goto('/u/validate-email'), 3000);
+						setTimeout(() => goto('/auth/validate-email'), 3000);
 					}
 				} catch (err) {
 					$error = 'An error occured';
