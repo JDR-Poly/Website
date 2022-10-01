@@ -1,12 +1,15 @@
 import type { Role } from "$lib/userPermissions"
 
 type Event = {
-	name: string,
-	author: string | undefined,
+	id: Id
+	title: string,
+	author: Id,
 	date: Date,
-	inscriptionStart: Date,
-	inscriptionStop: Date | undefined,
-	subscribed: Array<Id>
+	inscritpion: boolean,
+	inscription_group: string,
+	inscription_start: Date | undefined,
+	inscription_stop: Date | undefined,
+	description_text: string | undefined
 }
 
 /**
