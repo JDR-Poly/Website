@@ -1,0 +1,58 @@
+<script lang="ts">
+	import { error } from "$lib/stores";
+	import { page } from '$app/stores';
+	import { redirect } from "@sveltejs/kit";
+	import { Role, hasRolePermission, Roles } from "$lib/userPermissions";
+	import type { User } from "src/types";
+	import { dataset_dev } from "svelte/internal";
+
+	const {id} = $page.params
+
+	const eventPromise = fetch('/api/events/' + id)
+		.then(async (res) => {
+			const body = await res.json()
+			console.log(body);
+			
+			return body
+		})
+		.catch((err) => {
+			$error = err.message
+			throw redirect(403, '/not-found')
+		})
+
+	function translateRole(role?: Role) {
+		if(!role?.name) return 'ERROR'
+		switch (role.name) {
+			case Roles.USER.name:
+					return 'un utilisateur'
+				break;
+			case Roles.MEMBER.name:
+					return 'un membre'
+				break;
+			case Roles.COMMITTEE.name:
+					return 'un membre du comité'
+				break;
+			default:
+				return 'ERROR'
+			break;
+		}
+	}
+</script>
+
+{#await eventPromise}
+	<p>Chargement de l'événement</p>
+{:then event} 
+	<h3>{event.title}</h3>
+	<p>Date: {event.date}</p>
+	<p>{event.description}</p>
+
+	{#if event.inscription}
+		{#if $page.data.authenticated && hasRolePermission($page.data.user.role, "JOIN_EVENT_" + event.inscription_group.toUpperCase())}
+			<button>S'inscrire //TODO</button>
+		{:else}
+			<p color='red'>Vous devez être {translateRole(Roles[event.inscription_group])} pour pouvoir vous inscrire à cette événement</p>
+		{/if}
+	{:else}
+		<p color='green'>Il n'y a pas besoin de s'inscrire pour cette événements</p>
+	{/if}
+{/await}
