@@ -21,11 +21,4 @@ async function getUserRole(user: User): Promise<Role | undefined> {
 	return role
 }
 
-function hasRolePermission(role: Role, permission: UserPermission | string): boolean {
-	if (typeof permission === "string") {
-		permission = (UserPermission as any)[permission]
-	}
-	return role.permissions.has((permission as UserPermission))
-}
-
-export { getUserRole, hasRolePermission }
+export { getUserRole }
