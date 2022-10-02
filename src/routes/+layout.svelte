@@ -33,8 +33,7 @@
 
 		<p>Évenements</p>
 		<ul>
-			<li>Nocturnes</li>
-			<li>Soirée membres</li>
+			<li><a href="/events">Calandrier</a></li>
 		</ul>
 		
 		{#if authenticated && user.is_email_validated}

@@ -35,9 +35,26 @@ export async function POST({ request, locals }: RequestEvent) {
 
 /**  ---Events GET---  */
 
-/** @type {import('./$types').RequestHandler} */
-export async function GET({ }: RequestEvent) {
-	return db.any('SELECT * FROM events')
+/**
+ * Get all events sorted by their date
+ * @type {import('./$types').RequestHandler} 
+ * @param {boolean?} url.searchParams.excludeExpiredEvents exclude event in the past (default true) 
+ * @return {Event[]} list of events
+ * */
+export async function GET({ url }: RequestEvent) {
+	const excludeExpiredEvents = !(url.searchParams.get("excludeExpiredEvents") === "false")
+		
+	const db_req = excludeExpiredEvents ?
+		`SELECT * FROM events
+		WHERE date >= $1
+		ORDER BY date;
+		`
+		: 
+		`SELECT * FROM events
+		ORDER BY date;
+		`
+
+	return db.any(db_req, [new Date(Date.now())])
 		.then((result) => {
 			return json(result)
 		})
