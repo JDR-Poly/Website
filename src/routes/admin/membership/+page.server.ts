@@ -1,17 +1,16 @@
-import { hasRolePermission } from "$lib/server/backendPermissions"
 import { sendMail } from "$lib/server/mailClient"
 import { getNextPeriod, updateMemberPeriod, type Period } from "$lib/server/memberPeriod"
 import { db } from "$lib/server/postgresClient"
-import { UserPermission } from "$lib/userPermissions"
+import { hasRolePermission, UserPermission } from "$lib/userPermissions"
 import type { RequestEvent } from "./$types";
 import { v4 as uuid } from "uuid"
 import { error, invalid, redirect } from "@sveltejs/kit"
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ locals }: RequestEvent) {
-	if (!locals.authenticated || !locals.user?.role?.permissions?.has(UserPermission.GRANT_ROLE_MEMBER)) {
-	  throw redirect(307, '/');
-	} 
+	if (!locals.authenticated || !hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role)) {
+		throw redirect(307, '/');
+	}
 }
 
 /**
@@ -24,13 +23,18 @@ export function load({ locals }: RequestEvent) {
  */
 /** @type {import('./$types').Actions} */
 export const actions = {
-	default: async ({ request }: RequestEvent) => {
+	default: async ({ request, locals }: RequestEvent) => {
+		if(!locals.authenticated) throw error(401)
+		if (!hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role)) {
+			throw error(403);
+		}
+
 		const form = await request.formData();
-		const emails = form.get('emails')?.toString()?.split(",")?.flatMap((v) => {return v.split(";")})
+		const emails = form.get('emails')?.toString()?.split(",")?.flatMap((v) => { return v.split(";") })
 		const periodsNumber = parseInt(form.get('periodsNumber')?.toString() || "1") || 1;
-		
-		if(!emails) {
-			return invalid(400, {emails, periodsNumber})
+
+		if (!emails) {
+			return invalid(400, { emails, periodsNumber })
 		}
 
 		//Query user data
@@ -44,7 +48,7 @@ export const actions = {
 		//Add periods to users with account
 		users.forEach(user => {
 			//Prevent role change for admin
-			if(user.role !== "USER" && user.role !== "MEMBER") return
+			if (user.role !== "USER" && user.role !== "MEMBER") return
 
 			let period: Period = { start: user.member_start, stop: user.member_stop }
 			for (let i = 0; i < periodsNumber; i++) {

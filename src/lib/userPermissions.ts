@@ -61,6 +61,15 @@ class Role {
 	}
 }
 
+
+function hasRolePermission(permission: UserPermission | string, role?: Role, ): boolean {
+	if(!role) return false
+	if (typeof permission === "string") {
+		permission = (UserPermission as any)[permission]
+	}
+	return role.permissions.has((permission as UserPermission))
+}
+
 /**
  * List of all existing roles 
  */
@@ -71,12 +80,6 @@ const Roles: Record<string, Role> = {
 	ADMIN: Role.createRole("ADMIN", [UserPermission.GRANT_ROLE_COMMITTEE], ["COMMITTEE"])
 }
 
-function hasRolePermission(role?: Role, permission: UserPermission | string): boolean {
-	if(!role) return false
-	if (typeof permission === "string") {
-		permission = (UserPermission as any)[permission]
-	}
-	return role.permissions.has((permission as UserPermission))
-}
 
-export { UserPermission, Role, Roles, hasRolePermission }
+
+export { UserPermission, Role, Roles, hasRolePermission}

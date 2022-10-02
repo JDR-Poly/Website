@@ -1,7 +1,6 @@
-import { hasRolePermission } from "$lib/server/backendPermissions"
 import { getNextPeriod, updateMemberPeriod, type Period } from "$lib/server/memberPeriod"
 import { db } from "$lib/server/postgresClient"
-import { UserPermission } from "$lib/userPermissions"
+import { hasRolePermission, UserPermission } from "$lib/userPermissions"
 import { error, json, type RequestEvent } from "@sveltejs/kit"
 
 /**
@@ -43,7 +42,7 @@ import { error, json, type RequestEvent } from "@sveltejs/kit"
 export async function POST({ request, locals }: RequestEvent) {
 	if (!locals.authenticated) throw error(401)
 
-	if (!hasRolePermission(locals.user?.role!, UserPermission.GRANT_ROLE_MEMBER))
+	if (!hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role))
 		throw error(403)
 	
 	const body = await request.json()

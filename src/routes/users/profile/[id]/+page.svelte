@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { UserPermission } from '$lib/userPermissions';
+	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 	import type { User } from 'src/types';
 	import { error } from '$lib/stores';
 
@@ -25,7 +25,7 @@
 	<p>Nom: {profileUser.name}</p>
 	<p>Role: {profileUser.role?.name}</p>
 	<p>Date de création: {profileUser.account_creation}</p>
-	{#if $page.data.authenticated && $page.data.user.role?.permissions.has(UserPermission.MODIFY_USERS_DATA)}
+	{#if $page.data.authenticated && hasRolePermission(UserPermission.MODIFY_USERS_DATA, $page.data.user.role)}
 		<a href="/admin/profile/{id}">Modifier les données de cet utilisateur</a>
 	{/if}
 {:catch err}

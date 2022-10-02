@@ -1,7 +1,6 @@
 
-import { hasRolePermission } from "$lib/server/backendPermissions"
 import { db } from "$lib/server/postgresClient"
-import { UserPermission } from "$lib/userPermissions"
+import { hasRolePermission, UserPermission } from "$lib/userPermissions"
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 
@@ -10,7 +9,7 @@ import type { RequestEvent } from "./$types";
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request, locals }: RequestEvent) {
 	if (!locals.authenticated) throw error(401)
-	if (!hasRolePermission(locals.user?.role!, UserPermission.CREATE_EVENT)) throw error(403)
+	if (!hasRolePermission(UserPermission.CREATE_EVENT, locals.user?.role)) throw error(403)
 
 	const body = await request.json()
 	const gr = body.inscription_group.toUpperCase();

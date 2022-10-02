@@ -2,7 +2,7 @@
 	import { invalidateAll } from "$app/navigation";
 	import AlertDisplay from "$lib/components/AlertDisplay.svelte";
 	import { page } from '$app/stores';
-	import { UserPermission } from "$lib/userPermissions";
+	import { UserPermission, Role, hasRolePermission } from "$lib/userPermissions";
 	import type { User } from "src/types";
 	
 	async function logout() {
@@ -35,9 +35,8 @@
 		<ul>
 			<li><a href="/events">Calandrier</a></li>
 		</ul>
-		
 		{#if authenticated && user.is_email_validated}
-			{#if user.role?.permissions.has(UserPermission.ADMIN_PANEL)}
+			{#if hasRolePermission(UserPermission.ADMIN_PANEL, user?.role)}
 				<p>Panel admin</p>
 				<ul>
 					<li><a href="/admin/membership">Ajouter un membre</a></li>

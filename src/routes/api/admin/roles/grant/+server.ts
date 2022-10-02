@@ -1,6 +1,6 @@
 import { error, json } from "@sveltejs/kit";
-import { Role, Roles } from "$lib/userPermissions";
-import { getUserRole, hasRolePermission } from "$lib/server/backendPermissions";
+import { hasRolePermission, Role, Roles } from "$lib/userPermissions";
+import { getUserRole } from "$lib/server/backendPermissions";
 import type { RequestEvent } from "./$types";
 import { db } from "$lib/server/postgresClient";
 
@@ -16,14 +16,14 @@ export async function GET({ url, locals}: RequestEvent) {
 	if (!locals.authenticated) throw error(401)
 	
 	const id = parseInt(url.searchParams.get("id") || "0") || 0
-	if (id && !hasRolePermission(locals.user?.role!, "GRANT_ROLE_" + (await getUserRole({ id }))?.name)) {
+	if (id && !hasRolePermission("GRANT_ROLE_" + (await getUserRole({ id }))?.name, locals.user?.role)) {
 		throw error(403)
 	}
 
 	const result: Role[] = []
 	const rolesKey = Object.keys(Roles)
 	rolesKey.forEach(roleKey => {
-		if (hasRolePermission(locals.user?.role!, "GRANT_ROLE_" + roleKey)) {
+		if (hasRolePermission("GRANT_ROLE_" + roleKey, locals.user?.role)) {
 			result.push(Roles[roleKey])
 		}
 	});
@@ -44,8 +44,8 @@ export async function POST({ request, locals }: RequestEvent) {
 	const roleOfModifiedUser = await getUserRole({ id: body.id })
 	if (!roleOfModifiedUser) throw error(400, "User id is invalid")
 
-	if (!hasRolePermission(locals.user?.role!, "GRANT_ROLE_" + body.roleName)
-		|| !hasRolePermission(locals.user?.role!, "GRANT_ROLE_" + roleOfModifiedUser.name))
+	if (!hasRolePermission("GRANT_ROLE_" + body.roleName, locals.user?.role)
+		|| !hasRolePermission("GRANT_ROLE_" + roleOfModifiedUser.name, locals.user?.role))
 		throw error(403, "User doesn't have the permission to do that")
 
 	return db.none("UPDATE users SET role = $1, member_start=NULL, member_stop=NULL WHERE id=$2",

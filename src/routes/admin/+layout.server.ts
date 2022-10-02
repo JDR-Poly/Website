@@ -1,4 +1,4 @@
-import { UserPermission } from '$lib/userPermissions';
+import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 import { error, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from "./$types";
 
@@ -7,7 +7,7 @@ export function load({ locals }: RequestEvent) {
   if (!locals.user) {
 		throw redirect(307, '/auth/login');
   }
-  if (!locals.user.role?.permissions.has(UserPermission.MODIFY_USERS_DATA)) {
+  if (!hasRolePermission(UserPermission.MODIFY_USERS_DATA, locals.user.role)) {
     throw error(403);
   }
 }
