@@ -2,6 +2,7 @@ enum UserPermission {
 	GRANT_ROLE_USER,
 	GRANT_ROLE_MEMBER,
 	GRANT_ROLE_COMMITTEE,
+	GRANT_ROLE_HONORARY_MEMBER,
 	CREATE_EVENT,
 	JOIN_EVENT_USER,
 	JOIN_EVENT_MEMBER,
@@ -76,8 +77,9 @@ function hasRolePermission(permission: UserPermission | string, role?: Role, ): 
 const Roles: Record<string, Role> = {
 	USER: Role.createRole("USER", [UserPermission.JOIN_EVENT_USER]),
 	MEMBER: Role.createRole("MEMBER", [UserPermission.JOIN_EVENT_MEMBER], ["USER"]),
+	HONORARY_MEMBER: Role.createRole("HONORARY_MEMBER", [], ["MEMBER"]),
 	COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER, UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT, UserPermission.ADMIN_PANEL, UserPermission.JOIN_EVENT_COMMITTEE], ["MEMBER"]),
-	ADMIN: Role.createRole("ADMIN", [UserPermission.GRANT_ROLE_COMMITTEE], ["COMMITTEE"])
+	ADMIN: Role.createRole("ADMIN", [UserPermission.GRANT_ROLE_COMMITTEE, UserPermission.GRANT_ROLE_HONORARY_MEMBER], ["COMMITTEE"])
 }
 
 
