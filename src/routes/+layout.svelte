@@ -3,11 +3,17 @@
 	import AlertDisplay from "$lib/components/AlertDisplay.svelte";
 	import { page } from '$app/stores';
 	import { UserPermission } from "$lib/userPermissions";
+	import type { User } from "src/types";
 	
 	async function logout() {
 		const res = await fetch('/api/auth/logout', { method: 'POST' });
 		invalidateAll()
 	}
+
+	let user: User
+	let authenticated: Boolean
+	$: user = $page.data.user
+	$: authenticated = $page.data.authenticated
 </script>
 
 <nav>
@@ -31,8 +37,8 @@
 			<li>Soirée membres</li>
 		</ul>
 		
-		{#if $page.data.authenticated && $page.data.user.is_email_validated}
-			{#if $page.data.user.role?.permissions.has(UserPermission.ADMIN_PANEL)}
+		{#if authenticated && user.is_email_validated}
+			{#if user.role?.permissions.has(UserPermission.ADMIN_PANEL)}
 				<p>Panel admin</p>
 				<ul>
 					<li><a href="/admin/membership">Ajouter un membre</a></li>
@@ -40,13 +46,13 @@
 				<br />	
 			{/if}
 		
-			<p>{$page.data.user.name}</p>
+			<p>{user.name}</p>
 			<ul>
-				<li><a href="/users/profile/{$page.data.user.id}">Profile</a></li>
+				<li><a href="/users/profile/{user.id}">Profile</a></li>
 				<li><a href="/users/account/settings">Paramètres</a></li>
 				<li><button on:click={logout}>Se déconnecter</button></li>
 			</ul>
-		{:else if !$page.data.authenticated}
+		{:else if !authenticated}
 			<a href="/auth/login">Se connecter</a>
 		{/if}
 	</ul>
