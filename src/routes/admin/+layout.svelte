@@ -1,0 +1,1 @@
+<slot></slot> <!--layout only useful for redirection-->

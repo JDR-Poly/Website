@@ -2,11 +2,11 @@
 	"name": "jdrpolyweb",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "env-cmd svelte-kit dev",
-		"build": "env-cmd svelte-kit build",
-		"package": "svelte-kit package",
-		"preview": "env-cmd svelte-kit preview",
-		"prepare": "svelte-kit sync",
+		"dev": "env-cmd vite dev",
+		"build": "env-cmd vite dev build",
+		"package": "vite dev package",
+		"preview": "env-cmd vite dev preview",
+		"prepare": "vite dev sync",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check --plugin-search-dir=. . && eslint .",
@@ -38,9 +38,11 @@
 		"cookie": "^0.5.0",
 		"dotenv": "^16.0.1",
 		"env-cmd": "^10.1.0",
+		"jsdoc": "^3.6.11",
 		"node-gyp": "^9.0.0",
 		"nodemailer": "^6.7.7",
 		"pg-promise": "^10.11.1",
-		"uuid": "^8.3.2"
+		"uuid": "^8.3.2",
+		"vite": "^3.1.4"
 	}
 }

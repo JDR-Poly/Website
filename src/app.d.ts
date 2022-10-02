@@ -12,10 +12,6 @@ declare global {
 			authenticated: boolean,
 			user?: User
 		}
-		interface Session {
-			authenticated: boolean,
-			user?: User
-		}
 		// interface Platform {}
 		// interface Stuff {}
 	}
