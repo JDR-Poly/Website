@@ -28,29 +28,4 @@ function hasRolePermission(role: Role, permission: UserPermission | string): boo
 	return role.permissions.has((permission as UserPermission))
 }
 
-/**
- * Check if the user is authicated and has the correct permission and
- * return correct status code if there is a problem or return false
- * @param locals locals of a request 
- * @param permission a permission to check
- * @return a status code if the permission is missing, otherwise false
- */
-function isLocalsMissingPermission(locals: App.Locals, permission: UserPermission): any {
-	if (!locals.authenticated) return {
-		status: 401,
-		body: {
-			message: "User is not authenticated"
-		}
-	}
-	if (!hasRolePermission(locals.user?.role!, permission)) {
-		return {
-			status: 403,
-			body: {
-				message: "User doesn't have the permission to do that"
-			}
-		}
-	}
-	return false
-}
-
-export { getUserRole, hasRolePermission, isLocalsMissingPermission }
+export { getUserRole, hasRolePermission }
