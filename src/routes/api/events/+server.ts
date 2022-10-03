@@ -15,16 +15,18 @@ export async function POST({ request, locals }: RequestEvent) {
 	const gr = body.inscription_group.toUpperCase();
 	if (gr !== "USER" && gr !== "MEMBER" && gr !== "COMMITTEE") throw error(400, "inscription_group is not valid, should be either user, member or committee")
 
-	return db.none(
+	return db.one(
 		`INSERT INTO events
 			(title,author,date,inscription,inscription_group,inscription_start,inscription_stop,description)
 		VALUES
-			($1, $2, $3, $4, $5, $6, $7, $8);
+			($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING id;
 		`,
-		[body.title, locals.user?.id, body.date, body.inscription, gr, body.inscription_start, body.inscription_stop, body.description]
-	)
-		.then(() => {
-			return new Response()
+		[body.title, locals.user?.id, body.date, body.inscription, gr, body.inscription_start, body.inscription_stop, body.description],
+		a => a.id
+		)
+		.then((res) => {
+			return json({id: res})
 		})
 		.catch((err) => {
 			throw error(500, err.message)
