@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { error } from "$lib/stores";
+	import { page } from '$app/stores';
+	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 
 	const eventsPromise = fetch('/api/events')
 		.then((res) => {
@@ -11,6 +13,9 @@
 		})
 </script>
 
+{#if hasRolePermission(UserPermission.CREATE_EVENT, $page.data.user?.role)}
+	<a href="/events/create">Créer un évènement</a>
+{/if}
 {#await eventsPromise}
 	<p>Chargement des événements futurs</p>
 {:then events} 
@@ -20,6 +25,6 @@
 			<p>Date: {event.date}</p>
 			<p>{event.description}</p>
 		</div>
-		
 	{/each}
 {/await}
+

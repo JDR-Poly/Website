@@ -40,6 +40,7 @@
 				<p>Panel admin</p>
 				<ul>
 					<li><a href="/admin/membership">Ajouter un membre</a></li>
+					<li><a href="/events/create">Créer un évènement</a></li>
 				</ul>
 				<br />	
 			{/if}
