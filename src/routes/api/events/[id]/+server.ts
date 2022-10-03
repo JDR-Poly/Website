@@ -25,9 +25,23 @@ export function GET({ params }: RequestEvent) {
 /** @type {import('./$types').RequestHandler} */
 export function DELETE({ params, locals }: RequestEvent) {
 	if (!locals.authenticated) throw error(401)
-	if (!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role)) throw error(403)
 
 	const id = params.id
+	const canDelete = db.one(
+		` SELECT author FROM events
+            WHERE id = $1
+        `,
+		[id],
+		a => a.author
+	).then((author) => {
+		if (!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role) && locals.user?.id?.toString() !== author) return false
+	}).catch((err) => {		
+		throw error(500, err.message)
+	})
+	console.log(canDelete);
+	
+	if(!canDelete) throw error(403)
+	
 	return db.none(
 		` DELETE FROM events
             WHERE id = $1
