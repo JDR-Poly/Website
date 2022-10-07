@@ -5,7 +5,7 @@ type Event = {
 	title: string,
 	author: Id,
 	date: Date,
-	inscritpion: boolean,
+	inscription: boolean,
 	inscription_group: string,
 	inscription_start: Date | undefined,
 	inscription_stop: Date | undefined,
