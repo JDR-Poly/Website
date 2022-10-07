@@ -5,9 +5,11 @@ import type { RequestEvent } from "./$types";
 
 /**  ---Event GET---  */
 
-/** @type {import('./$types').RequestHandler} */
+/** 
+ * @type {import('./$types').RequestHandler} 
+ */
 export function GET({ params }: RequestEvent) {
-	const id = params.id
+	const id = params.event_id
 	return db.one(
 		` SELECT * FROM events
             WHERE id = $1
@@ -26,7 +28,7 @@ export function GET({ params }: RequestEvent) {
 export function DELETE({ params, locals }: RequestEvent) {
 	if (!locals.authenticated) throw error(401)
 
-	const id = params.id
+	const id = params.event_id
 	const canDelete = db.one(
 		` SELECT author FROM events
             WHERE id = $1
@@ -38,7 +40,6 @@ export function DELETE({ params, locals }: RequestEvent) {
 	}).catch((err) => {		
 		throw error(500, err.message)
 	})
-	console.log(canDelete);
 	
 	if(!canDelete) throw error(403)
 	
@@ -48,6 +49,11 @@ export function DELETE({ params, locals }: RequestEvent) {
         `,
 		[id]
 	).then(() => {
+		db.none(
+			` DELETE FROM event_inscription
+				WHERE event_id = $1`
+			,[id]
+		)
 		return new Response
 	}).catch((err) => {
 		throw error(500, err.message)
@@ -61,7 +67,7 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role)) throw error(403)
 
-	const id = params.id
+	const id = params.event_id
 	const body = await request.json()
 
 	const gr = body.inscription_group.toUpperCase();
@@ -79,6 +85,13 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 		[id, body.title, body.date, body.inscription, gr, body.inscription_start, body.inscription_stop, body.description]
 	)
 		.then((res) => {
+			if(!body.inscription) {
+				db.none(
+					` DELETE FROM event_inscription
+						WHERE event_id = $1`
+					,[id]
+				)
+			}
 			return json(res)
 		})
 		.catch((err) => {
