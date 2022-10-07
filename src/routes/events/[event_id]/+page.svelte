@@ -7,14 +7,14 @@
 	import {error as messageError} from "$lib/stores"
 	import type { User } from 'src/types';
 
-	const { id } = $page.params;
+	const { event_id } = $page.params;
 
-	const eventPromise = fetch('/api/events/' + id)
+	const eventPromise = fetch('/api/events/' + event_id)
 		.then((res) => {
 			return res.json();
 		})
 		.then(async (event) => {
-			return fetch('/api/events/' + id + '/subscribe')
+			return fetch('/api/events/' + event_id + '/subscribe')
 				.then((subscribed_fetch) => {
 					return subscribed_fetch.json();
 				})
@@ -55,7 +55,7 @@
 	}
 
 	async function subscribe() {
-		fetch('/api/events/' + id + '/subscribe', {
+		fetch('/api/events/' + event_id + '/subscribe', {
 			method: 'POST'
 		})
 		.then(() => {
@@ -67,7 +67,7 @@
 	}
 
 	async function unsubscribe() {
-		fetch('/api/events/' + id + '/subscribe', {
+		fetch('/api/events/' + event_id + '/subscribe', {
 			method: 'DELETE'
 		})
 		.then(() => {
@@ -110,7 +110,7 @@
 				<p>{user.name}</p>
 				{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
 					<button on:click={() => {
-						fetch('/api/admin/events/' + id + '/subscribe', {
+						fetch('/api/admin/events/' + event_id + '/subscribe', {
 							method: 'DELETE',
 							body: JSON.stringify({
 								user_id: user.id
