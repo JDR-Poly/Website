@@ -9,7 +9,7 @@ export function GET({ params }: RequestEvent) {
 
 	return db.one(
 		` SELECT 
-			id, email, name, role, account_creation, discord_id, avatar_id, bio, member_start, member_stop 
+			id, email, name, role, account_creation, discord_id, bio, member_start, member_stop 
 			FROM users WHERE id = $1`,
 		[id]
 	)

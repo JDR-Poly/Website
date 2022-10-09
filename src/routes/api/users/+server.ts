@@ -7,7 +7,7 @@ import type { RequestEvent } from "./$types";
 export function GET({ }: RequestEvent) {
 	return db.any(
 		` SELECT 
-			id, email, name, role, account_creation, discord_id, avatar_id, bio, member_start, member_stop 
+			id, email, name, role, account_creation, discord_id, bio, member_start, member_stop 
 			FROM users`
 	)
 		.then((res) => {

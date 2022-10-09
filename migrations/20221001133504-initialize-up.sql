@@ -9,7 +9,6 @@ CREATE TABLE public.users(
 	role VARCHAR(255) NOT NULL,
 	account_creation DATE NOT NULL DEFAULT CURRENT_DATE,
 	discord_id VARCHAR(255),
-	avatar_id VARCHAR(50),
 	bio TEXT,
 	member_start DATE,
 	member_stop DATE

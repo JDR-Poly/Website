@@ -14,8 +14,7 @@ import type { RequestEvent } from "./$types";
 		` SELECT
 		users.id id,users.email email, users.name name, users.role role,
 		users.account_creation account_creation, users.discord_id discord_id,
-		users.avatar_id avatar_id, users.bio bio, users.member_start member_start,
-		users.member_stop member_stop
+		users.bio bio, users.member_start member_start, users.member_stop member_stop
 	FROM
 		users 
 	INNER JOIN event_inscription 
