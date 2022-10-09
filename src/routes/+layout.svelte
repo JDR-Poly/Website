@@ -49,6 +49,7 @@
 			<ul>
 				<li><a href="/users/profile/{user.id}">Profile</a></li>
 				<li><a href="/users/account/settings">Paramètres</a></li>
+				<li><a href="/users/account/member-code">Code membre</a></li>
 				<li><button on:click={logout}>Se déconnecter</button></li>
 			</ul>
 		{:else if !authenticated}

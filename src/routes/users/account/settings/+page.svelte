@@ -2,22 +2,6 @@
 	import Avatar from '$lib/components/Avatar.svelte';
 	import { warning, info, error } from '$lib/stores';
 	import { page } from '$app/stores';
-	
-	let memberCode = '';
-
-	async function validateMembershipCode() {
-		const res = await fetch('/api/u/membership/validate', {
-			method: 'POST',
-			body: JSON.stringify({ validation_token: memberCode }),
-			headers: { 'Content-Type': 'application/json' }
-		});
-		const body = await res.json();
-		if (res.ok) {
-			$info = 'Vous avez reçu ' + body.periodsNumber + ' semestre(s) de membre.';
-		} else {
-			$warning = "Ce code n'est pas valide";
-		}
-	}
 
 	let images: undefined | FileList = undefined
 	function getBase64(image: File): Promise<string | ArrayBuffer | null | undefined> {
@@ -48,10 +32,6 @@
 </script>
 
 <h2>Account setting</h2>
-
-<p>Valider un semestre de membre</p>
-<input type="text" placeholder="code" bind:value={memberCode} />
-<button on:click={validateMembershipCode}>Valider</button>
 
 <Avatar id={$page.data.user?.id}></Avatar>
 <form>
