@@ -33,7 +33,7 @@
 
 		<p>Évenements</p>
 		<ul>
-			<li><a href="/events">Calandrier</a></li>
+			<li><a href="/events">Calendrier</a></li>
 		</ul>
 		{#if authenticated && user.is_email_validated}
 			{#if hasRolePermission(UserPermission.ADMIN_PANEL, user?.role)}

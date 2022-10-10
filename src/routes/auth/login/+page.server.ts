@@ -23,8 +23,8 @@ export const actions = {
 			return invalid(400, { email, incorrectFormat: true });
 		
 		return db.one('SELECT id,email,password FROM users WHERE email = $1', [email])
-			.then(data => {
-				if (!compare(password!, data.password)) {
+			.then(async data => {
+				if (!await compare(password!, data.password)) {
 					throw invalid(401, { email, wrongCreditentials: true })
 				}
 
