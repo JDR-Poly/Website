@@ -35,7 +35,7 @@
 		<ul>
 			<li><a href="/events">Calandrier</a></li>
 		</ul>
-		{#if authenticated && user.is_email_validated}
+		{#if authenticated}
 			{#if hasRolePermission(UserPermission.ADMIN_PANEL, user?.role)}
 				<p>Panel admin</p>
 				<ul>
@@ -44,16 +44,21 @@
 				</ul>
 				<br />	
 			{/if}
-		
 			<p>{user.name}</p>
 			<ul>
 				<li><a href="/users/profile/{user.id}">Profile</a></li>
-				<li><a href="/users/account/settings">Paramètres</a></li>
-				<li><a href="/users/account/member-code">Code membre</a></li>
+				{#if user.is_email_validated}
+					<li><a href="/users/account/settings">Paramètres</a></li>
+					<li><a href="/users/account/member-code">Code membre</a></li>
+				{:else}
+					<li><a href="/auth/validate-email">Valider votre email</a></li>
+				{/if}
 				<li><button on:click={logout}>Se déconnecter</button></li>
+
 			</ul>
 		{:else if !authenticated}
 			<a href="/auth/login">Se connecter</a>
+			<a href="/auth/register">Créer un compte</a>
 		{/if}
 	</ul>
 </nav>

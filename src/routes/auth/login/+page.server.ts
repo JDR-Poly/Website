@@ -23,33 +23,48 @@ export const actions = {
 			return invalid(400, { email, incorrectFormat: true });
 		
 		return db.one('SELECT id,email,password FROM users WHERE email = $1', [email])
-			.then(data => {
-				if (!compare(password!, data.password)) {
-					throw invalid(401, { email, wrongCreditentials: true })
+			.then(async (data) => {				
+				const isPasswordCorrect = await compare(password!, data.password)
+				if (!isPasswordCorrect) {					
+					return invalid(401, { email, wrongCreditentials: true })
 				}
 
-				const cookieId = uuid()
-				cookies.set('session', cookieId, {
-					path: '/',
-					httpOnly: true,
-					sameSite: 'strict',
-					secure: true,
-					maxAge: 60 * 60 * 24 * 14
-				});
-				return db.none(`INSERT INTO cookies (email, cookieId) 
-							VALUES($1,$2)
-						ON CONFLICT (email) DO UPDATE SET cookieId=$2`,
-						[email, cookieId])
-					.then(_ => {
-						throw redirect(307, '/users/profile/' + data.id)
-					})
-					.catch(err => {
-						if((err as RequestRedirect)) throw err
-						throw error(500, err);
-					})
+				let errorMessage: string | undefined
+				let attempt = 0
+				//3 attemps to generate a sessionId
+				do {
+					attempt++
+					const cookieId = uuid()
+					errorMessage = undefined
+
+					const expiration_date = new Date(Date.now())
+					expiration_date.setDate(expiration_date.getDate() + 14)
+
+					await db.none(
+						`INSERT INTO sessions (cookieId, user_id, expiration_date) 
+						VALUES($1,$2,$3)`,
+						[cookieId, data.id, expiration_date]
+					)
+						.then(() => {
+							cookies.set('session', cookieId, {
+								path: '/',
+								httpOnly: true,
+								sameSite: 'strict',
+								secure: true,
+								maxAge: 60 * 60 * 24 * 14
+							});		
+							throw redirect(307, '/')
+						})
+						.catch(err => {		
+							if((err as RequestRedirect)) throw err
+							else errorMessage = err.message
+						})
+				} while (attempt < 3);
+				throw error(500, errorMessage) //If failed 5 times, throw the error
 			})
 			.catch(err => {
 				if((err as RequestRedirect)) throw err
+				console.log(err);
 				return invalid(401, { email, wrongCreditentials: true })
 			})
 	}

@@ -36,42 +36,46 @@ export const actions = {
 			(email, name, password, role, is_email_validated) 
 			VALUES
 			($1, $2, $3, $4, FALSE) RETURNING id`,
-			[email, username, await hash(password!, 15), "USER"])
-			.catch((err) => {
-				throw error(500, err.message)
-			})
-		
-		if(!id) throw error(500, "User could not be added")
-		else id = id.id
+			[email, username, await hash(password!, 15), "USER"],
+			a => a.id)
+		.catch((err) => {
+			throw error(500, err.message)
+		})
 
 		sendMailValidationToken(id, email!, url.origin)
 		
-		const cookieId = uuid()
-		cookies.set('session', cookieId, {
-			path: '/',
-			httpOnly: true,
-			sameSite: 'strict',
-			secure: true,
-			maxAge: 60 * 60 * 24 * 14
-		});
-		console.log('1');
-		
-		return db.none(
-			`INSERT INTO cookies (email, cookieId) 
-			VALUES($1,$2)
-			ON CONFLICT (email) DO UPDATE SET cookieId=$2`,
-			[email, cookieId]
-		)
-			.then(() => {				
-				throw redirect(307, '/')
-			})
-			.catch(err => {				
-				if((err as RequestRedirect)) throw err
-				throw error(500, err);
-			})
-		
-	}
+		let errorMessage: string | undefined
+		let attempt = 0
+		let cookieId = ''
+		do {
+			attempt++
+			cookieId = uuid()
+			errorMessage = undefined
 
+			const expiration_date = new Date(Date.now())
+			expiration_date.setDate(expiration_date.getDate() + 14)
+			await db.none(
+				`INSERT INTO sessions (cookieId, user_id, expiration_date) 
+				VALUES($1,$2,$3)`,
+				[cookieId, id, expiration_date]
+			)
+				.then(() => {
+					cookies.set('session', cookieId, {
+						path: '/',
+						httpOnly: true,
+						sameSite: 'strict',
+						secure: true,
+						maxAge: 60 * 60 * 24 * 14
+					});
+					throw redirect(307, '/')
+				})
+				.catch(err => {				
+					if((err as RequestRedirect)) throw err
+					else errorMessage = err.message
+				})
+		} while (attempt < 3);
+		throw error(500, errorMessage)
+	}
 };
 
 

@@ -16,10 +16,17 @@ CREATE TABLE public.users(
 
 ---- COOKIES TABLE -----
 
-CREATE TABLE public.cookies(
-	email VARCHAR(255) PRIMARY KEY NOT NULL,
-	cookieId VARCHAR(255) NOT NULL
+CREATE TABLE public.sessions(
+	cookieId VARCHAR(255) NOT NULL,
+	user_id INT NOT NULL,
+	expiration_date DATE NOT NULL,
+	CONSTRAINT cookieId_pk PRIMARY KEY (cookieId)
 );
+
+ALTER TABLE public.sessions
+    ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON DELETE CASCADE ON UPDATE CASCADE;
 
  ----- EMAIL VALIDATION CODE TABLE -----
 

@@ -6,7 +6,8 @@ export function POST({cookies}: RequestEvent) {
 		path: '/',
 		httpOnly: true,
 		sameSite: 'strict',
-		secure: true}
+		secure: true
+	}
 	)
 	return new Response()
 }
