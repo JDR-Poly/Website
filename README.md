@@ -26,3 +26,9 @@ MAIL_PASSWORD=
 
 5. Run initialize-up migration file in your postgresql database
 6. Run using `npm run dev`
+
+
+## Additionals informations
+
+### Adding smui packages : 
+If you add a smui package, you need to run `npm run prepare` after having added the smui package
