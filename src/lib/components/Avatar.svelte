@@ -1,12 +1,21 @@
 <script lang="ts">
 	export let id: number;
 	
-	let src = "/avatars/" + id + ".png"
+	const tryImageUrl = fetch("/avatars/" + id + ".png")
+		.then((res) => {
+			if(res.ok) return "/avatars/" + id + ".png"
+			else return '/avatars/default.jpg'
+		})
+		.catch((err) => {
+			return '/avatars/default.jpg'
+		})
 </script>
 
-<img id="avatar" src={src} alt="avatar" on:error={(error) => {	
-	src = '/avatars/default.jpg'
-}} />
+{#await tryImageUrl}
+{:then src} 
+<img id="avatar" src={src} alt="avatar"/>
+{/await}
+
 
 <style>
 	img {
