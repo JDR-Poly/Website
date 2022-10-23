@@ -48,3 +48,21 @@ export const handle: Handle = async function ({ event, resolve }) {
 	return resolve(event);
 
 }
+
+export const handleError: HandleServerError =  ({ error, event }) => {
+	const newError = (error as App.Error)
+	if(event.routeId === null) {
+		return {
+			status: 404,
+			message: event.url.href		
+		}
+	} else {
+		console.error(newError);
+		return {
+			status: 500,
+			message: "Internal error"
+		}
+	}
+
+ }
+ 

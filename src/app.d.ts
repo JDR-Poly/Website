@@ -8,11 +8,14 @@ import type { User } from "./types"
 declare global {
 	declare namespace App {
 
+		interface Error {
+			message?: string,
+			status?: number
+		}
+
 		interface Locals {
 			authenticated: boolean,
 			user?: User
 		}
-		// interface Platform {}
-		// interface Stuff {}
 	}
 }
