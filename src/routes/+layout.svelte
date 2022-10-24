@@ -27,7 +27,7 @@
 
 		<p>Informations</p>
 		<ul>
-			<li>Commission</li>
+			<li><a href="/committee">Commission</a></li>
 			<li>Documents officiel</li>
 		</ul>
 
@@ -57,8 +57,10 @@
 
 			</ul>
 		{:else if !authenticated}
-			<a href="/auth/login">Se connecter</a>
-			<a href="/auth/register">Créer un compte</a>
+		<ul>
+			<li><a href="/auth/login">Se connecter</a></li>
+			<li><a href="/auth/register">Créer un compte</a></li>
+		</ul>
 		{/if}
 	</ul>
 </nav>

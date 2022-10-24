@@ -81,3 +81,15 @@ ALTER TABLE public.event_inscription
     ADD CONSTRAINT event_id_fk FOREIGN KEY (event_id)
         REFERENCES public.events (id) MATCH SIMPLE
         ON DELETE CASCADE ON UPDATE CASCADE;
+
+----- COMMITTEE INFO TABLE -----
+CREATE TABLE public.committee_info
+(
+	id					SERIAL NOT NULL,
+    category 			VARCHAR(255) NOT NULL,
+	title				VARCHAR(255) NOT NULL,
+	item_order 			SMALLINT NOT NULL,
+	name				VARCHAR(255) DEFAULT '',
+	description			TEXT,
+	CONSTRAINT id_pk PRIMARY KEY (id)
+);

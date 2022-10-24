@@ -29,6 +29,18 @@ type User = {
 	member_stop?: Date
 }
 
+/**
+ * A data type only useful for the committee page
+ */
+type Committee = {
+	id: Id,
+	category: string,
+	title: string,
+	name?: string,
+	description?: string,
+	item_order?: number, //For the order in which to show it on the committee page
+}
+
 type Id = number
 
-export type { User, Event, Id }
+export type { User, Event, Id, Committee }
