@@ -24,7 +24,6 @@
 
 	async function uploadNewCommittee() {
 		let imgData = null
-		console.log(imgBase64);
 		if(imgBase64 as string) {
 			imgData = (imgBase64 as string).split(',')[1]
 			console.log(imgData);
