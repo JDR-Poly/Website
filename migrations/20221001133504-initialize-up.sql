@@ -93,3 +93,13 @@ CREATE TABLE public.committee_info
 	description			TEXT,
 	CONSTRAINT id_pk PRIMARY KEY (id)
 );
+
+----- BOOKS TABLE -----
+CREATE TABLE public.books
+(
+	id					SERIAL PRIMARY KEY,
+	title				VARCHAR(255) NOT NULL,
+	item_order 			SMALLINT NOT NULL,
+	caution				TEXT,
+	status				VARCHAR(255)		
+);

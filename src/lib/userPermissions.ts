@@ -12,7 +12,8 @@ enum UserPermission {
 	ADMIN_PANEL,
 	SUBSCRIBE_USER_TO_EVENT,
 	REMOVE_USER_FROM_EVENT,
-	MODIFY_COMMITTEE_PAGE
+	MODIFY_COMMITTEE_PAGE,
+	MODIFY_BOOKS
 }
 
 /**
@@ -83,7 +84,7 @@ const Roles: Record<string, Role> = {
 	HONORARY_MEMBER: Role.createRole("HONORARY_MEMBER", [], ["MEMBER"]),
 	COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER, 
 		UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT, UserPermission.ADMIN_PANEL, UserPermission.JOIN_EVENT_COMMITTEE, 
-		UserPermission.SUBSCRIBE_USER_TO_EVENT, UserPermission.REMOVE_USER_FROM_EVENT], ["MEMBER"]),
+		UserPermission.SUBSCRIBE_USER_TO_EVENT, UserPermission.REMOVE_USER_FROM_EVENT, UserPermission.MODIFY_BOOKS], ["MEMBER"]),
 	ADMIN: Role.createRole("ADMIN", [UserPermission.GRANT_ROLE_COMMITTEE, UserPermission.GRANT_ROLE_HONORARY_MEMBER, UserPermission.MODIFY_COMMITTEE_PAGE], ["COMMITTEE"])
 }
 

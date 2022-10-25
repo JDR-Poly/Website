@@ -30,6 +30,7 @@
 			<li><a href="/committee">Commission</a></li>
 			<li>Documents officiel</li>
 		</ul>
+		<p><a href="/books">Bibliothèque</a></p>
 
 		<p>Évenements</p>
 		<ul>
@@ -66,6 +67,5 @@
 </nav>
 
 <slot />
-
 
 <AlertDisplay/>
