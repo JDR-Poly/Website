@@ -47,13 +47,13 @@
 	warning.subscribe(text => {
 		if(!text) return
 		createAlert(text, "warning")
-		$error = undefined
+		$warning = undefined
 	})
 
 	info.subscribe(text => {
 		if(!text) return
 		createAlert(text, "info")
-		$error = undefined
+		$info = undefined
 	})
 </script>
 	<div class="container">
