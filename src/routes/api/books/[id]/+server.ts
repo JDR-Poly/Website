@@ -18,7 +18,8 @@ export function DELETE({ params, locals }: RequestEvent) {
 		`DELETE FROM books WHERE id = $1`,
 		[book_id]
 	)
-		.then(() => {
+		.then(async () => {
+			await resortItemOrder()
 			return new Response()
 		})
 		.catch((err) => {
@@ -52,4 +53,32 @@ export async function PATCH({ locals, request, params }: RequestEvent) {
 		.catch(err => {
 			throw error(500, err.message)
 		});
+}
+
+/*
+	Change the database so that all the books are in the correct item_order 
+*/
+async function resortItemOrder() {
+	await db.any('SELECT id, item_order FROM books')
+		.then(async (res) => {
+			res = res.sort((a: any, b: any) => (a.item_order >= b.item_order ? 1 : -1))
+			let i = 0
+			let newOrder: [number, number][] = []
+			for(let value of res) {
+				newOrder.push([value.id,i])
+				i++
+			}
+
+			await db.tx(t => { //Perform a list of SQL request
+				let queries: Promise<null>[] = []
+				for (let value of newOrder) {
+					queries.push(t.none(`UPDATE books SET
+						item_order = $2
+						WHERE id = $1`
+						, value))
+				}
+				return t.batch(queries); //Execute all the queries
+			})
+		})
+		.catch((err) => {throw error(500, err.message)})
 }
