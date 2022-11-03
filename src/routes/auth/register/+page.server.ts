@@ -26,8 +26,8 @@ export const actions = {
 		if (!validateEmail(email) || !validateUsername(username) || !validatePassword(password))
 			return invalid(406, { email, username, incorrectFormat: true });
 		
-		const conflictUser = await db.any("SELECT email FROM users WHERE email=$1", [email])
-		if(!conflictUser) {
+		const conflictUser = await db.any("SELECT email FROM users WHERE email=$1 OR name=$2", [email, username])		
+		if(conflictUser.length > 0) {
 			throw error(409)
 		}
 		
