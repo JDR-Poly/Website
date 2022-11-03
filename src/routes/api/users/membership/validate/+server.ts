@@ -3,7 +3,11 @@ import { db } from "$lib/server/postgresClient";
 import { error } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 
-/** @type {import('./$types').RequestHandler} */
+/** 
+ * Validate a membership code
+ * @param {string} request.validation_token the membership code
+ * @type {import('./$types').RequestHandler}  
+*/
 export async function POST({ request, locals }: RequestEvent) {
 	if (!locals.authenticated) throw(401)
 	const body = await request.json()

@@ -50,7 +50,7 @@
 				<li><a href="/users/profile/{user.id}">Profile</a></li>
 				{#if user.is_email_validated}
 					<li><a href="/users/account/settings">Paramètres</a></li>
-					<li><a href="/users/account/member-code">Code membre</a></li>
+					<li><a href="/users/account/membership">Code membre</a></li>
 				{:else}
 					<li><a href="/auth/validate-email">Valider votre email</a></li>
 				{/if}
