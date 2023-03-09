@@ -51,7 +51,7 @@ export const handle: Handle = async function ({ event, resolve }) {
 
 export const handleError: HandleServerError =  ({ error, event }) => {
 	const newError = (error as App.Error)
-	if(event.routeId === null) {
+	if(event.route.id === null) {
 		return {
 			status: 404,
 			message: event.url.href		
