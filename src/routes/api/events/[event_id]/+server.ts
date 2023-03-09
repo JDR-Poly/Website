@@ -78,11 +78,11 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 			title=$2, date=$3,
 			inscription=$4,inscription_group=$5,
 			inscription_start=$6, inscription_stop=$7,
-			description=$8
+			description=$8,category=$9
 		WHERE id=$1
 		RETURNING *;
 		`,
-		[id, body.title, body.date, body.inscription, gr, body.inscription_start, body.inscription_stop, body.description]
+		[id, body.title, body.date, body.inscription, gr, body.inscription_start, body.inscription_stop, body.description, body.category]
 	)
 		.then((res) => {
 			if(!body.inscription) {

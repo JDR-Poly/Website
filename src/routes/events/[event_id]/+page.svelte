@@ -1,32 +1,17 @@
 <script lang="ts">
-	import { error } from '$lib/stores';
+	import { error, warning } from '$lib/stores';
 	import { page } from '$app/stores';
-	import { redirect } from '@sveltejs/kit';
 	import { hasRolePermission, Role, Roles, UserPermission } from '$lib/userPermissions';
 	import { goto } from '$app/navigation';
 	import {error as messageError} from "$lib/stores"
-	import type { User } from 'src/types';
+	import IconButton from '@smui/icon-button';
+	import Button, { Label, Icon } from '@smui/button';
+	import Textfield from '@smui/textfield';
+	import type { User } from '$gtypes';
+
+	export let data: any;
 
 	const { event_id } = $page.params;
-
-	const eventPromise = fetch('/api/events/' + event_id)
-		.then((res) => {
-			return res.json();
-		})
-		.then(async (event) => {
-			return fetch('/api/events/' + event_id + '/subscribe')
-				.then((subscribed_fetch) => {
-					return subscribed_fetch.json();
-				})
-				.then((subscribed) => {
-					event.subscribed = subscribed;
-					return event;
-				});
-		})
-		.catch((err) => {
-			$error = err.message;
-			throw redirect(403, '/not-found');
-		});
 
 	function translateRole(role?: Role) {
 		if (!role?.name) return 'ERROR';
@@ -81,54 +66,219 @@
 	function eventHasUser(subscribed: User[]): Boolean {
 		return subscribed.map(v => v.id).includes($page.data.user?.id)
 	}
+
+	let addedUser = ''
 </script>
 
-{#await eventPromise}
-	<p>Chargement de l'événement</p>
-{:then event}
-	<h3>{event.title}</h3>
-	<p>Date: {event.date}</p>
-	<p>{event.description}</p>
+<main>
+	<div id="img"/>
+	
+	<div id="wrapper">
+		<img src="/data/images/events/{data.event.id}.png" alt="Événement">
+		<h2>{data.event.title}</h2>
+		<h5>{new Intl.DateTimeFormat('fr-Fr', {
+			dateStyle: 'medium',
+			timeStyle: 'short',
+			timeZone: 'Europe/Paris'
+		}).format(data.event.date)}</h5>
 
-	{#if event.inscription}
-		{#if $page.data.authenticated && hasRolePermission('JOIN_EVENT_' + event.inscription_group.toUpperCase(), $page.data?.user?.role)}
-			{#if eventHasUser(event.subscribed)}
-				<button on:click={() => unsubscribe()}>Se désinscrire</button>
-			{:else}
-				<button on:click={() => subscribe()}>S'inscrire</button>
-			{/if}
-		{:else}
-			<p color="red">
-				Vous devez être {translateRole(Roles[event.inscription_group])} pour pouvoir vous inscrire à
-				cette événement
-			</p>
-		{/if}
+		<div id="split">
+			<p id="description">{data.event.description.replace("\n", "\n\n")}</p>
+			<div id="inscription">
+				{#if data.event.inscription}
+					{#if $page.data.authenticated && hasRolePermission('JOIN_EVENT_' + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)}
+						{#if eventHasUser(data.event.subscribed)}
+							<Button on:click={() => unsubscribe()} variant="raised">
+								<Icon class="material-icons">person_remove</Icon>
+								<Label>Se désinscrire</Label>
+							</Button>
+						{:else}
+							<Button on:click={() => subscribe()} variant="raised">
+								<Icon class="material-icons">person_add</Icon>
+								<Label>M'inscrire</Label>
+							</Button>
+						{/if}
+					{:else}
+						<p color="red">
+							Vous devez être {translateRole(Roles[data.event.inscription_group])} pour pouvoir vous inscrire à cette événement
+						</p>
+					{/if}
+			
+					<h5>Joueurs participants :</h5>
+					<p>Il y a actuellement {data.event.subscribed.length} joueurs inscrits</p>
+					{#each data.event.subscribed as user}
+						<div class="positioner">
+							<a href="/users/{user.id}">{user.name}</a>
+							{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
+								<IconButton class="material-icons" on:click={() => {
+									fetch('/api/admin/events/' + event_id + '/subscribe', {
+										method: 'DELETE',
+										body: JSON.stringify({
+											user_id: user.id
+										})
+									}).then(() => {
+										location.reload()
+									}).catch((err) => {
+										$messageError = err.message
+									})	
+								}}>close</IconButton>
+							{/if}
+						</div>
+					{/each}
+					{#if hasRolePermission(UserPermission.SUBSCRIBE_USER_TO_EVENT, $page.data.user?.role)}
+						<div id="addUser">
+							<Textfield type="number" bind:value={addedUser} label="Id d'utilisateur" style="width: 50%"/>
+							<IconButton class="material-icons" on:click={() => {
+								fetch('/api/admin/events/' + event_id + '/subscribe', {
+									method: 'POST',
+									body: JSON.stringify({
+										user_id: parseInt(addedUser)
+									})
+								}).then(async (res) => {
+									if(!res.ok) {
+										const body = await res.json()
+										$warning = body.message.includes("duplicate key value violates") ? "Cette utilisateur est déjà dans la liste" : body.message
 
-		<h5>Inscrits :</h5>
-		{#each event.subscribed as user}
-			<div>
-				<p>{user.name}</p>
-				{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
-					<button on:click={() => {
-						fetch('/api/admin/events/' + event_id + '/subscribe', {
-							method: 'DELETE',
-							body: JSON.stringify({
-								user_id: user.id
-							})
-						}).then(() => {
-							location.reload()
-						}).catch((err) => {
-							$messageError = err.message
-						})
-					}}>X</button>
+									} else {
+										location.reload()
+									}
+								}).catch((err) => {
+									$error = err.message
+								})	
+							}}>done</IconButton>
+						</div>
+					{/if}
+				{:else}
+					<p color="green">Il n'y a pas besoin de s'inscrire pour cette événements</p>
 				{/if}
 			</div>
-		{/each}
-	{:else}
-		<p color="green">Il n'y a pas besoin de s'inscrire pour cette événements</p>
-	{/if}
+		</div>
+		{#if hasRolePermission(UserPermission.MODIFY_EVENT) || data.event.author === $page.data.user?.id}
+			<div class="delete-btn">
+				<IconButton class="material-icons" on:click={() => deleteEvent(data.event.id)}>close</IconButton>
+			</div>
+		{/if}
 
-	{#if hasRolePermission(UserPermission.MODIFY_EVENT) || event.author === $page.data.user?.id}
-		<button color="red" on:click={() => deleteEvent(event.id)}>Supprimer</button>
-	{/if}
-{/await}
+	</div>
+</main>
+
+<style lang="scss">
+	main {
+		min-height: 90vh;
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		padding: 45px 15px;
+
+		#img {
+			filter: blur(3px);
+			background: url('/images/events/banner.png') center/cover;
+			aspect-ratio: 16/9;
+			position: absolute;
+			height: 100%;
+			width: 100%;
+		}
+	}
+
+
+	#wrapper {
+		width: 1100px;
+		background: #fff;
+		border-radius: 10px;
+		overflow: hidden;
+		padding: 40px 55px 90px;
+		z-index: 2;
+		position: relative;
+
+
+		h2 {
+			font-size: 1.65em;
+			font-weight: 400;
+			letter-spacing: 4px;
+			margin: 0 0 0.5em 0;
+			line-height: 1.75em;
+		}
+		
+		h5 {
+			font-weight: 400;
+			letter-spacing: 2px;
+		}
+
+		img {
+			max-height: 45vh;
+			margin: 2em auto;
+			display: block;
+			object-fit: cover;
+			width: 100%;
+		}
+
+		#split {
+			display: flex;
+			color: gray;
+			#description {
+				display: block;
+				width: 60%;
+				font-family: 'Ubuntu';
+				font-size: 20px;
+				letter-spacing: 1px;
+				line-height: 1.25em;
+				text-align: justify;
+			}
+			#inscription {
+				width: 40%;
+				text-align: center;
+				:global(.mdc-button) {
+					width: 60%;
+				}
+				h5 {
+					font-size: 1.25em;
+					font-weight: 400;
+					letter-spacing: 3px;
+					margin: 1em 0 0.75em 0;
+					line-height: 1.75em;
+				}
+				p {
+					text-align: center;
+					width: 100%;
+					margin-bottom: 10px;
+				}
+
+				a {
+					font-size: 20px;
+					color: #666;
+					text-decoration: none;
+					border-bottom: solid 1px #ddd;
+				}
+				.positioner {
+					position: relative;
+					margin: 10px 0;
+
+					:global(.mdc-icon-button) {
+						position: absolute;
+						right: 10%;
+						transform: translateY(-25%);
+					}
+				}
+				#addUser {
+					position: relative;
+					margin: 2em 0 0 20%;
+					:global(.mdc-text-field) {
+						float: left;
+
+					}
+
+				}
+				
+			}
+		}
+
+		.delete-btn {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+		}
+	}
+</style>

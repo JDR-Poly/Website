@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS public.events(
 	id SERIAL NOT NULL,
 	title VARCHAR(255) NOT NULL,
 	author INT NOT NULL,
+	category VARCHAR(255) NOT NULL,
 	date DATE NOT NULL,
 	inscription BOOLEAN NOT NULL DEFAULT true,
 	inscription_group VARCHAR(255) NOT NULL DEFAULT 'USER',

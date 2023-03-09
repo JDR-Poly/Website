@@ -4,12 +4,13 @@ type Event = {
 	id: Id
 	title: string,
 	author: Id,
+	category: string,
 	date: Date,
 	inscription: boolean,
 	inscription_group: string,
 	inscription_start: Date | undefined,
 	inscription_stop: Date | undefined,
-	description_text: string | undefined
+	description: string | undefined
 }
 
 /**

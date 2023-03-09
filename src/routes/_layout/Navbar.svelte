@@ -81,7 +81,7 @@
 		<p>Bibliothèque</p>
 	</a>
 
-	<a href="/" class="nav-link nav-button">
+	<a href="/events" class="nav-link nav-button">
 		<span class="material-symbols-outlined link-icon">event</span>
 		<p>Évenements</p>
 	</a>

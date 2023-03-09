@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
+
+	export let data: any;
 </script>
 
 <main>
@@ -30,39 +32,21 @@
 		</header>
 		<div id="events">
 			<div id="title">Événements</div>
-			<div class="event">
-				<div class="img"> 
-					<img src="/data/images/events/1.jpg" alt="Evénement"/>
+			{#each data.events as event}
+				<div class="event">
+					<div class="img"> 
+						<img src={`/data/images/events/${event.id}.png`} alt="Evénement"/>
+					</div>
+					<h3>{event.title}</h3>
+					<h5>{new Intl.DateTimeFormat('fr-Fr', {
+						dateStyle: 'medium',
+						timeStyle: 'short',
+						timeZone: 'Europe/Paris'
+					}).format(new Date(event.date))}</h5>
+					<p>{event.description}</p>
+					<a class="button" href={`/events/${event.id}`}>Découvrir</a>
 				</div>
-				<h3>Soirée Loup-Garou Ambiancé</h3>
-				<h5>16 novembre 2022 19:00</h5>
-				<p>Le village de Thiercelieu est en danger !
-					Moultes lycanthropes affamés rôdent et cherchent leur prochaine victime.
-					
-					Rejoignez nous pour une soirée ou l'ambiance sera de mise et ou nul ne sait qui sera la prochaine victime, que ce soit celle du village ou celle des lycanthropes !</p>
-				<a class="button">Découvrir</a>
-			</div>
-			<div class="event">
-				<div class="img"> 
-					<img src="/data/images/events/2.jpg" alt="Evénement"/>
-				</div>
-				<h3>Nocturne, Soirée Initiation</h3>
-				<h5>23 novembre 2022 19h10</h5>
-				<p>Nocturne / soirée d'initiation, entrée libre et gratuite à tous (les débutants comme les vétérants).
-					Du JDR simple et bon enfant !</p>
-				<a class="button">Découvrir</a>
-
-			</div>
-			<div class="event">
-				<div class="img"> 
-					<img src="/data/images/events/3.jpg" alt="Evénement"/>
-				</div> 
-				<h3>Soirée Jeux de Société</h3>
-				<h5>30 novembre 2022 19:00</h5>
-				<p>Le premier semestre est bientôt terminé, vous méritez bien de vous détendre un coup.
-					Venez passer une soirée tranquille à jouer à des jeux de société en bonne compagnie.</p>
-				<a class="button">Découvrir</a>
-				</div>
+			{/each}
 		</div>
 	</div>
 
@@ -233,12 +217,18 @@
 				height: 28vh;
 				overflow: hidden;
 				border-radius: 8px;
+				position: relative;
 			}
 			img {
 				max-height: 28vh;
 				border-radius: 8px;
 				margin: auto;
 				display: block;
+				position: absolute;
+				top: -9999px;
+				bottom: -9999px;
+				left: -9999px;
+				right: -9999px;
 			}
 
 			h3 {

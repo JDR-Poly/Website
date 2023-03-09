@@ -1,17 +1,31 @@
 <script lang="ts">
 	import { UserPermission } from "$lib/userPermissions";
-	import {error, info} from "$lib/stores"
+	import {error, info, warning} from "$lib/stores"
+	import Icon from '@smui/select/icon';
+	import Select, { Option } from '@smui/select';
+	import Textfield from '@smui/textfield';
 	import { goto } from "$app/navigation";
+	import Checkbox from '@smui/checkbox';
+  	import FormField from '@smui/form-field';
+	import IconButton from '@smui/icon-button';
 
+	let categories = ['GN & Murder', 'Nocturne, soirée d\'initation', 'Soirée membre', 'Événement divers', 'Événement externe', 'Weekend jeu de rôle']
+	
 	let title = ''
 	let description = ''
-	let date = new Date(Date.now())
+	let date: string | number = ''
+	let category = categories[0]
 	let inscription = false
 	let inscription_group = 'MEMBER'
-	let inscription_start: Date | undefined = undefined
-	let inscription_stop: Date | undefined = undefined
+	let inscription_start: string | number = -1
+	let inscription_stop: string | number = -1
 	
+	let images: null | FileList = null;
+	let image: File
+
 	let isInscriptionStop = false //Not an actual stored value in the database
+	let submitDisabled = true
+
 
 	function returnJoinEventRoles(): string[] {
 		let res = []
@@ -23,23 +37,22 @@
 		return res
 	}
 
-	async function submit() {
-		const data = {
-			title,
-			description,
-			date,
-			inscription,
-			inscription_group,
-			inscription_start,
-			inscription_stop
-		}
+	async function submit() {	
+		const formData = new FormData();
+		formData.append("title", title)
+		formData.append("category", category)
+		formData.append("description", description)
+		formData.append("date", new Date(date).toUTCString())
+		formData.append("image", image)
+		formData.append("inscription", inscription.toString())
+		formData.append("inscription_group", inscription_group)
+		if(inscription_start != null) formData.append("inscription_start", new Date(inscription_start).toUTCString())
+		if(inscription_stop != null) formData.append("inscription_stop", new Date(inscription_stop).toUTCString())
 		
-
 		const res = await fetch('/api/events/', {
 			method: 'POST',
-			body: JSON.stringify(data),
-			headers: { 'Content-Type': 'application/json' }
-		});
+			body: formData
+		});	
 		const body = await res.json();
 		if (res.ok) {
 			goto('/events/' + body.id)
@@ -51,59 +64,144 @@
 
 </script>
 
-<form method="POST">
-	<input id="title" name="title" type="text" bind:value={title} placeholder="Titre"/>
-	<br>
-	<input id="description" name="description" type="text"  bind:value={description} placeholder="description"/>
-	<br>
-	<label for="date"> Date</label>
-	<input id="date" name="date" type="date"  bind:value={date}/>
-	<br>
-	<input id="inscription" name="inscription" type="checkbox"  bind:checked={inscription} on:change={() => {		
-		if(!inscription) {
-			inscription_group = 'MEMBER'
-			inscription_start = undefined
-			inscription_stop = undefined
-			isInscriptionStop = false
+<main>
+	<div id="img"></div>
+	<div id="wrapper">
+		<form on:change={() => {
+			submitDisabled = (() => {
+				if(!title || !category || !date) return true
+
+				if(inscription && (!inscription_group || !inscription_start)) return true
+				if(isInscriptionStop && (!inscription_stop)) return true
+				return false
+			})()
+		}}>
+			<Select bind:value={category} label="Catégorie" class="small-field" required>
+				<Icon class="material-icons" slot="leadingIcon">event</Icon>
+				{#each categories as category}
+					<Option value={category}>{category}</Option>
+				{/each}
+			</Select>
+			<Textfield type="text" name="title" bind:value={title} label="Titre" style="width: 100%" required/>
+			<Textfield type="text" bind:value={description} label="Description" style="width: 100%" textarea/>
+			
+			<Textfield bind:value={date} type="datetime-local" label="Date" class="small-field" required input$min={new Date(Date.now()).toISOString().slice(0, -8)}></Textfield>
+			
+			<div class="hide-file-ui">
+				<Textfield bind:files={images} label="Image" type="file" on:change={async () => {				
+					if (images && images[0]) {
+						if (images[0].size > 4e+6) {
+							$warning = 'Image max 4MB';
+							images = null;
+						} else {
+							image = images[0]
+						}
+					}
+				}}/>
+				<IconButton
+					class="material-icons"
+					on:click={() => {
+						images = null;
+					}}>delete</IconButton>
+			</div>
+
+			<FormField>
+				<Checkbox bind:checked={inscription} touch on:change={() => {		
+					if(!inscription) {
+						inscription_group = 'MEMBER'
+						inscription_start = -1
+						inscription_stop = -1
+						isInscriptionStop = false
+					} else {
+						inscription_start = Date.now()
+					}
+				}}/>
+				<span slot="label">Inscription </span>
+			</FormField>
+		
+			{#if inscription}
+				<Select bind:value={inscription_group} label="Rôle d'inscription" class="small-field" required>
+					{#each returnJoinEventRoles() as role}
+						<Option value={role}>{role}</Option>
+					{/each}
+				</Select>
+
+				<Textfield bind:value={inscription_start} type="datetime-local" label="Début d'inscription" class="small-field" required></Textfield>
+		
+				<FormField>
+					<Checkbox bind:checked={isInscriptionStop} touch on:change={() => {		
+						if(!isInscriptionStop) {
+							inscription_stop = -1
+						} else {
+							inscription_stop = Date.now()
+						}
+					}}/>
+					<span slot="label">Fin d'inscription </span>
+				</FormField>
+		
+				{#if isInscriptionStop}
+					<Textfield bind:value={inscription_stop} type="datetime-local" label="Fin d'inscription" class="small-field" required input$min={new Date(Date.now()).toISOString().slice(0, -1)}></Textfield>
+				{/if}
+			{/if}
+		
+			<button disabled={submitDisabled} on:click={submit}>Créer l'événement</button>		
+		</form>
+	</div>
+	
+</main>
+
+
+<style lang="scss">
+	main {
+		min-height: 90vh;
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		padding: 15px;
+
+		#img {
+			filter: blur(3px);
+			background: url('/images/events/banner.png') center/cover;
+			position: absolute;
+			height: 100%;
+			width: 100%;
 		}
-	}}/>
-	<label for="inscription"> Inscription?</label><br>
+	}
 
-	{#if inscription}
-		<label for="inscription_group">Rôle pour s'inscrire :</label>
-		<select id="inscription_group" name="inscription_group" bind:value={inscription_group}>
-			{#each returnJoinEventRoles() as role}
-				<option value={role}>{role}</option>
-			{/each}
-		</select>
-		<br>
 
-		<label for="inscription_start">Début d'inscription</label>
-		<input id="inscription_start" name="inscription_start" type="date"  bind:value={inscription_start}/>
-		<br>
+	#wrapper {
+		width: 700px;
+		background: #fff;
+		border-radius: 10px;
+		overflow: hidden;
+		padding: 72px 55px 90px;
+		z-index: 2;
 
-		<input id="isInscriptionStop" name="isInscriptionStop" type="checkbox"  bind:checked={isInscriptionStop} on:change={() => {
-			if(!isInscriptionStop) {
-				inscription_stop = undefined
+		form > {
+
+			:global(*:not(.mdc-form-field)) {
+				margin: 10px 5px;
+				width: 100%;
 			}
-		}}/>
-		<label for="isInscriptionStop"> Date de fin d'inscription?</label>
-		<br>
 
-		{#if isInscriptionStop}
-			<label for="inscription_stop">Fin d'inscription</label>
-			<input id="inscription_stop" name="inscription_stop" type="date"  bind:value={inscription_stop}/>
-			<br>
-		{/if}
-	{/if}
+			:global(.small-field) {
+				width: 50%;
+			}
 
-	<button on:click|preventDefault={submit} disabled={!Boolean(title && date)}>Créer l'évènement</button>
+			:global(.mdc-form-field) {
+				display: flex;
+			}
+		}
+	}
 
+	.hide-file-ui :global(input[type='file']::file-selector-button) {
+		display: none;
+	}
 
-</form>
-
-<style>
-	input {
-		margin: 10px;
+	.hide-file-ui :global(:not(.mdc-text-field--label-floating) input[type='file']) {
+		color: transparent;
 	}
 </style>
