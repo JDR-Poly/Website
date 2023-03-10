@@ -1,7 +1,10 @@
 <script lang="ts">
-	import type { User } from 'src/types';
+	import type { User } from '$gtypes';
 	import {error} from "$lib/stores"
 	import { page } from '$app/stores';
+	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
+	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table'
+  	import LinearProgress from '@smui/linear-progress';
 
 	//Search completion variables
 	let searchCompletion: User[] = [];
@@ -66,67 +69,120 @@
 			return undefined;
 		}
 	}
+
+	let canSeeEmail = $page.data.authenticated && hasRolePermission(UserPermission.SEE_MAIL, $page.data.user.role)
+	let loaded = false
 </script>
 
-<h2>Users</h2>
+<main>
+	<h2>Utilisateurs</h2>
 
-<form
-	on:submit|preventDefault={async () => {
-		index = 0;
-		users = await search(20, index);
-	}}
-	autocomplete="off">
-	<div
-		class="searchBar"
-		on:focusout={(event) => {
-			setTimeout(() => {
-				selectedIndex = -1;
-				searchCompletion = [];
-			}, 100);
+	<form
+		on:submit|preventDefault={async () => {
+			index = 0;
+			loaded = false
+			users = await search(20, index);
+			loaded = true
 		}}
-	>
-		<input
-			type="text"
-			placeholder="Chercher un utilisateur"
-			bind:value={searchText}
-			on:input={inputChange}
-			on:keydown={onKeypressInput}
-		/>
-		<div class="searchBar-items">
-			{#each searchCompletion as result, i}
-				<a href="/users/profile/{result.id}"
-					><div class={i == selectedIndex ? 'searchBar-active' : ''}>
-						<strong>{result.name}</strong>
-					</div></a
-				>
-			{/each}
+		autocomplete="off">
+		<div
+			class="searchBar"
+			on:focusout={(event) => {
+				setTimeout(() => {
+					selectedIndex = -1;
+					searchCompletion = [];
+				}, 100);
+			}}
+		>
+			<input
+				type="text"
+				placeholder="Chercher un utilisateur"
+				bind:value={searchText}
+				on:input={inputChange}
+				on:keydown={onKeypressInput}
+			/>
+			<div class="searchBar-items">
+				{#each searchCompletion as result, i}
+					<a href="/users/profile/{result.id}"
+						><div class={i == selectedIndex ? 'searchBar-active' : ''}>
+							<strong>{result.name}</strong>
+						</div></a
+					>
+				{/each}
+			</div>
 		</div>
+		<button>Chercher</button>
+	</form>
+
+	<div id="datatable">
+		{#if users}
+			<DataTable table$aria-label="User list" style="width: 100%;">
+				<Head>
+					<Row>
+						<Cell numeric>ID</Cell>
+						<Cell style="width: 100%;">Nom</Cell>
+						{#if canSeeEmail}
+							<Cell>Email</Cell>
+						{/if}
+					</Row>
+				</Head>
+				<Body>
+					{#each users as user (user.id)}
+						<Row>
+							<Cell numeric>{user.id}</Cell>
+							<Cell><a href="/users/profile/{user.id}">{user.name}</a></Cell>
+							{#if canSeeEmail}
+									<Cell>{user.email}</Cell>
+							{/if}
+						</Row>
+					{/each}
+				</Body>
+			
+				<LinearProgress
+					indeterminate
+					bind:closed={loaded}
+					aria-label="Data is being loaded..."
+					slot="progress"
+				/>
+			</DataTable>
+		{/if}
 	</div>
-	<button>Chercher</button>
-</form>
+</main>
 
-{#if users}
-	{#each users as user}
-		<div class="user">
-			<p><a href="/users/profile/{user.id}"><strong>{user.name}</strong></a> {user.email}</p>
-		</div>
-	{/each}
-{/if}
 
-<style>
+
+
+<style lang="scss">
 	* {
 		box-sizing: border-box;
 	}
 
-	div.user {
-		margin: 10px;
-		background-color: lightgray;
-	}
+	main {
+		margin: 4em auto;
+		width: fit-content;
+		min-height: 70vh;
 
-	.searchBar {
-		position: relative;
-		display: inline-block;
-		width: 500px;
+		h2 {
+			font-family: 'Ubuntu';
+			margin-bottom: 0.5em;
+			width: fit-content;
+		}
+
+		.searchBar {
+			position: relative;
+			display: inline-block;
+			width: 40vw;
+		}
+
+		button {
+			padding: 6px;
+			border-radius: 2px;
+			cursor: pointer;
+		}
+
+		#datatable {
+			margin: 1em;
+		}
 	}
 
 	input {

@@ -1,15 +1,16 @@
 import { db } from "$lib/server/postgresClient";
 import type { RequestEvent } from "./$types";
 import { error, json } from '@sveltejs/kit';
-import { Roles } from "$lib/userPermissions";
+import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions";
 
 /** @type {import('./$types').RequestHandler} */
-export function GET({ params }: RequestEvent) {
+export function GET({ params, locals }: RequestEvent) {
 	const id = params.id
+	const mailSQLText = locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role) ? "email, " : "" 
 
 	return db.one(
 		` SELECT 
-			id, email, name, role, account_creation, discord_id, bio, member_start, member_stop 
+			id, ${mailSQLText}name, role, account_creation, discord_id, bio, member_start, member_stop 
 			FROM users WHERE id = $1`,
 		[id]
 	)

@@ -1,13 +1,14 @@
 import { error, json } from "@sveltejs/kit";
 import { db } from "$lib/server/postgresClient"
-import { Roles } from "$lib/userPermissions";
+import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions";
 import type { RequestEvent } from "./$types";
 
 /** @type {import('./$types').RequestHandler} */
-export function GET({ }: RequestEvent) {
+export function GET({ locals }: RequestEvent) {
+	const mailSQLText = locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role) ? "email, " : "" 
 	return db.any(
 		` SELECT 
-			id, email, name, role, account_creation, discord_id, bio, member_start, member_stop 
+			id, ${mailSQLText}name, role, account_creation, discord_id, bio, member_start, member_stop 
 			FROM users`
 	)
 		.then((res) => {
