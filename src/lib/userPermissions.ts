@@ -68,12 +68,17 @@ class Role {
 }
 
 
-function hasRolePermission(permission: UserPermission | string, role?: Role, ): boolean {
+function hasRolePermission(permission: UserPermission | string, role?: Role): boolean {
 	if(!role) return false
+	const permissions = Roles[role.name].permissions
+	console.log(role.name);
+	
+	console.log(permissions);
+	
 	if (typeof permission === "string") {
 		permission = (UserPermission as any)[permission]
 	}
-	return role.permissions.has((permission as UserPermission))
+	return permissions.has((permission as UserPermission))
 }
 
 /**
