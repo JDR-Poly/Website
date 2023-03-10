@@ -2,7 +2,7 @@
 	import IconButton from '@smui/icon-button';
 	import Dropdown from './Dropdown.svelte';
 	import { page } from '$app/stores';
-	import type { User } from 'src/types';
+	import type { User } from '$gtypes';
 	import { invalidateAll } from '$app/navigation';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 

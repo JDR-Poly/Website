@@ -1,4 +1,4 @@
-import { error, json, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch }) {

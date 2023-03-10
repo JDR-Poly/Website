@@ -3,7 +3,7 @@ import { error, redirect } from '@sveltejs/kit';
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
 	return {
-		events: 
+		user_profile: 
 		fetch(`/api/users/${params.id}`)
 			.then(async (res) => {
 				const body = await res.json()					
