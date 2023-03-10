@@ -24,6 +24,15 @@
 		<img src="/images/logo-white.svg" alt="Logo jdrpoly" id="svg" />
 	</a>
 
+	<div id="close-icon" class="">
+		<IconButton
+			class="material-icons"
+			on:click={() => {
+				responsive = false;
+			}}>close</IconButton
+		>
+	</div>
+
 	<Dropdown
 		{responsive}
 		data={{
@@ -158,14 +167,6 @@
 			}}>list</IconButton
 		>
 	</div>
-	<div id="close-icon" class="">
-		<IconButton
-			class="material-icons"
-			on:click={() => {
-				responsive = false;
-			}}>close</IconButton
-		>
-	</div>
 </div>
 
 <style lang="scss">
@@ -230,6 +231,30 @@
 			}
 		}
 
+		#close-icon {
+			color: $secondary;
+			margin-left: auto;
+			position: relative;
+			margin-right: 84px;
+			top: -80px;
+			:global(button) {
+				position: absolute;
+				top: 50%;
+				-ms-transform: translateY(-50%);
+				transform: translateY(-50%);
+				font-size: 40px;
+			}
+			:global(button .mdc-icon-button__ripple) {
+				transform: translate(-3%, -5%); //tricky bad practice for good sized ripple effect
+
+				&::after {
+					background-color: $secondary;
+					width: 30px;
+					height: 30px;
+				}
+			}
+		}
+
 		.nav-link {
 			color: $secondary;
 
@@ -285,9 +310,6 @@
 				margin-bottom: 2em;
 			}
 
-			#close-icon {
-				color: $secondary;
-			}
 			#nav-icon {
 				display: none;
 			}

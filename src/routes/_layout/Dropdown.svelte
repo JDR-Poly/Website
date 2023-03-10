@@ -6,10 +6,6 @@
 
 	let open = true;
 
-	$: if (responsive) {
-		open = true;
-	}
-
 	type DdData = {
 		//DropdownData
 		element: DdElement;

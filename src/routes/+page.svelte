@@ -225,8 +225,6 @@
 				margin: auto;
 				display: block;
 				position: absolute;
-				top: -9999px;
-				bottom: -9999px;
 				left: -9999px;
 				right: -9999px;
 			}
