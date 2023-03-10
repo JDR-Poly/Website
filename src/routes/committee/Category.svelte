@@ -4,23 +4,23 @@
 	import { Panel, Header, Content } from '@smui-extra/accordion';
 	import Fab, { Label, Icon } from '@smui/fab';
 	import { error } from '$lib/stores';
-	import type { Committee } from 'src/types';
+	import type { Committee } from '$gtypes';
 	import { page } from '$app/stores';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 	import IconButton from '@smui/icon-button';
+	import { onMount } from 'svelte';
+	import ImgDefault from '$components/ImgDefault.svelte';
 
 	let change = false;
-
-	let reqCommittees = fetch('/api/committee/categories/' + category)
-		.then(async (res) => {
-			return await res.json();
-		})
-		.then((res) => {
-			return sortByItemOrder(res);
-		})
-		.catch((err) => {
-			$error = err.message;
-		});
+	let reqCommittee: Promise<Committee[]> = (async () => {return []})() //Evil hack to allow svelte to rerender {#each} loop
+	onMount(async () => {
+		const res = await fetch('/api/committee/categories/' + category);
+		const body = await res.json();
+		if(res.ok) reqCommittee = (async () => {return sortByItemOrder(body)})()
+		else {
+			$error = body.message
+		}
+	});
 
 	function sortByItemOrder(committees: any) {
 		return committees.sort((a: any, b: any) => (a.item_order >= b.item_order ? 1 : -1));
@@ -40,9 +40,7 @@
 
 		current_committee.item_order++;
 		change = true;
-		reqCommittees = (async () => {
-			return sortByItemOrder(committees);
-		})();
+		reqCommittee = (async () => {return sortByItemOrder(committees)})()
 	}
 
 	function removeOneToOrder(committees: any, current_committee: any) {
@@ -59,9 +57,7 @@
 
 		current_committee.item_order--;
 		change = true;
-		reqCommittees = (async () => {
-			return sortByItemOrder(committees);
-		})();
+		reqCommittee = (async () => {return sortByItemOrder(committees)})()
 	}
 
 	async function updateOrders(committees: Committee[]) {
@@ -79,63 +75,67 @@
 </script>
 
 <Panel {open}>
-	<Header>{category}</Header>
+<Header>{category}</Header>
 
-	<Content>
-		{#await reqCommittees}
-			<!---->
-		{:then committees}
-			{#each committees as committee, i}
-				<div class="committee" style:border-top={i == 0 ? '' : 'solid 2px #e5e5e5'}>
-					{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
-						<div class="item_order">
-							<IconButton
-								class="material-icons"
-								on:click={() =>
-									fetch('/api/committee/' + committee.id, {
-										method: 'DELETE'
-									}).then(() => location.reload())}
-							>
-								delete
-							</IconButton>
-							<IconButton
-								class="material-icons"
-								on:click={() => removeOneToOrder(committees, committee)}
-							>
-								remove
-							</IconButton>
-							<IconButton
-								class="material-icons"
-								on:click={() => addOneToOrder(committees, committee)}
-							>
-								add
-							</IconButton>
-						</div>
-					{/if}
+<Content>
 
-					<h2>{committee.title}</h2>
-					<h3>{committee.name}</h3>
-					<div class="committee-info">
-						<div class="flex-component">
-							<img src={'/committee/' + committee.id + '.png'} alt="" />
-						</div>
-						<div class="flex-component"><p>{committee.description}</p></div>
-					</div>
+{#await reqCommittee}
+	<!-- Evil hack to allow svelte to rerender {#each} loop-->
+{:then committees} 
+<div class="grid">
+	{#each committees as committee, i}
+		<div class="card">
+			<ImgDefault url={`/data/images/committee/${committee.id}.png`} defaultUrl="/data/images/committee/default.png" alt={committee.name}/>
+			<div class="text-container">
+				<h4><b>{committee.name}</b></h4>
+				<p>{committee.title}</p>
+			</div>
+			<div class="overlay">
+				<div class="text">{committee.description}</div>
+			</div>
+			{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
+				<div class="itemorder">
+					<IconButton
+						class="material-icons"
+						on:click={() =>
+							fetch('/api/committee/' + committee.id, {
+								method: 'DELETE'
+							}).then(() => location.reload())}
+					>
+						delete
+					</IconButton>
+					<IconButton
+						class="material-icons"
+						on:click={() => removeOneToOrder(committees, committee)}
+					>
+						remove
+					</IconButton>
+					<IconButton
+						class="material-icons"
+						on:click={() => addOneToOrder(committees, committee)}
+					>
+						add
+					</IconButton>
 				</div>
-			{/each}
-			{#if change && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
-				<Fab
-					id="fab-container"
-					color="secondary"
-					on:click={() => updateOrders(committees)}
-					extended
-				>
-					<Icon class="material-icons">done</Icon>
-					<Label>Sauvegarder</Label>
-				</Fab>
 			{/if}
-		{/await}
-	</Content>
+		</div>
+	{/each}
+</div>
+		
+{#if change && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
+	<Fab
+		id="fab-container"
+		color="secondary"
+		on:click={() => updateOrders(committees)}
+		extended
+	>
+		<Icon class="material-icons">done</Icon>
+		<Label>Sauvegarder</Label>
+	</Fab>
+{/if}
+
+{/await}	
+</Content>
 </Panel>
 
 <style lang="scss">
@@ -143,47 +143,72 @@
 		--mdc-theme-secondary: limegreen;
 	}
 
-	.committee {
-		margin: 10px;
-		position: relative;
-	}
-
-	.item_order {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		display: block;
-	}
-
-	h2 {
-		font-size: 1.65em;
-		font-weight: 400;
-		letter-spacing: 2px;
-		margin: 0 0 0.75em 0;
-		line-height: 1.75em;
-	}
-
-	h3 {
-		margin: 0;
-	}
-
-	.committee-info {
+	.grid {
 		display: flex;
-		align-items: center;
-		padding: 2em;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+	.card {
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+		max-width: 20vw;
+		margin: 1em 1em;
+		min-width: 280px;
+  		transition: 0.3s;
+		position: relative;
 
-		.flex-component {
-			img {
-				max-width: 180px;
-				max-height: 180px;
-				margin-right: 70px;
+		:global(img) {
+			width: 100%;
+		}
+		.text-container {
+			padding: 8px 16px;
+			font-family: 'Ubuntu';
+
+			h4 {
+				font-size: 20px;
 			}
-
 			p {
-				white-space: pre-line;
-				width: 70%;
-				margin: 0;
+				font-size: 17px;
+				letter-spacing: 0.05em;
+			}
+		}
 
+		.itemorder {
+			position: absolute;
+			bottom: 10px;
+			right: 10px;
+			display: block;
+		}
+
+		.overlay {
+			position: absolute;
+			bottom: 100%;
+			left: 0;
+			right: 0;
+			background-color: #03245f;
+			overflow: hidden;
+			width: 100%;
+			height:0;
+			transition: .5s ease;
+
+			.text {
+				color: white;
+				font-size: 15px;
+				width: 80%;
+				margin: 15px auto;
+				text-align: center;
+				white-space: pre-line;
+			}
+			overflow-y: scroll;
+		}
+
+		&:hover {
+			.overlay {
+				bottom: 0;
+				height: 100%;
+			}
+			:global(.mdc-icon-button) {
+				color: white;
+				transition: .5s ease;
 			}
 		}
 	}

@@ -7,34 +7,18 @@
 	import type { Writable } from 'svelte/store';
 	import { warning, error } from '$lib/stores';
 	import IconButton from '@smui/icon-button';
+	import { getBase64 } from '$lib/utils';
 
 	export let open: Writable<boolean>;
 	export let categories: string[];
 
-	function getBase64(image: File): Promise<string | ArrayBuffer | null | undefined> {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.readAsDataURL(image);
-			reader.onload = (e) => {
-				resolve(e?.target?.result);
-			};
-			reader.onerror = reject;
-		});
-	}
-
 	async function uploadNewCommittee() {
-		let imgData = null
-		if(imgBase64 as string) {
-			imgData = (imgBase64 as string).split(',')[1]
-			console.log(imgData);
-			
-		}
 		const data = {
 			category: category,
 			title: title,
 			name: name,
 			description: description,
-			imgBase64: imgData
+			imgBase64
 		}
 
 		fetch('/api/committee', {
@@ -42,7 +26,7 @@
 			body: JSON.stringify(data),
 			headers: { 'Content-Type': 'application/json' }
 		})
-			.then( (res) => {location.reload()})
+			.then((res) => {location.reload()})
 			.catch((err) => {$error = err.message})
 	}
 

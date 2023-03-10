@@ -37,8 +37,8 @@ export async function POST({ request, locals }: RequestEvent) {
 				, [body.category, body.title, maxOrder + 1, body.name, body.description],
 				a => a.id
 			)
-				.then((id) => {
-					writeFileSync('static/committee/' + id + '.png', body.imgBase64, 'base64')
+				.then((id) => {					
+					writeFileSync('static/data/images/committee/' + id + '.png', body.imgBase64, 'base64')
 					return new Response()
 				})
 		})
@@ -76,8 +76,6 @@ export async function PATCH({ locals, request }: RequestEvent) {
 			return new Response()
 		})
 		.catch(err => {
-			console.log("test");
-
 			throw error(500, err.message)
 		});
 }

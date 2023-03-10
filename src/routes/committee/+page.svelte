@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Category from './Category.svelte';
-	import { error } from '$lib/stores';
 	import Add from './Add.svelte';
 	import { writable } from 'svelte/store';
 	import Accordion from '@smui-extra/accordion';
@@ -8,37 +7,38 @@
 	import { page } from '$app/stores';
 	import Fab, { Icon } from '@smui/fab';
 
-	const reqCategories = fetch('/api/committee/categories')
-		.then(async (res) => {
-			return (await res.json()).categories;
-		})
-		.catch((err) => {
-			$error = err.message;
-		});
+	export let data: any;
 
 	const openAddDialog = writable(false);
 </script>
 
-{#await reqCategories}
-	<!---->
-{:then categories}
+<main>
 	<Accordion>
-		{#each categories as category, i}
+		{#each data.categories as category, i}
 			<Category {category} open={i == 0} />
 		{/each}
 	</Accordion>
+</main>
 
-	{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
-		<Add open={openAddDialog} {categories} />
-		<div class="add-button-container">
-			<Fab style="width:80px;height:80px;" on:click={() => ($openAddDialog = true)}>
-				<Icon class="material-icons" style="font-size:40px;">add</Icon>
-			</Fab>
-		</div>
-	{/if}
-{/await}
+
+{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
+	<Add open={openAddDialog} categories={data.categories} />
+	<div class="add-button-container">
+		<Fab style="width:80px;height:80px;" on:click={() => ($openAddDialog = true)}>
+			<Icon class="material-icons" style="font-size:40px;">add</Icon>
+		</Fab>
+	</div>
+{/if}
+
 
 <style lang="scss">
+	main {
+		width: 80%;
+		padding: 10px;
+		//box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		margin: 2em auto;
+		border-radius: 5px;
+	}
 	.add-button-container {
 		position: fixed;
 		bottom: 40px;
