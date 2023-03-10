@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Textfield from '@smui/textfield';
-	import Icon from '@smui/textfield/icon';
 
 	let isEmailInvalid = true;
 	let email = '';
@@ -37,9 +36,7 @@
 				<a href="mailto:comite@jdrpoly.ch">comite@jdrpoly.ch</a>
 			</section>
 			<section>
-				<a><span class="material-symbols-outlined icon">mail</span></a>
-				<a><span class="material-symbols-outlined icon">mail</span></a>
-				<a><span class="material-symbols-outlined icon">mail</span></a>
+				<!-- Social media -->
 			</section>
 		</div>
 	</div>
