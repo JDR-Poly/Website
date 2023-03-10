@@ -7,6 +7,10 @@
 	export let data: any;
 </script>
 
+<svelte:head>
+	<title>Profile | JDRPoly</title> 
+</svelte:head>
+
 <h1>Profile</h1>
 <p>Email: {data.user_profile.email}</p>
 <p>Nom: {data.user_profile.name}</p>

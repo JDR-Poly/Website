@@ -12,6 +12,10 @@
 	const openAddDialog = writable(false);
 </script>
 
+<svelte:head>
+	<title>Comité | JDRPoly</title> 
+</svelte:head>
+
 <main>
 	<Accordion>
 		{#each data.categories as category, i}

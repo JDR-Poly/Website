@@ -21,6 +21,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Événements | JDRPoly</title> 
+</svelte:head>
+
 <main>
 	{#if hasRolePermission(UserPermission.CREATE_EVENT, $page.data.user?.role)}
 		<div class="add-button-container">

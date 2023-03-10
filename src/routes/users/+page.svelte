@@ -74,6 +74,10 @@
 	let loaded = false
 </script>
 
+<svelte:head>
+	<title>Utilisateurs | JDRPoly</title> 
+</svelte:head>
+
 <main>
 	<h2>Utilisateurs</h2>
 

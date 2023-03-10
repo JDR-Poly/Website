@@ -6,3 +6,6 @@
 
 <h2>Account setting</h2>
 
+<svelte:head>
+	<title>Paramètres | JDRPoly</title> 
+</svelte:head>

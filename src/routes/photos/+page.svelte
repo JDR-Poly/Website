@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Photos | JDRPoly</title> 
+</svelte:head>
+
 <main>
 	<h2>Galeries photo :</h2>
 

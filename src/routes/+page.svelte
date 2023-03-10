@@ -4,6 +4,11 @@
 	export let data: any;
 </script>
 
+
+<svelte:head>
+	<title>Accueil | JDRPoly</title> 
+</svelte:head>
+
 <main>
 	<div id="banner">
 		<img src="/images/main/banner.png" alt="banière jdrpoly" />
