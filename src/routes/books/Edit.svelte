@@ -6,13 +6,14 @@
 	import Icon from '@smui/select/icon';
 	import Button, { Label } from '@smui/button';
 	import { error } from '$lib/stores';
+	import type { Book } from '$gtypes';
 
-	export let book: any;
+	export let book: Book;
 	export let open: Writable<boolean>;
 	export let statusList: string[];
 
 	async function editBook() {
-		fetch('/api/books/' + book.id, {
+		fetch('/api/books/', {
 			method: 'PATCH',
 			body: JSON.stringify(book),
 			headers: { 'Content-Type': 'application/json' }
@@ -24,8 +25,6 @@
 				$error = err.message;
 			});
 	}
-
-	let tes = ' ';
 </script>
 
 <Dialog bind:open={$open}>

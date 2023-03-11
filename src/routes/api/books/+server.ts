@@ -2,6 +2,7 @@ import type { RequestEvent } from "./$types";
 import { error, json } from '@sveltejs/kit';
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+import type { Book } from "$gtypes";
 
 /**
  * Get all the books
@@ -50,4 +51,37 @@ export async function POST({ request, locals }: RequestEvent) {
 		})
 		.catch((err) => { throw error(500, err.message) })
 
+}
+
+/**
+ * Update a book or a list of books
+ * @param {RequestEvent} request
+ * @param {Book | Book[]} request.body the book(s) to update
+ * @type {import('./$types').RequestHandler} 
+ */
+export async function PATCH({ locals, request }: RequestEvent) {
+	if (!locals.authenticated) throw error(401)
+
+	let body = await request.json()
+	if (!hasRolePermission(UserPermission.MODIFY_BOOKS, locals.user?.role)) throw error(403, "User doesn't have the permission to do that")
+	if (!Array.isArray(body)) body = [body]
+
+	return db.tx(t => { //Perform a list of SQL request
+
+		let queries: Promise<null>[] = []
+		for (let book of (body as Book[])) {
+			queries.push(t.none(`UPDATE books SET
+				title = $[title], caution = $[caution],
+				status = $[status], item_order = $[item_order]
+				WHERE id = $[id]`
+				, book))
+		}
+		return t.batch(queries); //Execute all the queries
+	})
+		.then(() => {
+			return new Response()
+		})
+		.catch(err => {
+			throw error(500, err.message)
+		});
 }

@@ -2,7 +2,7 @@ import { error } from "@sveltejs/kit";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import type { RequestEvent } from "./$types";
 import { db } from "$lib/server/postgresClient";
-import type { Committee } from "src/types";
+import type { Committee } from "$gtypes";
 import { writeFileSync } from 'fs';
 
 
@@ -49,7 +49,7 @@ export async function POST({ request, locals }: RequestEvent) {
 /**
  * Update one or a list of committees
  * @param {RequestEvent} request
- * @param {Committee || Committee[]} request.body the committee(s) to update
+ * @param {Committee | Committee[]} request.body the committee(s) to update
  * @type {import('./$types').RequestHandler} 
  */
 export async function PATCH({ locals, request }: RequestEvent) {

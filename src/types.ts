@@ -52,6 +52,14 @@ type HonorMember = {
 	description?: string
 }
 
+type Book = {
+	id: Id,
+	title: string,
+	item_order: number,
+	caution?: number,
+	status?: string
+}
+
 type Id = number
 
-export type { User, Event, Id, Committee, HonorMember }
+export type { User, Event, Id, Committee, HonorMember, Book }

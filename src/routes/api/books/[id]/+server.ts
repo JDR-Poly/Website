@@ -27,34 +27,6 @@ export function DELETE({ params, locals }: RequestEvent) {
 		})
 }
 
-/**
- * Update a book
- * @param {RequestEvent} request
- * @param {string} request.title the book title
- * @param {number} request.item_order the book item_order
- * @param {string} request.caution the book caution
- * @param {string} request.status the availablity of the book
- * @type {import('./$types').RequestHandler} 
- */
-export async function PATCH({ locals, request, params }: RequestEvent) {
-	if (!locals.authenticated) throw error(401)
-
-	let body = await request.json()
-	if (!hasRolePermission(UserPermission.MODIFY_BOOKS, locals.user?.role)) throw error(403, "User doesn't have the permission to do that")
-
-	return db.none(`UPDATE books SET
-		title = $[title], caution = $[caution],
-		status = $[status], item_order = $[item_order]
-		WHERE id = $[id]`
-		, { ...body, id: params.id })
-		.then(() => {
-			return new Response()
-		})
-		.catch(err => {
-			throw error(500, err.message)
-		});
-}
-
 /*
 	Change the database so that all the books are in the correct item_order 
 */

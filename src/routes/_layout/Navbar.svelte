@@ -85,7 +85,7 @@
 		}}
 	/>
 
-	<a href="/" class="nav-link nav-button">
+	<a href="/books" class="nav-link nav-button">
 		<span class="material-symbols-outlined link-icon">book</span>
 		<p>Bibliothèque</p>
 	</a>
