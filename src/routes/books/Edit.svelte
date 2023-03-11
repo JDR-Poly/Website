@@ -49,3 +49,10 @@
 		</Button>
 	</Actions>
 </Dialog>
+
+<style lang="scss">
+	:global(.mdc-dialog__surface) {
+		max-width: 600px !important;
+		width: 80vw !important;
+	}
+</style>
