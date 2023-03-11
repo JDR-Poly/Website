@@ -111,6 +111,13 @@
 								text: 'Envoyer un code'
 							},
 							link: '/admin/membership'
+						},
+						{
+							element: {
+								text: "Événements",
+								prefix_icon: "dataset"
+							},
+							link: "/admin/events"
 						}
 					]
 				}}
