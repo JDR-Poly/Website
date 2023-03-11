@@ -1,6 +1,7 @@
-import type { User } from "src/types"
+import type { User } from "$gtypes"
 import { sendMail } from "./mailClient"
 import { db } from "./postgresClient"
+import { readFile } from 'fs';
 
 /**
  * Increse the end of the period to next closest period's end
@@ -49,8 +50,12 @@ function updateMemberPeriod(user: User, period: Period) {
 		role: newRole,
 		id: user.id
 	})
-
-	sendMail(user.email, "JDRPoly: Vous êtes membres", "<p>Member start: " + period.start + "</p><p>Member stop:" + period.stop + "</p>")
+	readFile('static/mails/updateMemberPeriod.html', function(err, data) {		
+		let html = data.toString()
+		if(period.start) html = html.replace('%START%', period.start?.toLocaleDateString())
+		if(period.stop) html = html.replace('%STOP%', period.stop?.toLocaleDateString())
+		sendMail(user.email, "JDRPoly: Vous êtes membres !", html)
+	})
 }
 
 export { type Period, getNextPeriod, updateMemberPeriod }

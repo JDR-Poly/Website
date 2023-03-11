@@ -1,7 +1,9 @@
 import { createTestAccount, createTransport, type Transporter, getTestMessageUrl } from "nodemailer";
-import type { Id } from "src/types";
+import type { Id } from "$gtypes";
 import { v4 as uuid } from "uuid"
 import { db } from "./postgresClient";
+import { readFile } from 'fs';
+
 
 let transporter: Transporter | undefined
 let ethereal = false
@@ -61,7 +63,13 @@ async function sendMailValidationToken(userId: Id, mail: string, origin: string)
 		id: userId,
 		validation_token: emailValidationToken
 	})
-	sendMail(mail, "JDRPoly: Validez votre mail", '<a href="' + origin + '/auth/validate-email/' + emailValidationToken + '" target="_blank">Valider</a>')
+	readFile('static/mails/mailValidationToken.html', function(err, data) {
+		let html = data.toString()
+		html = html.replace('%ORIGIN%', origin)
+		html = html.replace('%TOKEN%', emailValidationToken)
+		sendMail(mail, "JDRPoly: Validez votre mail", html)
+	})
+	
 }
 
 export { sendMailValidationToken, sendMail }

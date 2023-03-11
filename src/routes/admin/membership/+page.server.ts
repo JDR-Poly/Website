@@ -5,6 +5,7 @@ import { hasRolePermission, UserPermission } from "$lib/userPermissions"
 import type { RequestEvent, Actions } from "./$types";
 import { v4 as uuid } from "uuid"
 import { error, fail, redirect } from "@sveltejs/kit"
+import { readFile } from 'fs';
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ locals }: RequestEvent) {
@@ -84,7 +85,12 @@ async function createAndSendMemberCodes(emails: string[], periodsNumber: number)
 			})
 
 			const promise = ( async () => {
-				const res = await sendMail(email, "JDRPoly: Code de membre", "<p>" + code + "</p>")
+				let res: any;
+				await readFile('static/mails/memberCode.html', function(err, data) {
+					let html = data.toString()
+					html = html.replace('%CODE%', code)
+					res = sendMail(email, "JDRPoly: Code de membre", html)
+				})
 				if(res instanceof Error) return email
 				else return ""	
 			})()
