@@ -144,7 +144,7 @@
 								prefix_icon: 'keyboard_double_arrow_right',
 								text: 'Entrer un code'
 							},
-							link: '/docs'
+							link: '/users/account/membership'
 						}
 					],
 					actions: [
