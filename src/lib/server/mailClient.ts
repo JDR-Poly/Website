@@ -48,11 +48,9 @@ async function sendMail(to: any, subject: string, html: string): Promise<any> {
 		})
 		if (ethereal) console.log("Preview Mail: %s", getTestMessageUrl(result));
 		return result
-	} catch (err) {
-		console.log(err)
-		return null
+	} catch (err: any) {
+		return Error(err.message)
 	}
-
 }
 
 async function sendMailValidationToken(userId: Id, mail: string, origin: string) {

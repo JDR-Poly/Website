@@ -110,7 +110,7 @@
 								prefix_icon: 'outgoing_mail',
 								text: 'Envoyer un code'
 							},
-							link: '/committee'
+							link: '/admin/membership'
 						}
 					]
 				}}

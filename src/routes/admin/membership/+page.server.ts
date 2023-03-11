@@ -2,9 +2,9 @@ import { sendMail } from "$lib/server/mailClient"
 import { getNextPeriod, updateMemberPeriod, type Period } from "$lib/server/memberPeriod"
 import { db } from "$lib/server/postgresClient"
 import { hasRolePermission, UserPermission } from "$lib/userPermissions"
-import type { RequestEvent } from "./$types";
+import type { RequestEvent, Actions } from "./$types";
 import { v4 as uuid } from "uuid"
-import { error, invalid, redirect } from "@sveltejs/kit"
+import { error, fail, redirect } from "@sveltejs/kit"
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ locals }: RequestEvent) {
@@ -21,7 +21,6 @@ export function load({ locals }: RequestEvent) {
  * @param {number} request.periods the number of periods to add
  * @returns list of mails that are not found and who can't get emails
  */
-/** @type {import('./$types').Actions} */
 export const actions = {
 	default: async ({ request, locals }: RequestEvent) => {
 		if(!locals.authenticated) throw error(401)
@@ -30,13 +29,13 @@ export const actions = {
 		}
 
 		const form = await request.formData();
-		const emails = form.get('emails')?.toString()?.split(",")?.flatMap((v) => { return v.split(";") })
+		const emails: string[] | undefined = form.get('emails')?.toString()?.split(",")?.flatMap((v) => { return v.split(";") })
+		emails?.forEach((str) => str = str.trim())
 		const periodsNumber = parseInt(form.get('periodsNumber')?.toString() || "1") || 1;
-
+		
 		if (!emails) {
-			return invalid(400, { emails, periodsNumber })
+			return fail(400, { emails, periodsNumber })
 		}
-
 		//Query user data
 		const users = await db.any("SELECT id, email, role, member_start, member_stop FROM users WHERE email IN ($[emails:csv]);", {
 			emails: emails
@@ -58,14 +57,13 @@ export const actions = {
 		})
 
 		//Send email and code to users that don't have an account
-		const errorMails = await createAndSendMemberCodes(emailsNotFound, periodsNumber)
-
+		const errorMails = await createAndSendMemberCodes(emailsNotFound, periodsNumber)		
 		return {
 			success: true,
 			errorMails: errorMails
 		}
 	}
-}
+} satisfies Actions;
 
 /**
  * Send email and code to users that don't have an account
@@ -75,7 +73,8 @@ export const actions = {
  */
 async function createAndSendMemberCodes(emails: string[], periodsNumber: number): Promise<string[]> {
 	const mailsError: string[] = []
-	emails.forEach(email => {
+	const promises: Promise<string>[] = []
+	emails.forEach((email) => {
 		try {
 			const code = uuid()
 			db.none("INSERT INTO $[table:name](validation_token, periods) VALUES($[validation_token], $[periods])", {
@@ -83,10 +82,20 @@ async function createAndSendMemberCodes(emails: string[], periodsNumber: number)
 				validation_token: code,
 				periods: periodsNumber
 			})
-			sendMail(email, "JDRPoly: Code de membre", "<p>" + code + "</p>")
-		} catch (err) {
+
+			const promise = ( async () => {
+				const res = await sendMail(email, "JDRPoly: Code de membre", "<p>" + code + "</p>")
+				if(res instanceof Error) return email
+				else return ""	
+			})()
+			promises.push(promise)
+			
+		} catch (err) {			
 			mailsError.push(email)
 		}
 	})
+
+	const res = await (await Promise.all(promises)).filter((str) => str) 
+	mailsError.push(...res)
 	return mailsError
 }
