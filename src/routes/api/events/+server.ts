@@ -8,12 +8,25 @@ import { writeFileSync } from 'fs';
 
 /**  ---Event POST---  */
 
-/** @type {import('./$types').RequestHandler} */
+/**
+ * @param {FormData} request.body the request must be a form data
+ * @param {string} title the title of the event
+ * @param {string} category the category of the event
+ * @param {string} description the description of the event
+ * @param {string} date the UTCdate of the event
+ * @param {Blob} image the image of the event
+ * @param {string} inscription the string of a boolean, indicating if people can join the event
+ * @param {string} inscription_group name of the group that are allowed to join
+ * @param {string} inscription_start the UTCdate of when people can join an event
+ * @param {string} inscription_stop the UTCdate of when people can no longer join an event
+ * @type {import('./$types').RequestHandler} 
+ */
 export async function POST({ request, locals }: RequestEvent) {		
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.CREATE_EVENT, locals.user?.role)) throw error(403)
 	
 	const data = await request.formData()
+
 	const parsedData = {
 		title: data.get("title")?.toString(),
 		category: data.get("category")?.toString(),
@@ -49,7 +62,7 @@ export async function POST({ request, locals }: RequestEvent) {
 		[parsedData.title, locals.user?.id, parsedData.category, parsedData.date, parsedData.inscription, parsedData.inscription_group, parsedData.inscription_start, parsedData.inscription_stop, parsedData.description],
 		a => a.id
 		)
-		.then(async (id) => {
+		.then(async (id) => {			
 			if(parsedData.image) {
 				const file = await parsedData.image.arrayBuffer()
 				writeFileSync('static/data/images/events/' + id + '.png', Buffer.from(file))

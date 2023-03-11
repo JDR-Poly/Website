@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { UserPermission } from "$lib/userPermissions";
 	import {error, info, warning} from "$lib/stores"
 	import Icon from '@smui/select/icon';
 	import Select, { Option } from '@smui/select';
@@ -8,17 +7,16 @@
 	import Checkbox from '@smui/checkbox';
   	import FormField from '@smui/form-field';
 	import IconButton from '@smui/icon-button';
-
-	let categories = ['GN & Murder', 'Nocturne, soirée d\'initation', 'Soirée membre', 'Événement divers', 'Événement externe', 'Weekend jeu de rôle']
-	
+	import { categories, returnJoinEventRoles } from "$lib/events";
+		
 	let title = ''
 	let description = ''
-	let date: string | number = ''
+	let date: string = ''
 	let category = categories[0]
 	let inscription = false
 	let inscription_group = 'MEMBER'
-	let inscription_start: string | number = -1
-	let inscription_stop: string | number = -1
+	let inscription_start: string = ''
+	let inscription_stop: string = ''
 	
 	let images: null | FileList = null;
 	let image: File
@@ -26,30 +24,19 @@
 	let isInscriptionStop = false //Not an actual stored value in the database
 	let submitDisabled = true
 
-
-	function returnJoinEventRoles(): string[] {
-		let res = []
-		for(let permission in UserPermission) {
-			if(permission.includes("JOIN_EVENT_")) {
-				res.push(permission.split("JOIN_EVENT_")[1])
-			}
-		}
-		return res
-	}
-
 	async function submit() {	
 		const formData = new FormData();
 		formData.append("title", title)
 		formData.append("category", category)
 		formData.append("description", description)
-		formData.append("date", new Date(date).toUTCString())
-		formData.append("image", image)
+		if(date) formData.append("date", new Date(Date.parse(date)).toUTCString())
+		if(image) formData.append("image", image)
 		formData.append("inscription", inscription.toString())
 		formData.append("inscription_group", inscription_group)
-		if(inscription_start != null) formData.append("inscription_start", new Date(inscription_start).toUTCString())
-		if(inscription_stop != null) formData.append("inscription_stop", new Date(inscription_stop).toUTCString())
+		if(inscription_start) formData.append("inscription_start", new Date(Date.parse(inscription_start)).toUTCString())
+		if(inscription_stop) formData.append("inscription_stop", new Date(Date.parse(inscription_stop)).toUTCString())
 		
-		const res = await fetch('/api/events/', {
+		const res = await fetch('/api/events', {
 			method: 'POST',
 			body: formData
 		});	
@@ -61,7 +48,6 @@
 			$error = body.message
 		}
 	}
-
 </script>
 
 <main>
@@ -86,7 +72,6 @@
 			<Textfield type="text" bind:value={description} label="Description" style="width: 100%" textarea/>
 			
 			<Textfield bind:value={date} type="datetime-local" label="Date" class="small-field" required input$min={new Date(Date.now()).toISOString().slice(0, -8)}></Textfield>
-			
 			<div class="hide-file-ui">
 				<Textfield bind:files={images} label="Image" type="file" on:change={async () => {				
 					if (images && images[0]) {
@@ -109,11 +94,11 @@
 				<Checkbox bind:checked={inscription} touch on:change={() => {		
 					if(!inscription) {
 						inscription_group = 'MEMBER'
-						inscription_start = -1
-						inscription_stop = -1
+						inscription_start = ''
+						inscription_stop = ''
 						isInscriptionStop = false
 					} else {
-						inscription_start = Date.now()
+						inscription_start = new Date(Date.now()).toUTCString()
 					}
 				}}/>
 				<span slot="label">Inscription </span>
@@ -131,16 +116,16 @@
 				<FormField>
 					<Checkbox bind:checked={isInscriptionStop} touch on:change={() => {		
 						if(!isInscriptionStop) {
-							inscription_stop = -1
+							inscription_stop = ''
 						} else {
-							inscription_stop = Date.now()
+							inscription_stop = new Date(Date.now()).toUTCString()
 						}
 					}}/>
 					<span slot="label">Fin d'inscription </span>
 				</FormField>
 		
 				{#if isInscriptionStop}
-					<Textfield bind:value={inscription_stop} type="datetime-local" label="Fin d'inscription" class="small-field" required input$min={new Date(Date.now()).toISOString().slice(0, -1)}></Textfield>
+					<Textfield bind:value={inscription_stop} type="datetime-local" label="Fin d'inscription" class="small-field" required input$min={new Date(Date.now()).toISOString().slice(0, -8)}></Textfield>
 				{/if}
 			{/if}
 		

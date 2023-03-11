@@ -3,14 +3,14 @@ import type { Role } from "$lib/userPermissions"
 type Event = {
 	id: Id
 	title: string,
+	description: string,
 	author: Id,
 	category: string,
 	date: Date,
 	inscription: boolean,
 	inscription_group: string,
-	inscription_start: Date | undefined,
-	inscription_stop: Date | undefined,
-	description: string | undefined
+	inscription_start?: Date,
+	inscription_stop?: Date
 }
 
 /**

@@ -1,6 +1,7 @@
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
+import { writeFileSync } from "fs";
 import type { RequestEvent } from "./$types";
 
 /**  ---Event GET---  */
@@ -62,39 +63,80 @@ export function DELETE({ params, locals }: RequestEvent) {
 
 /**  ---Event PATCH---  */
 
-/** @type {import('./$types').RequestHandler} */
+/** 
+ * @param {FormData} request.body the request must be a formdata
+ * @param {string} title the title of the event
+ * @param {string} category the category of the event
+ * @param {string} description the description of the event
+ * @param {string} date the UTCdate of the event
+ * @param {Blob} image the image of the event
+ * @param {string} inscription the string of a boolean, indicating if people can join the event
+ * @param {string} inscription_group name of the group that are allowed to join
+ * @param {string} inscription_start the UTCdate of when people can join an event
+ * @param {string} inscription_stop the UTCdate of when people can no longer join an event
+ * @type {import('./$types').RequestHandler} */
+
 export async function PATCH({ params, request, locals }: RequestEvent) {
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role)) throw error(403)
 
 	const id = params.event_id
-	const body = await request.json()
-
-	const gr = body.inscription_group.toUpperCase();
-	if (gr !== "USER" && gr !== "MEMBER" && gr !== "COMMITTEE") throw error(400, "inscription_group is not valid, should be either user, member or committee")
+	const data = await request.formData()
+	
+	const parsedData = {
+		title: data.get("title")?.toString(),
+		category: data.get("category")?.toString(),
+		description: data.get("description")?.toString(),
+		date: (() => {
+			const date = data.get("date")
+			if(date == null) return null
+			else return new Date(Date.parse(date.toString()))
+		})(),
+		image: data.get("image")?.valueOf() as Blob,
+		inscription: data.get("inscription")?.toString(),
+		inscription_group: data.get("inscription_group")?.toString().toUpperCase(),
+		inscription_start: (() => {
+			const date = data.get("inscription_start")
+			if(date == null) return null
+			else return new Date(Date.parse(date.toString()))
+		})(),
+		inscription_stop: (() => {
+			const date = data.get("inscription_stop")
+			if(date == null) return null
+			else return new Date(Date.parse(date.toString()))
+		})(),
+	}
+		
+	if (parsedData.inscription_group !== "USER" && parsedData.inscription_group !== "MEMBER" && parsedData.inscription_group !== "COMMITTEE") throw error(400, "inscription_group is not valid, should be either user, member or committee")
 
 	return db.one(
 		`UPDATE events SET
-			title=$2, date=$3,
-			inscription=$4,inscription_group=$5,
-			inscription_start=$6, inscription_stop=$7,
-			description=$8,category=$9
-		WHERE id=$1
-		RETURNING *;
-		`,
-		[id, body.title, body.date, body.inscription, gr, body.inscription_start, body.inscription_stop, body.description, body.category]
+			title=$[title], category=$[category],
+			description=$[description],date=$[date],
+			inscription=$[inscription], inscription_group=$[inscription_group],
+			inscription_start=$[inscription_start],inscription_stop=$[inscription_stop]
+		WHERE id=$[id]
+		RETURNING *;`,
+		{id: id, ...parsedData}
 	)
-		.then((res) => {
-			if(!body.inscription) {
+		.then(async (res) => {
+			if(!parsedData.inscription) {
 				db.none(
 					` DELETE FROM event_inscription
 						WHERE event_id = $1`
 					,[id]
 				)
 			}
+			if(parsedData.image) {
+				const file = await parsedData.image.arrayBuffer()
+				writeFileSync('static/data/images/events/' + id + '.png', Buffer.from(file))
+			}
 			return json(res)
 		})
 		.catch((err) => {
+
+			console.log(err.message);
+			
 			throw error(500, err.message)
 		})
 }

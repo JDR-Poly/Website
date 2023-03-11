@@ -8,6 +8,12 @@
 		removeAlertById(parseInt((event.target as any).parentElement.id))
 	}
 
+	function handleKeyPress(event: KeyboardEvent) {
+		if(event.key == "x") {
+			removeAlertById(parseInt((event.target as any).parentElement.id))
+		}
+	}
+
 	function removeAlertById(id: number) {
 		for(let i=0;i<alertArray.length;i++) {
 			if(alertArray[i].id === id) {
@@ -58,7 +64,7 @@
 </script>
 	<div class="container">
 		{#each alertArray as alert}
-			<div class="alert {alert.type}" id="{alert.id.toString()}" in:fly={{x: 200, duration: 2000}}>{alert.text}<span class="closebtn" on:click={closeButton}>&times;</span></div>
+			<div class="alert {alert.type}" id="{alert.id.toString()}" in:fly={{x: 200, duration: 2000}}>{alert.text}<span class="closebtn" on:click={closeButton} on:keypress={handleKeyPress}>&times;</span></div>
 		{/each}
 	</div>
 

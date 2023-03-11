@@ -33,7 +33,7 @@
 			</Fab>
 		</div>
 	{/if}
-	<grid class:hack-fit={data.events.length < 4}>
+	<div id="event-container">
 		{#each data.events as event}
 			<div class="event">
 				{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
@@ -56,7 +56,7 @@
 				<a href={'/events/' + event.id} class="button">Découvrir</a>
 			</div>
 		{/each}
-	</grid>
+	</div>
 </main>
 
 <style lang="scss">
@@ -74,27 +74,12 @@
 			rgba(21, 137, 209, 1) 100%
 		);
 	}
-
-	.hack-fit {
-			justify-content: center;
-			align-content: center;
-			grid-template-columns: none;
-
-			grid-auto-flow: column;
-
-			.event {
-				width: 22em;
-			}
-	}
-
-	grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(300px, 400px));
-		grid-gap: 15px;
-		padding: 4em 0;
+	
+	#event-container {
+		display: flex;
+		flex-wrap: wrap;
 		justify-content: center;
-
-		
+		padding: 4em 0;
 
 		.event {
 			background-color: $secondary;
@@ -104,6 +89,9 @@
 			color: #353535;
 			position: relative;
 			border-radius: 8px;
+			max-width: 20vw;
+			min-width: 280px;
+			margin: 2em;
 
 			.delete-btn {
 				position: absolute;
@@ -180,6 +168,7 @@
 		position: absolute;
 		bottom: 40px;
 		right: 40px;
+		z-index: 1;
 
 		:global(.mdc-fab__icon) {
 			color: $secondary;

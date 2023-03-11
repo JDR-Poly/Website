@@ -8,9 +8,12 @@
 	import Button, { Label, Icon } from '@smui/button';
 	import Textfield from '@smui/textfield';
 	import type { User } from '$gtypes';
+	import Edit from './Edit.svelte';
+	import { writable } from 'svelte/store';
 
 	export let data: any;
-
+	
+	const openEditDialog = writable(false);
 	const { event_id } = $page.params;
 
 	function translateRole(role?: Role) {
@@ -69,7 +72,9 @@
 
 	let addedUser = ''
 </script>
-
+<svelte:head>
+	<title>{data.event.title} | JDRPoly</title> 
+</svelte:head>
 <main>
 	<div id="img"/>
 	
@@ -157,6 +162,14 @@
 			<div class="delete-btn">
 				<IconButton class="material-icons" on:click={() => deleteEvent(data.event.id)}>close</IconButton>
 			</div>
+			<div id="edit-event">
+				<IconButton
+						class="material-icons"
+						on:click={() => openEditDialog.set(true)}>
+						edit
+				</IconButton>
+			</div>
+			<Edit event={data.event} open={openEditDialog}></Edit>
 		{/if}
 
 	</div>
@@ -181,8 +194,13 @@
 			height: 100%;
 			width: 100%;
 		}
-	}
 
+		#edit-event {
+			position: absolute;
+			top: 20px;
+			right: 60px;
+		}
+	}
 
 	#wrapper {
 		width: 1100px;
@@ -277,7 +295,7 @@
 
 		.delete-btn {
 			position: absolute;
-			top: 10px;
+			top: 20px;
 			right: 10px;
 		}
 	}

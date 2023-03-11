@@ -50,11 +50,11 @@ CREATE TABLE IF NOT EXISTS public.events(
 	title VARCHAR(255) NOT NULL,
 	author INT NOT NULL,
 	category VARCHAR(255) NOT NULL,
-	date DATE NOT NULL,
+	date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	inscription BOOLEAN NOT NULL DEFAULT true,
 	inscription_group VARCHAR(255) NOT NULL DEFAULT 'USER',
-	inscription_start DATE,
-	inscription_stop DATE,
+	inscription_start TIMESTAMP WITHOUT TIME ZONE,
+	inscription_stop TIMESTAMP WITHOUT TIME ZONE,
 	description TEXT,
 	CONSTRAINT events_pk PRIMARY KEY (id)
 );
