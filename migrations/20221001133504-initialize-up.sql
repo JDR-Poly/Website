@@ -104,3 +104,12 @@ CREATE TABLE public.books
 	caution				TEXT,
 	status				VARCHAR(255)		
 );
+
+----- HONOR MEMBERS TABLE -----
+CREATE TABLE public.honor_members
+(
+	id					SERIAL PRIMARY KEY,
+	name				VARCHAR(255) NOT NULL,
+	item_order 			SMALLINT NOT NULL,
+	description			TEXT
+);

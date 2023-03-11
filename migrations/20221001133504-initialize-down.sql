@@ -17,3 +17,4 @@ DROP TABLE public.events;
 DROP TABLE public.event_inscription;
 DROP TABLE public.committee_info;
 DROP TABLE public.books;
+DROP TABLE public.honor_members;

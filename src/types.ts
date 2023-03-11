@@ -42,6 +42,16 @@ type Committee = {
 	item_order?: number, //For the order in which to show it on the committee page
 }
 
+/**
+ * A data type only useful for the /docs/ page to show honor members
+ */
+type HonorMember = {
+	id: Id,
+	name: string,
+	item_order: number, //For the order in which to show it on the /docs/ page
+	description?: string
+}
+
 type Id = number
 
-export type { User, Event, Id, Committee }
+export type { User, Event, Id, Committee, HonorMember }
