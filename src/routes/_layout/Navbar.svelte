@@ -33,31 +33,11 @@
 		>
 	</div>
 
-	<Dropdown
-		{responsive}
-		data={{
-			element: {
-				prefix_icon: 'group',
-				text: 'Communauté'
-			},
-			links: [
-				{
-					element: {
-						prefix_icon: 'search',
-						text: 'Utilisateurs'
-					},
-					link: '/users'
-				},
-				{
-					element: {
-						prefix_icon: 'image',
-						text: 'Photos'
-					},
-					link: '/photos'
-				}
-			]
-		}}
-	/>
+	<a href="/events" class="nav-link nav-button">
+		<span class="material-symbols-outlined link-icon">event</span>
+		<p>Évenements</p>
+	</a>
+	
 
 	<Dropdown
 		{responsive}
@@ -67,6 +47,13 @@
 				text: 'Informations'
 			},
 			links: [
+				{
+					element: {
+						prefix_icon: 'location_on',
+						text: 'Accès'
+					},
+					link: '/plan'
+				},
 				{
 					element: {
 						prefix_icon: 'groups',
@@ -85,15 +72,31 @@
 		}}
 	/>
 
+	<Dropdown
+		{responsive}
+		data={{
+			element: {
+				prefix_icon: 'group',
+				text: 'Communauté'
+			},
+			links: [
+				{
+					element: {
+						prefix_icon: 'image',
+						text: 'Photos'
+					},
+					link: '/photos'
+				}
+			]
+		}}
+	/>
+
 	<a href="/books" class="nav-link nav-button">
 		<span class="material-symbols-outlined link-icon">book</span>
 		<p>Bibliothèque</p>
 	</a>
 
-	<a href="/events" class="nav-link nav-button">
-		<span class="material-symbols-outlined link-icon">event</span>
-		<p>Évenements</p>
-	</a>
+
 
 	{#if authenticated}
 		{#if hasRolePermission(UserPermission.ADMIN_PANEL, user.role)}
@@ -118,6 +121,13 @@
 								prefix_icon: "dataset"
 							},
 							link: "/admin/events"
+						},
+						{
+							element: {
+								prefix_icon: 'search',
+								text: 'Utilisateurs'
+							},
+							link: '/admin/users'
 						}
 					]
 				}}
@@ -129,7 +139,7 @@
 				data={{
 					element: {
 						prefix_icon: 'person',
-						text: 'Utilisateur'
+						text: user.name ? user.name : "Utilisateur"
 					},
 					links: [
 						{
@@ -239,6 +249,7 @@
 		}
 
 		#close-icon {
+			display: none;
 			color: $secondary;
 			margin-left: auto;
 			position: relative;
@@ -282,6 +293,7 @@
 
 		#user-div {
 			margin-left: auto;
+			margin-right: 25px;
 		}
 
 		:global(#user-div .dropdown) {
@@ -332,6 +344,10 @@
 
 			.nav-link {
 				padding: 0.5em 16px;
+			}
+
+			#close-icon {
+				display: block;
 			}
 		}
 	}

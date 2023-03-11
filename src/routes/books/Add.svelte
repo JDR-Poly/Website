@@ -57,3 +57,9 @@
 		</Button>
 	</Actions>
 </Dialog>
+
+<style lang="scss">
+	:global(#list-selection-content > *) {
+		margin: 0.5em;
+	}
+</style>

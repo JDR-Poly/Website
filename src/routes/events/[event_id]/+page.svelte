@@ -223,6 +223,7 @@
 		h5 {
 			font-weight: 400;
 			letter-spacing: 2px;
+			margin-bottom: 2em;
 		}
 
 		img {

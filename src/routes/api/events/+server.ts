@@ -80,7 +80,8 @@ export async function POST({ request, locals }: RequestEvent) {
 /**
  * Get all events sorted by their date
  * @type {import('./$types').RequestHandler} 
- * @param {boolean?} url.searchParams.excludeExpiredEvents exclude event in the past (default true) 
+ * @param {boolean?} url.searchParams.excludeExpiredEvents exclude event in the past (default true)
+ * @param {number} url.searchParams.limit how much events to search for
  * @return {Event[]} list of events
  * */
 export async function GET({ url }: RequestEvent) {

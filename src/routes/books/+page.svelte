@@ -212,7 +212,6 @@
 		}
 	}
 
-
 	:global(#fab-container .mdc-fab__label, #fab-container .mdc-fab__icon) {
 		color: $secondary;
 	}
