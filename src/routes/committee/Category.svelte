@@ -212,4 +212,8 @@
 			}
 		}
 	}
+
+	:global(#fab-container > *) {
+		color: $secondary;
+	}
 </style>

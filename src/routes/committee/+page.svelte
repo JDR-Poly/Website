@@ -48,8 +48,8 @@
 		bottom: 40px;
 		right: 40px;
 
-		:root {
-			--mdc-theme-secondary: limegreen;
+		:global(.mdc-fab > i) {
+			color: $secondary;
 		}
 	}
 </style>
