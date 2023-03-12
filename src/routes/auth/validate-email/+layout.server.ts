@@ -5,7 +5,5 @@ import { redirect } from "@sveltejs/kit";
 export function load({ locals }: RequestEvent) {
 	if (locals.authenticated && locals.user?.is_email_validated) {
 	  throw redirect(307, '/');
-	} else if(!locals.authenticated) {
-	  throw redirect(307, '/auth/login');
-	} 
+	}
 }
