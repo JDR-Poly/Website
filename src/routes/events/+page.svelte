@@ -96,8 +96,8 @@
 
 			.delete-btn {
 				position: absolute;
-				top: 2px;
-				right: 2px;
+				top: -5px;
+				right: -5px;
 			}
 
 			.img {

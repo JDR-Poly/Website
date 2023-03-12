@@ -41,7 +41,7 @@
 		</div>
 	</div>
 	<div id="bottom">
-		<p>© JDRpoly 2015-2023. All rights reserved. | Design: Inspired by <a href="http://html5up.net/" target="_blank" rel="noreferrer">HTML5 UP</a></p>
+		<p>© JDRpoly 2015-2023. All rights reserved. | Home page design: Inspired by <a href="http://html5up.net/" target="_blank" rel="noreferrer">HTML5 UP</a></p>
 	</div>
 </footer>
 
