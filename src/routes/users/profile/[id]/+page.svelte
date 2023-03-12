@@ -27,7 +27,7 @@
 	<p>Role: <strong>{data.user_profile.role?.name}</strong></p>
 
 	{#if data.user_profile.member_start}
-		<p>Membre depuis: <strong>{dateFormater.format(Date.parse(data.user_profile.member_start))}</strong></p>
+		<p>Membre à partir de: <strong>{dateFormater.format(Date.parse(data.user_profile.member_start))}</strong></p>
 	{/if}
 	{#if data.user_profile.member_stop}
 		<p>Fin de membre: <strong>{dateFormater.format(Date.parse(data.user_profile.member_stop))}</strong></p>

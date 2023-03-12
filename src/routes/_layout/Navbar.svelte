@@ -144,6 +144,13 @@
 					links: [
 						{
 							element: {
+								prefix_icon: 'person',
+								text: 'Profile'
+							},
+							link: `/users/profile/${user.id}`
+						},
+						{
+							element: {
 								prefix_icon: 'settings',
 								text: 'Paramètres'
 							},
