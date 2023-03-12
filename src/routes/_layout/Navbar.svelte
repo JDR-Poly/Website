@@ -147,7 +147,7 @@
 								prefix_icon: 'settings',
 								text: 'Paramètres'
 							},
-							link: '/committee'
+							link: '/users/account/settings'
 						},
 						{
 							element: {
