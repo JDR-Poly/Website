@@ -1,11 +1,12 @@
 import { sendMail } from "$lib/server/mailClient"
-import { getNextPeriod, updateMemberPeriod, type Period } from "$lib/server/memberPeriod"
+import { updateMemberPeriod} from "$lib/server/memberPeriod"
 import { db } from "$lib/server/postgresClient"
 import { hasRolePermission, UserPermission } from "$lib/userPermissions"
 import type { RequestEvent, Actions } from "./$types";
 import { v4 as uuid } from "uuid"
 import { error, fail, redirect } from "@sveltejs/kit"
 import { readFile } from 'fs/promises';
+import { getNextPeriod, type Period } from "$lib/publicMemberPeriod";
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ locals }: RequestEvent) {

@@ -1,4 +1,5 @@
-import { getNextPeriod, updateMemberPeriod, type Period } from "$lib/server/memberPeriod";
+import { getNextPeriod, type Period } from "$lib/publicMemberPeriod";
+import { updateMemberPeriod } from "$lib/server/memberPeriod";
 import { db } from "$lib/server/postgresClient";
 import { error } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";

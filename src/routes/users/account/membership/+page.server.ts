@@ -1,7 +1,8 @@
 import type { RequestEvent, Actions } from "./$types";
 import { error, fail } from "@sveltejs/kit"
 import { db } from "$lib/server/postgresClient";
-import { getNextPeriod, updateMemberPeriod, type Period } from "$lib/server/memberPeriod";
+import { updateMemberPeriod} from "$lib/server/memberPeriod";
+import { getNextPeriod, type Period } from "$lib/publicMemberPeriod";
 
 /**
  * For a user, validate a code and add the correspoding member time.
