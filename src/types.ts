@@ -23,11 +23,11 @@ type User = {
 	name?: string,
 	role?: Role,
 	is_email_validated?: boolean,
-	account_creation?: Date,
+	account_creation?: string, //Date
 	discord_id?: string,
 	bio?: string,
-	member_start?: Date,
-	member_stop?: Date
+	member_start?: string, //Date
+	member_stop?: string //Date
 }
 
 /**

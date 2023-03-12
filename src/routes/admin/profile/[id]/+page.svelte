@@ -1,17 +1,28 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import ModifyRole from '$lib/components/admin/users/ModifyRole.svelte';
+	import ModifyRole from './ModifyRole.svelte';
 
-	const { id } = $page.params;
-
-	const userQuery = fetch('/api/users/' + id)
-		.then((res) => res.json())
+	export let data: any;
 </script>
 
-{#await userQuery}
-	<h2>Chargement de la page</h2>
-{:then user}
-	<p style="text-size: 16px;">Modifier les données de <strong>{user.name}</strong></p>
 
-	<ModifyRole {user} />
-{/await}
+<main>
+	<h2>Modifier les données de {data.name}</h2>
+
+	<ModifyRole user={data} />
+</main>
+
+<style lang="scss">
+	main {
+		width: 70%;
+		margin: 8em auto;
+		min-height: 40vh;
+
+		h2 {
+			font-family: 'Ubuntu';
+			text-transform: uppercase;
+			font-weight: 600;
+			letter-spacing: 0.15em;
+			margin-bottom: 15px;
+		}
+	}
+</style>
