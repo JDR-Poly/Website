@@ -28,7 +28,7 @@
 			<h2>Qu'est-ce que JDR-Poly ?</h2>
 			<p>
 				Légalement, JDR-Poly est une commission de l'AGEPoly, l'association générale des étudiants de l'EPFL. 
-				Notre but est avant tout de promouvoir le jeu de rôle et d'organiser divers événements au cours de l'année à destination de tous. Une bonne partie d'entre eux se déroulent le mercredi soir dans le bâtiment <a href="#accès">INM</a>. 
+				Notre but est avant tout de promouvoir le jeu de rôle et d'organiser divers événements au cours de l'année à destination de tous. Une bonne partie d'entre eux se déroulent le mercredi soir dans le bâtiment <a href="/plan">INM</a>. 
 				Le plus emblématique se déroule toutes les deux semaines, il s'agit des bonnes vieilles nocturnes d'initiation. 
 				Il existe de nombreuses autres activités proposées, allant de la simple mais ludique soirée Loup-garou ambiancée aux fameuses murders party.
 				

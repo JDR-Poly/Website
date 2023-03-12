@@ -51,5 +51,10 @@
 		:global(.mdc-fab > i) {
 			color: $secondary;
 		}
+
+		:global(.mdc-fab) {
+			background-color: limegreen;
+		}
 	}
+
 </style>

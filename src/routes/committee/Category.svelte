@@ -81,7 +81,7 @@
 
 {#await reqCommittee}
 	<!-- Evil hack to allow svelte to rerender {#each} loop-->
-{:then committees} 
+{:then committees}
 <div class="grid">
 	{#each committees as committee, i}
 		<div class="card">
@@ -139,9 +139,6 @@
 </Panel>
 
 <style lang="scss">
-	:root {
-		--mdc-theme-secondary: limegreen;
-	}
 
 	.grid {
 		display: flex;
@@ -215,5 +212,8 @@
 
 	:global(#fab-container > *) {
 		color: $secondary;
+	}
+	:global(#fab-container ) {
+		background-color: limegreen;
 	}
 </style>

@@ -81,11 +81,11 @@
 	<div id="wrapper">
 		<img src="/data/images/events/{data.event.id}.png" alt="Événement">
 		<h2>{data.event.title}</h2>
-		<h5>{new Intl.DateTimeFormat('fr-Fr', {
+		<h3>{new Intl.DateTimeFormat('fr-Fr', {
 			dateStyle: 'medium',
 			timeStyle: 'short',
 			timeZone: 'Europe/Paris'
-		}).format(data.event.date)}</h5>
+		}).format(data.event.date)}</h3>
 
 		<div id="split">
 			<p id="description">{data.event.description.replace("\n", "\n\n")}</p>
@@ -220,6 +220,11 @@
 			line-height: 1.75em;
 		}
 		
+		h3 {
+			font-weight: 400;
+			letter-spacing: 2px;
+			margin-bottom: 2em;
+		}
 		h5 {
 			font-weight: 400;
 			letter-spacing: 2px;

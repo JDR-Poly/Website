@@ -83,10 +83,10 @@
 		{#each bookList as book}
 			<li class="book">
 				<p>
-					{book.title} |
+					{book.title} | <b>Disponible:</b> <Icon class="material-icons">{book.status == 'Disponible' ? 'done' : 'close'}</Icon> 
+					<br>
 					<i>Caution: {book.caution}</i>
-					<b>Disponible:</b>
-					<Icon class="material-icons">{book.status == 'Disponible' ? 'done' : 'close'}</Icon>
+					
 				</p>
 				{#if hasRolePermission(UserPermission.MODIFY_BOOKS, $page.data.user?.role)}
 					<div class="admin-buttons">

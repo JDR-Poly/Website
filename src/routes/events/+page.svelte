@@ -92,6 +92,7 @@
 			max-width: 20vw;
 			min-width: 280px;
 			margin: 2em;
+			width: 18vw;
 
 			.delete-btn {
 				position: absolute;
