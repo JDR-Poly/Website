@@ -162,7 +162,7 @@
 			text-transform: uppercase;
 			font-weight: 600;
 			letter-spacing: 0.15em;
-			margin-bottom: 5px;
+			margin-bottom: 15px;
 		}
 
 		p {

@@ -12,24 +12,25 @@ export const handle: Handle = async function ({ event, resolve }) {
 		return resolve(event);
 	}
 
+	//Get user session
 	const id = await db.one(
 			"SELECT user_id FROM sessions WHERE cookieId=$1",
 			[session],
 			a => a.user_id
-	)
-		.catch(() => {})
+	).catch(() => {})
 	if(!id) return resolve(event);
 	
+	//Get user
 	const user = await db.one(
 		`SELECT id, email, name, role, account_creation, is_email_validated 
 		FROM users WHERE id=$1`
 		,[id]
-	)
-		.catch((err) => {
-			throw throwError(500, err.message)
-		})
+	).catch((err) => {
+		throw throwError(500, err.message)
+	})
 		
-	const role = Roles[user.role]
+	const role = Roles[user.role] //Get role from rolename
+
 	if (role) {
 		event.locals = {
 			authenticated: true,
@@ -46,7 +47,6 @@ export const handle: Handle = async function ({ event, resolve }) {
 		throw throwError(500, `User with email,id ${user.email},${user.id} has an invalid role ${user.role}`)
 	}
 	return resolve(event);
-
 }
 
 export const handleError: HandleServerError =  ({ error, event }) => {
@@ -59,10 +59,9 @@ export const handleError: HandleServerError =  ({ error, event }) => {
 	} else {
 		console.error(newError);
 		return {
-			status: 500,
+			status: newError.status,
 			message: "Internal error"
 		}
 	}
-
  }
  

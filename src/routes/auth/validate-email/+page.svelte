@@ -1,35 +1,59 @@
 <script lang="ts">
-	import { info } from '$lib/stores';
+	import { info, error } from '$lib/stores';
 	import { page } from '$app/stores';
 	import { invalidateAll } from '$app/navigation';
+	import Button, { Label } from '@smui/button';
+	import { enhance } from '$app/forms';
+
 </script>
 
-<h>En attente de validation du mail</h>
+<svelte:head>
+	<title>Valider email | JDRPoly</title> 
+</svelte:head>
 
-<p>Vous avez dû recevoir un mail de validation à l'email: {$page.data.user.email}</p>
+<main>
+	<h2>En attente de validation du mail</h2>
+	<p>Vous avez dû recevoir un mail de validation à l'email: <strong>{$page.data.user.email}</strong></p>
 
-<button
-	on:click={async () => {
-		try {
-			const res = await fetch('/api/auth/email/send', {
-				method: 'POST',
-				body: JSON.stringify({
-					id: $page.data.user.id
-				}),
-				headers: { 'Content-Type': 'application/json' }
-			});
-			if (res.ok) {
-				$info = "Le mail vient d'être envoyé";
+	<form method="POST" use:enhance={({ }) => {
+			return async ({ result }) => {
+				if(result.type == "success") {
+					$info = "Le mail vient d'être envoyé";
+				} else if(result.type == "failure") {
+					$error = result?.data?.message
+				}
 			}
-		} catch (err) {
-			console.error(err);
-		}
-	}}>Renvoyez un mail</button
->
+		}}>
+		<div class="button">
+			<Button touch variant="unelevated">
+				<Label>Renvoyer un mail</Label>
+			</Button>
+		</div>
+	</form>
+</main>
 
-<button
-	on:click={async () => {
-		const res = await fetch('/api/auth/logout', { method: 'POST' });
-		await invalidateAll()
-	}}>Mauvais email ?</button
->
+<style lang="scss">
+	main {
+		width: 70%;
+		margin: 8em auto;
+		min-height: 40vh;
+
+		h2 {
+			font-family: 'Ubuntu';
+			text-transform: uppercase;
+			font-weight: 600;
+			letter-spacing: 0.15em;
+			margin-bottom: 15px;
+		}
+
+		p {
+			white-space: pre-line;
+			line-height: 27px;
+			text-align: justify;
+			margin-bottom: 2em;
+			color: #777;
+			font-family: 'Ubuntu';
+			font-size: 23px;
+		}
+	}
+</style>

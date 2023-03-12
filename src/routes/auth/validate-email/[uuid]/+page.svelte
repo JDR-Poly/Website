@@ -1,49 +1,56 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { info, error } from '$lib/stores';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	const { uuid } = $page.params;
 
-	const emailValidationResult = fetch('/api/auth/email/validate', {
-		method: 'POST',
-		body: JSON.stringify({ uuid }),
-		headers: { 'Content-Type': 'application/json' }
-	}).then((res) => {
-		
-		if (res.ok) {
-			setTimeout(() => invalidateAll(), 2000);
+	export let data: any;	
+
+	onMount(() => {
+		if(data.success) {
+			setTimeout(() => {
+				invalidateAll();
+			}, 3000);
 		}
-		return res;
-	});
+	})
 </script>
 
-{#await emailValidationResult}
-	<h1>Loading</h1>
-{:then res}
-	{#if res.ok}
-		<p>Votre mail est validé ! Nous allons vous rediriger vers la page d'accueil</p>
+<svelte:head>
+	<title>Vérification mail | JDRPoly</title> 
+</svelte:head>
+
+<main>
+	{#if data.success}
+		<h2>Vous avez bien validé votre email !</h2>
+		<p>Vous allez êtes rediriger sous peu.</p>
 	{:else}
-		<p>Ce lien n'est plus valide</p>
-		<button
-			on:click={async () => {
-				try {
-					const res = await fetch('/api/auth/email/send', {
-						method: 'POST',
-						body: JSON.stringify({
-							id: $page.data.user.id
-						}),
-						headers: { 'Content-Type': 'application/json' }
-					});
-					if (res.ok) {
-						$info = "Le mail vient d'être envoyé";
-						setTimeout(() => goto('/auth/validate-email'), 3000);
-					}
-				} catch (err) {
-					$error = 'An error occured';
-					console.error(err);
-				}
-			}}>Envoyer un nouveau mail</button
-		>
+		<h2>Code invalide</h2>
+		<p>Le code <strong>{uuid}</strong> n'est pas un code valide.</p>
 	{/if}
-{/await}
+</main>
+
+<style lang="scss">
+	main {
+		width: 70%;
+		margin: 8em auto;
+		min-height: 40vh;
+
+		h2 {
+			font-family: 'Ubuntu';
+			text-transform: uppercase;
+			font-weight: 600;
+			letter-spacing: 0.15em;
+			margin-bottom: 15px;
+		}
+
+		p {
+			white-space: pre-line;
+			line-height: 27px;
+			text-align: justify;
+			margin-bottom: 2em;
+			color: #777;
+			font-family: 'Ubuntu';
+		}
+	}
+</style>
