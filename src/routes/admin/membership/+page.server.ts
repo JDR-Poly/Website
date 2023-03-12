@@ -48,7 +48,7 @@ export const actions = {
 		//Add periods to users with account
 		users.forEach(user => {
 			//Prevent role change for admin
-			if (user.role !== "USER" && user.role !== "MEMBER") return
+			if (user.role != "USER" && user.role != "MEMBER") return
 
 			let period: Period = { start: user.member_start, stop: user.member_stop }
 			for (let i = 0; i < periodsNumber; i++) {
