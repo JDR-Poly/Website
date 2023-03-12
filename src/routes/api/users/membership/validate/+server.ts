@@ -15,7 +15,7 @@ export async function POST({ request, locals }: RequestEvent) {
 	return db.one("SELECT validation_token, periods FROM members_code WHERE validation_token=$1", 
 	[body.validation_token])
 		.then((res) => {
-			return db.one("SELECT id, email, member_start, member_stop FROM users WHERE id=$1;",
+			return db.one("SELECT id, email, member_start, member_stop, role FROM users WHERE id=$1;",
 				[locals.user?.id])
 				.then((user) => {
 					db.none("DELETE FROM members_code WHERE validation_token=$1",
@@ -25,7 +25,7 @@ export async function POST({ request, locals }: RequestEvent) {
 					for (let i = 0; i < res.periods; i++) {
 						period = getNextPeriod(period)
 					}
-					updateMemberPeriod(user, period)
+					if(user.role != "USER" && user.role != "MEMBER") updateMemberPeriod(user, period)
 					return new Response("User membership period updated")
 				})
 		})

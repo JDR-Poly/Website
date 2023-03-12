@@ -16,8 +16,9 @@ export const actions = {
 		
 		return db.one("SELECT validation_token, periods FROM members_code WHERE validation_token=$1", [form.get("validation_token")]) //Get matching token
 			.then((res) => {				
-				return db.one("SELECT id, member_start, member_stop FROM users WHERE id=$1;", [locals.user?.id]) //get user data
+				return db.one("SELECT id, member_start, member_stop, role FROM users WHERE id=$1;", [locals.user?.id]) //get user data
 					.then((user) => {
+						if(user.role != "USER" && user.role != "MEMBER") return 
 						db.none("DELETE FROM members_code WHERE validation_token=$1", [res.validation_token]) //Delete now invalid token
 						
 						//Calculate new member period

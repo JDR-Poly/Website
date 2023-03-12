@@ -34,7 +34,9 @@ type Period = {
 
 const periods: Period[] = [
 	{ start: new Date(2022, 8, 10), stop: new Date(2023, 0, 10) },
-	{ start: new Date(2023, 0, 10), stop: new Date(2023, 6, 10) }
+	{ start: new Date(2023, 0, 10), stop: new Date(2023, 6, 10) },
+	{ start: new Date(2024, 8, 10), stop: new Date(2024, 0, 10) },
+	{ start: new Date(2024, 0, 10), stop: new Date(2024, 6, 10) }
 ]
 
 function updateMemberPeriod(user: User, period: Period) {
@@ -45,7 +47,7 @@ function updateMemberPeriod(user: User, period: Period) {
 
 	db.none("UPDATE $[table:name] SET role=$[role], member_start=$[member_start], member_stop=$[member_stop] WHERE id=$[id]", {
 		table: "users",
-		member_start: period.start,
+		member_start: newRole == "MEMBER" ? null : period.start,
 		member_stop: period.stop,
 		role: newRole,
 		id: user.id

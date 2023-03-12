@@ -95,7 +95,7 @@ export const actions = {
 	}
 };
 
-function validateEmail(email?: string): Boolean {
+function validateEmail(email?: string): Boolean { //TODO 
 	return true
 }
 
