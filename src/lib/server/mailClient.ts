@@ -40,7 +40,7 @@ if (transporter == undefined) {
 	ethereal = true
 }
 
-async function sendMail(to: any, subject: string, html: string): Promise<any> {
+async function sendMail(to: any, subject: string, html: string): Promise<any> {	
 	try {
 		const result = await transporter!.sendMail({
 			from: '"JDRPoly Info" <informatique@jdrpoly.ch>',
@@ -50,7 +50,7 @@ async function sendMail(to: any, subject: string, html: string): Promise<any> {
 		})
 		if (ethereal) console.log("Preview Mail: %s", getTestMessageUrl(result));
 		return result
-	} catch (err: any) {
+	} catch (err: any) {		
 		return Error(err.message)
 	}
 }

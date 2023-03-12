@@ -5,7 +5,7 @@ import { hasRolePermission, UserPermission } from "$lib/userPermissions"
 import type { RequestEvent, Actions } from "./$types";
 import { v4 as uuid } from "uuid"
 import { error, fail, redirect } from "@sveltejs/kit"
-import { readFile } from 'fs';
+import { readFile } from 'fs/promises';
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ locals }: RequestEvent) {
@@ -56,9 +56,8 @@ export const actions = {
 			}
 			updateMemberPeriod(user, period)
 		})
-
 		//Send email and code to users that don't have an account
-		const errorMails = await createAndSendMemberCodes(emailsNotFound, periodsNumber)		
+		const errorMails = await createAndSendMemberCodes(emailsNotFound, periodsNumber)				
 		return {
 			success: true,
 			errorMails: errorMails
@@ -85,12 +84,9 @@ async function createAndSendMemberCodes(emails: string[], periodsNumber: number)
 			})
 
 			const promise = ( async () => {
-				let res: any;
-				await readFile('static/mails/memberCode.html', function(err, data) {
-					let html = data.toString()
-					html = html.replace('%CODE%', code)
-					res = sendMail(email, "JDRPoly: Code de membre", html)
-				})
+				let content = await readFile('static/mails/memberCode.html', { encoding: 'utf8' })
+				content = content.replace('%CODE%', code)
+				const res = await sendMail(email, "JDRPoly: Code de membre", content)
 				if(res instanceof Error) return email
 				else return ""	
 			})()
@@ -103,5 +99,6 @@ async function createAndSendMemberCodes(emails: string[], periodsNumber: number)
 
 	const res = await (await Promise.all(promises)).filter((str) => str) 
 	mailsError.push(...res)
+	
 	return mailsError
 }
