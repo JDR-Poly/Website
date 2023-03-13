@@ -1,4 +1,4 @@
-import type { User } from "src/types";
+import type { User } from "$gtypes";
 import { Role, Roles, UserPermission } from "../userPermissions";
 import { db } from "./postgresClient";
 
