@@ -123,8 +123,8 @@
 	}
 
 	#main {
-		background-image: url('images/main/dark-tl.svg'), url('images/main/dark-tr.svg'),
-			url('images/main/dark-bl.svg'), url('images/main/dark-br.svg');
+		background-image: url('/images/main/dark-tl.svg'), url('/images/main/dark-tr.svg'),
+			url('/images/main/dark-bl.svg'), url('/images/main/dark-br.svg');
 		background-position: top left, top right, bottom left, bottom right;
 		background-repeat: no-repeat;
 		background-size: 25em;

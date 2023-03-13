@@ -10,7 +10,7 @@ import type { RequestEvent } from "./$types";
  * @type {import('./$types').RequestHandler}  
 */
 export async function POST({ request, locals }: RequestEvent) {
-	if (!locals.authenticated) throw(401)
+	if (!locals.authenticated) throw error(401)
 	const body = await request.json()
 
 	return db.one("SELECT validation_token, periods FROM members_code WHERE validation_token=$1", 

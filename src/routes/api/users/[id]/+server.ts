@@ -5,7 +5,9 @@ import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions";
 
 /** @type {import('./$types').RequestHandler} */
 export function GET({ params, locals }: RequestEvent) {
+	if(!locals.authenticated) throw error(401)
 	const id = params.id
+	if(!hasRolePermission(UserPermission.SEE_USERS_PROFILE, locals.user?.role) && parseInt(id) != locals.user?.id) throw error(403)
 	const mailSQLText = locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role) ? "email, " : "" 
 
 	return db.one(

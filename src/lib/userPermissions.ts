@@ -14,7 +14,8 @@ enum UserPermission {
 	SUBSCRIBE_USER_TO_EVENT,
 	REMOVE_USER_FROM_EVENT,
 	MODIFY_COMMITTEE_PAGE,
-	MODIFY_BOOKS
+	MODIFY_BOOKS,
+	SEE_USERS_PROFILE
 }
 
 /**
@@ -82,7 +83,7 @@ function hasRolePermission(permission: UserPermission | string, role?: Role): bo
  */
 const Roles: Record<string, Role> = {
 	USER: Role.createRole("USER", [UserPermission.JOIN_EVENT_USER]),
-	MEMBER: Role.createRole("MEMBER", [UserPermission.JOIN_EVENT_MEMBER], ["USER"]),
+	MEMBER: Role.createRole("MEMBER", [UserPermission.JOIN_EVENT_MEMBER, UserPermission.SEE_USERS_PROFILE], ["USER"]),
 	HONORARY_MEMBER: Role.createRole("HONORARY_MEMBER", [], ["MEMBER"]),
 	COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER, 
 		UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT, UserPermission.ADMIN_PANEL, UserPermission.JOIN_EVENT_COMMITTEE, 

@@ -5,6 +5,9 @@ import type { RequestEvent } from "./$types";
 
 /** @type {import('./$types').RequestHandler} */
 export function GET({ locals }: RequestEvent) {
+	if(!locals.authenticated) throw error(401)
+	if(!hasRolePermission(UserPermission.SEE_USERS_PROFILE, locals.user?.role)) throw error(403)
+
 	const mailSQLText = locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role) ? "email, " : "" 
 	return db.any(
 		` SELECT 

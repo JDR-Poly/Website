@@ -72,6 +72,8 @@
 	}
 
 	let addedUser = ''
+
+	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role)
 </script>
 <svelte:head>
 	<title>{data.event.title} | JDRPoly</title> 
@@ -114,7 +116,12 @@
 					<p>Il y a actuellement {data.event.subscribed.length} joueurs inscrits</p>
 					{#each data.event.subscribed as user}
 						<div class="positioner">
-							<a href="/users/{user.id}">{user.name}</a>
+							{#if canSeeProfile}
+								<a href="/users/profile/{user.id}">{user.name}</a>
+							{:else}
+								<a href="">{user.name}</a>
+							{/if}
+
 							{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
 								<IconButton class="material-icons" on:click={() => {
 									fetch('/api/admin/events/' + event_id + '/subscribe', {
