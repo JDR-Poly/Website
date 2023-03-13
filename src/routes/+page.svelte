@@ -37,6 +37,9 @@
 		</header>
 		<div id="events">
 			<div id="title">Événements</div>
+			{#if data.events.length == 0}
+				<h1>Il n'y a aucun événement prévu pour le moment</h1>
+			{/if}
 			{#each data.events as event}
 				<div class="event">
 					<div class="img"> 
@@ -177,6 +180,7 @@
 		display: flex;
 		justify-content: space-evenly;
 		margin: 8em 0 0 0;
+		min-height: 30vh;
 		padding: 8em 7%;
 		background: rgb(0,2,26);
 		background: linear-gradient(135deg, rgba(0,2,26,1) 0%, rgba(0,12,56,1) 34%, rgba(2,28,85,1) 57%, rgba(7,48,118,1) 85%, rgba(21,137,209,1) 100%);
@@ -187,6 +191,10 @@
 		
 		position: relative;
 
+		h1 {
+			color: $secondary;
+			margin-top: 2em;
+		}
 
 		#title {
 			position: absolute;

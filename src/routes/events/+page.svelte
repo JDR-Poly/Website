@@ -33,6 +33,9 @@
 			</Fab>
 		</div>
 	{/if}
+	{#if data.events.length == 0} 
+		<h1>Il n'y a aucun événement prévu pour le moment</h1>
+	{/if}
 	<div id="event-container">
 		{#each data.events as event}
 			<div class="event">
@@ -73,6 +76,16 @@
 			rgba(7, 48, 118, 1) 85%,
 			rgba(21, 137, 209, 1) 100%
 		);
+
+		h1 {
+			color: $secondary;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			display: block;
+			font-size: 2.5rem;
+		}
 	}
 	
 	#event-container {

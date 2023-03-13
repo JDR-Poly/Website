@@ -242,4 +242,15 @@
 			}
 		}
 	}
+
+	@media only screen and (max-width: 800px) {
+		main {
+			img {
+				display: none;
+			}
+			#form-wrapper {
+				width: 100%;
+			}
+		}
+	}
 </style>
