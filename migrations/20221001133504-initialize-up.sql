@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS public.events(
 	inscription_start TIMESTAMP WITHOUT TIME ZONE,
 	inscription_stop TIMESTAMP WITHOUT TIME ZONE,
 	description TEXT,
+	image BYTEA,
 	CONSTRAINT events_pk PRIMARY KEY (id)
 );
 
@@ -92,6 +93,7 @@ CREATE TABLE public.committee_info
 	item_order 			SMALLINT NOT NULL,
 	name				VARCHAR(255) DEFAULT '',
 	description			TEXT,
+	image				BYTEA,
 	CONSTRAINT id_pk PRIMARY KEY (id)
 );
 

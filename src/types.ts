@@ -38,6 +38,7 @@ type Committee = {
 	category: string,
 	title: string,
 	name?: string,
+	imageb64?: string,
 	description?: string,
 	item_order?: number, //For the order in which to show it on the committee page
 }

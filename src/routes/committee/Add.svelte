@@ -28,14 +28,12 @@
 <Dialog bind:open={$open}>
 	<Title id="simple-title">Ajouter un comité</Title>
 	<Content id="list-selection-content">
-		<form method="POST" action="?/addCommittee" use:enhance={({ form, data, action, cancel }) => {
+		<form method="POST" action="?/addCommittee" use:enhance={({ data }) => {
 			data.append("category", category)
 			if(images && images[0]) data.append("image", images[0])
 			console.log(data);
 			
-			return async ({ result }) => {
-				console.log(result);
-				
+			return async ({ result }) => {				
 				images = null
 				data.delete('image')
 				if(result.type == "success") {
@@ -52,7 +50,7 @@
 				{/each}
 			</Select>
 			<Textfield input$name="title" type="text" bind:value={title} label="Titre" style="min-width: 400px;" />
-			<Textfield input$name="text" type="text" bind:value={name} label="Nom" style="min-width: 400px;"
+			<Textfield input$name="name" type="text" bind:value={name} label="Nom" style="min-width: 400px;"
 				><Icon class="material-icons" slot="leadingIcon">person</Icon></Textfield
 			>
 			<Textfield

@@ -14,9 +14,18 @@ export function GET({ params}: RequestEvent) {
 		[category]
 	)
 		.then((res) => {
+			res.forEach((v) => {
+				if(v.image) v.imageb64 = Buffer.from(v.image).toString("base64") //Convert to b64
+				v.image = undefined
+			})	
+			return res	
+		})
+		.then((res) => {			
 			return json(res)
 		})
-		.catch((err) => {
+		.catch((err) => {	
+			console.log(err);
+					
 			throw error(500, err.message)
 		})
 }

@@ -10,6 +10,7 @@
 	import IconButton from '@smui/icon-button';
 	import { onMount } from 'svelte';
 	import ImgDefault from '$components/ImgDefault.svelte';
+	import ImageB64 from '$components/ImageB64.svelte';
 
 	let change = false;
 	let reqCommittee: Promise<Committee[]> = (async () => {return []})() //Evil hack to allow svelte to rerender {#each} loop
@@ -68,7 +69,7 @@
 			.then(() => {
 				location.reload();
 			})
-			.catch((err) => {
+			.catch((err) => {				
 				$error = err.message;
 			});
 	}
@@ -85,7 +86,7 @@
 <div class="grid">
 	{#each committees as committee, i}
 		<div class="card">
-			<ImgDefault url={`/data/images/committee/${committee.id}.png`} defaultUrl="/data/images/committee/default.png" alt={committee.name}/>
+			<ImageB64 imageb64={committee.imageb64} alt={committee.name ? committee.name : ""} alternativeImageSrc="/data/images/committee/default.png" />
 			<div class="text-container">
 				<h4><b>{committee.name}</b></h4>
 				<p>{committee.title}</p>
