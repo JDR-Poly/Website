@@ -3,7 +3,7 @@
 	import Dropdown from './Dropdown.svelte';
 	import { page } from '$app/stores';
 	import type { User } from '$gtypes';
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 
 	let responsive = false;
@@ -15,7 +15,9 @@
 
 	async function logout() {
 		const res = await fetch('/api/auth/logout', { method: 'POST' });
+		await goto('/')
 		invalidateAll();
+		
 	}
 </script>
 
