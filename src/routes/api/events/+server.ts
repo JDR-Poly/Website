@@ -3,13 +3,14 @@ import { db } from "$lib/server/postgresClient"
 import { hasRolePermission, UserPermission } from "$lib/userPermissions"
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
-import { writeFileSync } from 'fs';
 import { __envDir } from "$lib/utils";
 
 
 /**  ---Event POST---  */
 
 /**
+ * Create an event
+ * 
  * @param {FormData} request.body the request must be a form data
  * @param {string} title the title of the event
  * @param {string} category the category of the event
@@ -37,7 +38,7 @@ export async function POST({ request, locals }: RequestEvent) {
 			if(date == null) return null
 			else return new Date(date.toString())
 		})(),
-		image: data.get("image")?.valueOf() as Blob,
+		image: data.get("image")?.valueOf() as Blob | undefined,
 		inscription: data.get("inscription")?.toString(),
 		inscription_group: data.get("inscription_group")?.toString().toUpperCase(),
 		inscription_start: (() => {
@@ -50,30 +51,24 @@ export async function POST({ request, locals }: RequestEvent) {
 			if(date == null) return null
 			else return new Date(date.toString())
 		})(),
-	}
+	}	
+	const barray = parsedData.image ? await parsedData.image.arrayBuffer() : undefined
 	if (parsedData.inscription_group !== "USER" && parsedData.inscription_group !== "MEMBER" && parsedData.inscription_group !== "COMMITTEE") throw error(400, "inscription_group is not valid, should be either user, member or committee")
 
 	return db.one(
 		`INSERT INTO events
-			(title,author,category,date,inscription,inscription_group,inscription_start,inscription_stop,description)
+			(title,author,category,date,inscription,inscription_group,inscription_start,inscription_stop,description, image)
 		VALUES
-			($1, $2, $3, $4, $5, $6, $7, $8, $9)
-		RETURNING id;
-		`,
-		[parsedData.title, locals.user?.id, parsedData.category, parsedData.date, parsedData.inscription, parsedData.inscription_group, parsedData.inscription_start, parsedData.inscription_stop, parsedData.description],
-		a => a.id
-		)
-		.then(async (id) => {			
-			if(parsedData.image) {
-				const file = await parsedData.image.arrayBuffer()
-				writeFileSync(__envDir + 'data/images/events/' + id + '.png', Buffer.from(file))
-			}
-			return json({id})
+			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+		RETURNING id;`,
+		[parsedData.title, locals.user?.id, parsedData.category, parsedData.date, parsedData.inscription, parsedData.inscription_group, parsedData.inscription_start, parsedData.inscription_stop, parsedData.description, barray ? Buffer.from(barray) : null],
+		a => a.id)
+		.then((id) => {						
+			return json({id: id})
 		})
 		.catch((err) => {
 			throw error(500, err.message)
 		})
-
 }
 
 /**  ---Events GET---  */
@@ -99,6 +94,13 @@ export async function GET({ url }: RequestEvent) {
 		`
 
 	return db.any(db_req, [new Date(Date.now())])
+		.then((res) => {
+			res.forEach((v) => {
+				if(v.image) v.imageb64 = Buffer.from(v.image).toString("base64") //Convert to base64
+				v.image = undefined
+			})
+			return res
+		})
 		.then((result) => {
 			return json(result)
 		})

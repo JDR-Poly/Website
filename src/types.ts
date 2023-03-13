@@ -10,7 +10,8 @@ type Event = {
 	inscription: boolean,
 	inscription_group: string,
 	inscription_start?: Date,
-	inscription_stop?: Date
+	inscription_stop?: Date,
+	imageb64?: string
 }
 
 /**

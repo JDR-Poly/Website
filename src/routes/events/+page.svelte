@@ -5,6 +5,7 @@
 	import Fab, { Icon } from '@smui/fab';
 	import { goto } from '$app/navigation';
 	import IconButton from '@smui/icon-button';
+	import ImageB64 from '$components/ImageB64.svelte';
 
 	export let data: any;
 
@@ -18,7 +19,7 @@
 			const body = await res.json();
 			$error = body.message;
 		}
-	}
+	}	
 </script>
 
 <svelte:head>
@@ -38,6 +39,7 @@
 	{/if}
 	<div id="event-container">
 		{#each data.events as event}
+
 			<div class="event">
 				{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
 					<div class="delete-btn">
@@ -45,7 +47,9 @@
 					</div>
 				{/if}
 				<div class="img">
-					<img src="/data/images/events/{event.id}.png" alt="Evénement" />
+					{#if event.imageb64}
+						<ImageB64 imageb64={event.imageb64} alt={`Événement ${event.name}`} alternativeImageSrc=""/>
+					{/if}
 				</div>
 				<h3>{event.title}</h3>
 				<h5>
@@ -106,6 +110,8 @@
 			min-width: 280px;
 			margin: 2em;
 			width: 18vw;
+			height: 45vh;
+			min-height: 414px;
 
 			.delete-btn {
 				position: absolute;
@@ -115,23 +121,23 @@
 
 			.img {
 				width: 100%;
-				height: 28vh;
+				height: 50%;
 				overflow: hidden;
 				border-radius: 8px;
 				position: relative;
-			}
-			img {
-				max-height: 28vh;
-				border-radius: 8px;
-				margin: auto;
-				display: block;
-				position: absolute;
-				top: -9999px;
-				bottom: -9999px;
-				left: -9999px;
-				right: -9999px;
-			}
 
+				:global(img) {
+					border-radius: 8px;
+					margin: auto;
+					display: block;
+					position: absolute;
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
+
+			}
+			
 			h3 {
 				margin: 15px 5px;
 				letter-spacing: 0.025em;

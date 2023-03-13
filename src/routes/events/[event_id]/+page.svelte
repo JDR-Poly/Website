@@ -10,6 +10,7 @@
 	import type { User } from '$gtypes';
 	import Edit from './Edit.svelte';
 	import { writable } from 'svelte/store';
+	import ImageB64 from '$components/ImageB64.svelte';
 
 	export let data: any;
 	
@@ -79,7 +80,7 @@
 	<div id="img"/>
 	
 	<div id="wrapper">
-		<img src="/data/images/events/{data.event.id}.png" alt="Événement">
+		<ImageB64 imageb64={data.event.imageb64} alt="Événement" alternativeImageSrc=""/>
 		<h2>{data.event.title}</h2>
 		<h3>{new Intl.DateTimeFormat('fr-Fr', {
 			dateStyle: 'medium',

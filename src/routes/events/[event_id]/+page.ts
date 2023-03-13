@@ -7,7 +7,11 @@ export async function load({ params, fetch }) {
 			fetch('/api/events/' + params.event_id)
 				.then(async (res) => {
 					const body = await res.json()					
-					if(!res.ok) throw error(res.status, body.message)			
+					if(!res.ok) throw error(res.status, body.message)
+					else {
+						body.imageb64 = Buffer.from(body.image).toString("base64") //Convert to b64
+						body.image = undefined
+					}			
 					return body;
 				})
 				.then(async (event) => {					
