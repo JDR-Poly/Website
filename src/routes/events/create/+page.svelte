@@ -41,9 +41,7 @@
 			body: formData
 		});	
 		const body = await res.json();
-		if (res.ok) {
-			console.log(body);
-			
+		if (res.ok) {			
 			goto('/events/' + body.id)
 			$info = "L'évènement a bien été crée"
 		} else {

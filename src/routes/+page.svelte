@@ -317,12 +317,6 @@
 				margin: 2em 0;
 				padding: 6em 4em 12em 4em;
 				width: 50%;
-
-				img {
-					display: block;
-					margin: 20px auto;
-					margin: 0 auto 40px auto;
-				}
 			}
 		}	
 		

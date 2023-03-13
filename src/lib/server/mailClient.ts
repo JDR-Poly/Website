@@ -22,9 +22,9 @@ if (import.meta.env.PROD) {
 	testTransporter.verify((error, success) => {
 		if (!error) {
 			transporter = testTransporter
-			console.log("Email transporter is correctly linked")
+			console.info("Email transporter is correctly linked")
 		} else {
-			console.log(error)
+			console.error(error)
 		}
 	});
 }
@@ -50,7 +50,7 @@ async function sendMail(to: any, subject: string, html: string): Promise<any> {
 			subject: subject,
 			html: html
 		})
-		if (ethereal) console.log("Preview Mail: %s", getTestMessageUrl(result));
+		if (ethereal) console.info("Preview Mail: %s", getTestMessageUrl(result));
 		return result
 	} catch (err: any) {		
 		return Error(err.message)

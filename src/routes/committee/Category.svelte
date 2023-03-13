@@ -85,7 +85,7 @@
 <div class="grid">
 	{#each committees as committee, i}
 		<div class="card">
-			<ImageB64 imageb64={committee.imageb64} alt={committee.name ? committee.name : ""} alternativeImageSrc="/data/images/committee/default.png" />
+			<ImageB64 imageb64={committee.imageb64} alt={committee.name ? committee.name : ""} alternativeImageSrc="/images/default/committee.png" />
 			<div class="text-container">
 				<h4><b>{committee.name}</b></h4>
 				<p>{committee.title}</p>
@@ -154,7 +154,9 @@
 		position: relative;
 
 		:global(img) {
-			width: 100%;
+			width: 384px;
+			height: 384px;
+			object-fit: cover;
 		}
 		.text-container {
 			padding: 8px 16px;

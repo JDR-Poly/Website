@@ -19,7 +19,7 @@ const httpsServer = https.createServer(credentials, app);
 const SSLPORT = 443;
 
 httpsServer.listen(SSLPORT, function () {
-    console.log('HTTPS Server is running on: https://localhost:%s', SSLPORT);
+    console.info('HTTPS Server is running on: https://localhost:%s', SSLPORT);
 });
 
 // let SvelteKit handle everything else, including serving prerendered pages and static assets
