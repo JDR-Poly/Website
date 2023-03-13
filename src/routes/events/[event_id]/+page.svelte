@@ -232,7 +232,7 @@
 			margin-bottom: 2em;
 		}
 
-		img {
+		:global(img) {
 			max-height: 45vh;
 			margin: 2em auto;
 			display: block;

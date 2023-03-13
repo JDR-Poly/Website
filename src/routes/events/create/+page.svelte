@@ -43,7 +43,7 @@
 		const body = await res.json();
 		if (res.ok) {			
 			goto('/events/' + body.id)
-			$info = "L'évènement a bien été crée"
+			$info = "L'évènement a bien été créé"
 		} else {
 			$error = body.message
 		}

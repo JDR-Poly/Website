@@ -9,9 +9,9 @@ export async function load({ params, fetch }) {
 					const body = await res.json()					
 					if(!res.ok) throw error(res.status, body.message)
 					else {
-						body.imageb64 = Buffer.from(body.image).toString("base64") //Convert to b64
+						if(body.image) body.imageb64 = Buffer.from(body.image).toString("base64") //Convert to b64
 						body.image = undefined
-					}			
+					}
 					return body;
 				})
 				.then(async (event) => {					
@@ -24,7 +24,7 @@ export async function load({ params, fetch }) {
 							return event;
 						})
 				})
-				.catch((err) => {					
+				.catch((err) => {
 					throw redirect(307, '/404');
 				})
 	}

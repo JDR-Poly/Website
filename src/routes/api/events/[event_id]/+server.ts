@@ -20,6 +20,7 @@ export function GET({ params }: RequestEvent) {
 	).then((res) => {
 		if(res.image) res.imageb64 = Buffer.from(res.image).toString("base64") //Convert to b64
 		res.image = undefined
+		return res
 	})
 	.then((res) => {
 		return json(res)
@@ -134,14 +135,11 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 			}
 			if(parsedData.image) {
 				const file = await parsedData.image.arrayBuffer()
-				writeFileSync(__envDir + 'data/images/events/' + id + '.png', Buffer.from(file))
 			}
 			return json(res)
 		})
 		.catch((err) => {
-
 			console.error(err.message);
-			
 			throw error(500, err.message)
 		})
 }

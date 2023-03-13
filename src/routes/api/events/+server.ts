@@ -80,7 +80,7 @@ export async function POST({ request, locals }: RequestEvent) {
  * @param {number} url.searchParams.limit how much events to search for
  * @return {Event[]} list of events
  * */
-export async function GET({ url }: RequestEvent) {
+export async function GET({ url }: RequestEvent) {	
 	const excludeExpiredEvents = !(url.searchParams.get("excludeExpiredEvents") === "false")
 		
 	const db_req = excludeExpiredEvents ?
@@ -92,7 +92,6 @@ export async function GET({ url }: RequestEvent) {
 		`SELECT * FROM events
 		ORDER BY date;
 		`
-
 	return db.any(db_req, [new Date(Date.now())])
 		.then((res) => {
 			res.forEach((v) => {
