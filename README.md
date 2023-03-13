@@ -11,7 +11,7 @@ The main language used is TypeScript, and the database is a **Postgresql databas
 2. Clone the project
 3. Run `npm install` in the project folder (you need to have nodejs and npm installed)
 4. (Optional) Change .env to change url and port
-5. Create a .env.local and fill these informations 
+5. Create a .env.local (you can also create a .env.production.local for production) and fill these informations 
 ```
 DB_IP=
 DB_PORT=
@@ -28,10 +28,11 @@ MAIL_PASSWORD=
 5. Run initialize-up migration file in your postgresql database
 6. Run using `npm run dev`
 
-## How to build
+## How to build and run
 1. run `npm run build`
 2. (Optional) edit .env and .env.local
-3. serve with `node -r dotenv/config build`
+3. For https support follow https://kit.svelte.dev/docs/adapter-node#custom-server (you can then add https like a normal express server)
+4. Serve with `node -r dotenv/config server.js` (or `node -r dotenv/config build` if you don't want https)
 
 ## Additionals informations
 
