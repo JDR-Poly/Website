@@ -206,7 +206,7 @@
 		border: 1px solid #d4d4d4;
 		border-bottom: none;
 		border-top: none;
-		z-index: 99;
+		z-index: 6;
 		/*position the autocomplete items to be the same width as the container:*/
 		top: 100%;
 		left: 0;

@@ -216,7 +216,7 @@
 		border-radius: 10px;
 		overflow: hidden;
 		padding: 40px 55px 90px;
-		z-index: 2;
+		z-index: 1;
 		position: relative;
 
 

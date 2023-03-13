@@ -163,7 +163,7 @@
 		border-radius: 10px;
 		overflow: hidden;
 		padding: 72px 55px 90px;
-		z-index: 2;
+		z-index: 1;
 
 		form > {
 
