@@ -64,7 +64,7 @@
 					}
 				})			
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			$error = "An error occured"
 			return undefined;
 		}

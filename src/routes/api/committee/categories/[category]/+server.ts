@@ -24,7 +24,7 @@ export function GET({ params}: RequestEvent) {
 			return json(res)
 		})
 		.catch((err) => {	
-			console.log(err);
+			console.error(err);
 					
 			throw error(500, err.message)
 		})

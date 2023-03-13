@@ -19,9 +19,7 @@
 	let images: null | FileList = null;
 
 	function submit(form: any) {
-		console.log(form);
 		form.click()
-		//form.submit()
 	}
 </script>
 
@@ -31,8 +29,6 @@
 		<form method="POST" action="?/addCommittee" use:enhance={({ data }) => {
 			data.append("category", category)
 			if(images && images[0]) data.append("image", images[0])
-			console.log(data);
-			
 			return async ({ result }) => {				
 				images = null
 				data.delete('image')

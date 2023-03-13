@@ -140,7 +140,7 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 		})
 		.catch((err) => {
 
-			console.log(err.message);
+			console.error(err.message);
 			
 			throw error(500, err.message)
 		})

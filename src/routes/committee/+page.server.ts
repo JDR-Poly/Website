@@ -24,9 +24,7 @@ export const actions = {
 		if (!category) return fail(400, {message: 'No category found'})
 		const image = body.get("image")?.valueOf() as Blob | undefined
 		const barray = image ? await image.arrayBuffer() : undefined
-		
-		console.log(body);
-		
+				
 		return db.any("SELECT item_order FROM committee_info WHERE category = $1", [category])
 			.then((res) => {
 				res.push({ item_order: -1 }) //If the array is empty, set the max to -1 so that the new order will be 0
@@ -43,7 +41,7 @@ export const actions = {
 					})
 			})
 			.catch((err) => { 
-				console.log(err);
+				console.error(err);
 				return fail(500, err.message) })
 
 	}
