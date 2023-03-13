@@ -9,7 +9,6 @@
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 	import IconButton from '@smui/icon-button';
 	import { onMount } from 'svelte';
-	import ImgDefault from '$components/ImgDefault.svelte';
 	import ImageB64 from '$components/ImageB64.svelte';
 
 	let change = false;
