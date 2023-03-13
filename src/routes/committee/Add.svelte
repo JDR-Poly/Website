@@ -5,84 +5,83 @@
 	import Button, { Label } from '@smui/button';
 	import Textfield from '@smui/textfield';
 	import type { Writable } from 'svelte/store';
-	import { warning, error } from '$lib/stores';
+	import { error, warning } from '$lib/stores';
 	import IconButton from '@smui/icon-button';
-	import { getBase64 } from '$lib/utils';
+	import { enhance } from '$app/forms';
 
 	export let open: Writable<boolean>;
 	export let categories: string[];
-
-	async function uploadNewCommittee() {
-		const data = {
-			category: category,
-			title: title,
-			name: name,
-			description: description,
-			imgBase64
-		}
-
-		fetch('/api/committee', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: { 'Content-Type': 'application/json' }
-		})
-			.then((res) => {location.reload()})
-			.catch((err) => {$error = err.message})
-	}
 
 	let category = categories[0];
 	let title = '';
 	let name = '';
 	let description = '';
 	let images: null | FileList = null;
-	let imgBase64: string | ArrayBuffer | null | undefined = undefined;
+
+	function submit(form: any) {
+		console.log(form);
+		form.click()
+		//form.submit()
+	}
 </script>
 
 <Dialog bind:open={$open}>
 	<Title id="simple-title">Ajouter un comité</Title>
 	<Content id="list-selection-content">
-		<Select bind:value={category} label="Catégorie">
-			<Icon class="material-icons" slot="leadingIcon">event</Icon>
-			{#each categories as category}
-				<Option value={category}>{category}</Option>
-			{/each}
-		</Select>
-		<Textfield type="text" bind:value={title} label="Titre" style="min-width: 400px;" />
-		<Textfield type="text" bind:value={name} label="Nom" style="min-width: 400px;"
-			><Icon class="material-icons" slot="leadingIcon">person</Icon></Textfield
-		>
-		<Textfield
-			style="width: 100%;margin-top:20px;"
-			textarea
-			bind:value={description}
-			label="Description"
-		/>
-		<div class="hide-file-ui">
-			<Textfield bind:files={images} label="Image" type="file" on:change={async () => {				
-				if (images && images[0]) {
-					if (images[0].size > 2097152) {
-						$warning = 'Image max 2MB';
-						imgBase64 = undefined;
-						images = null;
-					} else {						
-						imgBase64 = await getBase64(images[0]);
-					}
+		<form method="POST" action="?/addCommittee" use:enhance={({ form, data, action, cancel }) => {
+			data.append("category", category)
+			if(images && images[0]) data.append("image", images[0])
+			console.log(data);
+			
+			return async ({ result }) => {
+				console.log(result);
+				
+				images = null
+				data.delete('image')
+				if(result.type == "success") {
+					location.reload()
+				} else if(result.type == "failure") {
+					$error = result.data?.message
 				}
-			}}/>
-			<IconButton
-				class="material-icons"
-				on:click={() => {
-					images = null;
-				}}
-				>delete</IconButton
+			}
+		  }}>
+			<Select bind:value={category} label="Catégorie">
+				<Icon class="material-icons" slot="leadingIcon">event</Icon>
+				{#each categories as category}
+					<Option value={category}>{category}</Option>
+				{/each}
+			</Select>
+			<Textfield input$name="title" type="text" bind:value={title} label="Titre" style="min-width: 400px;" />
+			<Textfield input$name="text" type="text" bind:value={name} label="Nom" style="min-width: 400px;"
+				><Icon class="material-icons" slot="leadingIcon">person</Icon></Textfield
 			>
-		</div>
+			<Textfield
+				input$name="description"
+				style="width: 100%;margin-top:20px;"
+				textarea
+				bind:value={description}
+				label="Description"
+			/>
+			<div class="hide-file-ui">
+				<Textfield bind:files={images} label="Image" type="file" on:change={async () => {				
+					if (images && images[0]) {
+						if (images[0].size > 2097152) {
+							$warning = 'Image max 2MB';
+							images = null;
+						}
+					}
+				}}/>
+				<IconButton class="material-icons" on:click={() => {images = null;}}>delete</IconButton>
+				<button type="submit" id="addFormButton"></button>
+			</div>
+		</form>
+		
 	</Content>
 	<Actions>
 		<Button>
 			<Label>Annuler</Label>
 		</Button>
-		<Button on:click={uploadNewCommittee}>
+		<Button on:click={() => {submit(document.getElementById('addFormButton'))	}}>
 			<Label>Ajouter</Label>
 		</Button>
 	</Actions>
