@@ -2,8 +2,9 @@ import { createTestAccount, createTransport, type Transporter, getTestMessageUrl
 import type { Id } from "$gtypes";
 import { v4 as uuid } from "uuid"
 import { db } from "./postgresClient";
-import { readFile } from 'fs';
+import { readFile, readdir } from 'fs';
 import { MAIL_HOST, MAIL_PASSWORD, MAIL_PORT, MAIL_USER } from '$env/static/private';
+import { __envDir } from "$lib/utils";
 
 
 let transporter: Transporter | undefined
@@ -64,7 +65,7 @@ async function sendMailValidationToken(userId: Id, mail: string, origin: string)
 		id: userId,
 		validation_token: emailValidationToken
 	})
-	readFile('static/mails/mailValidationToken.html', function(err, data) {
+	readFile(__envDir + 'mails/mailValidationToken.html', function(err, data) {
 		let html = data.toString()
 		html = html.replace('%ORIGIN%', origin)
 		html = html.replace('%TOKEN%', emailValidationToken)

@@ -4,6 +4,7 @@ import type { RequestEvent } from "./$types";
 import { db } from "$lib/server/postgresClient";
 import type { Committee } from "$gtypes";
 import { writeFileSync } from 'fs';
+import { __envDir } from "$lib/utils";
 
 
 
@@ -38,7 +39,7 @@ export async function POST({ request, locals }: RequestEvent) {
 				a => a.id
 			)
 				.then((id) => {					
-					writeFileSync('static/data/images/committee/' + id + '.png', body.imgBase64, 'base64')
+					writeFileSync(__envDir + 'data/images/committee/' + id + '.png', body.imgBase64, 'base64')
 					return new Response()
 				})
 		})

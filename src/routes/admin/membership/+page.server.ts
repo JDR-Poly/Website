@@ -7,6 +7,7 @@ import { v4 as uuid } from "uuid"
 import { error, fail, redirect } from "@sveltejs/kit"
 import { readFile } from 'fs/promises';
 import { getNextPeriod, type Period } from "$lib/publicMemberPeriod";
+import { __envDir } from "$lib/utils";
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ locals }: RequestEvent) {
@@ -85,7 +86,7 @@ async function createAndSendMemberCodes(emails: string[], periodsNumber: number)
 			})
 
 			const promise = ( async () => {
-				let content = await readFile('static/mails/memberCode.html', { encoding: 'utf8' })
+				let content = await readFile(__envDir + 'mails/memberCode.html', { encoding: 'utf8' })
 				content = content.replace('%CODE%', code)
 				const res = await sendMail(email, "JDRPoly: Code de membre", content)
 				if(res instanceof Error) return email

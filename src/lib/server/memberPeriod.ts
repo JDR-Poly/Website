@@ -3,6 +3,7 @@ import { sendMail } from "./mailClient"
 import { db } from "./postgresClient"
 import { readFile } from 'fs';
 import type { Period } from "$lib/publicMemberPeriod";
+import { __envDir } from "$lib/utils";
 
 function updateMemberPeriod(user: User, period: Period) {
 	const now = new Date(Date.now())
@@ -17,7 +18,7 @@ function updateMemberPeriod(user: User, period: Period) {
 		role: newRole,
 		id: user.id
 	})
-	readFile('static/mails/updateMemberPeriod.html', function(err, data) {		
+	readFile(__envDir + 'mails/updateMemberPeriod.html', function(err, data) {		
 		let html = data.toString()
 		if(period.start) html = html.replace('%START%', period.start?.toLocaleDateString())
 		if(period.stop) html = html.replace('%STOP%', period.stop?.toLocaleDateString())

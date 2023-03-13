@@ -1,5 +1,6 @@
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+import { __envDir } from "$lib/utils";
 import { error, json } from "@sveltejs/kit";
 import { writeFileSync } from "fs";
 import type { RequestEvent } from "./$types";
@@ -129,7 +130,7 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 			}
 			if(parsedData.image) {
 				const file = await parsedData.image.arrayBuffer()
-				writeFileSync('static/data/images/events/' + id + '.png', Buffer.from(file))
+				writeFileSync(__envDir + 'data/images/events/' + id + '.png', Buffer.from(file))
 			}
 			return json(res)
 		})

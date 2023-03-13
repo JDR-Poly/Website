@@ -9,4 +9,6 @@ function getBase64(image: File): Promise<string> {
 	});
 }
 
-export {getBase64}
+const __envDir = import.meta.env.PROD ? "build/client/" : "static/"
+
+export {getBase64, __envDir}

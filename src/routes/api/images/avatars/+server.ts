@@ -1,3 +1,4 @@
+import { __envDir } from "$lib/utils";
 import { error, json } from "@sveltejs/kit";
 import { writeFileSync } from 'fs';
 import type { RequestEvent } from "./$types";
@@ -15,7 +16,7 @@ import type { RequestEvent } from "./$types";
 	if(!body.image) throw error(400) 
 
 	try {
-		writeFileSync(`static/avatars/` + locals?.user?.id +`.png`, body.image, 'base64')
+		writeFileSync(__envDir + `avatars/` + locals?.user?.id +`.png`, body.image, 'base64')
 
 		return json({link: url.origin + '/static/avatars/' + locals?.user?.id +`.png`})
 	} catch(err: any) {

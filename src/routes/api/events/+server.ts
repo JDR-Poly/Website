@@ -4,6 +4,7 @@ import { hasRolePermission, UserPermission } from "$lib/userPermissions"
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 import { writeFileSync } from 'fs';
+import { __envDir } from "$lib/utils";
 
 
 /**  ---Event POST---  */
@@ -65,7 +66,7 @@ export async function POST({ request, locals }: RequestEvent) {
 		.then(async (id) => {			
 			if(parsedData.image) {
 				const file = await parsedData.image.arrayBuffer()
-				writeFileSync('static/data/images/events/' + id + '.png', Buffer.from(file))
+				writeFileSync(__envDir + 'data/images/events/' + id + '.png', Buffer.from(file))
 			}
 			return json({id})
 		})

@@ -7,7 +7,7 @@ This website works using Sveltekit (an application framework powered by Svelte a
 The main language used is TypeScript, and the database is a **Postgresql database** 
 
 ## How to help
-1. Create a postgresql database
+1. Create a postgresql database and run files in ./migrations/ on it
 2. Clone the project
 3. Run `npm install` in the project folder (you need to have nodejs and npm installed)
 4. (Optional) Change .env to change url and port
@@ -31,8 +31,11 @@ MAIL_PASSWORD=
 ## How to build and run
 1. run `npm run build`
 2. (Optional) edit .env and .env.local
-3. For https support follow https://kit.svelte.dev/docs/adapter-node#custom-server (you can then add https like a normal express server)
+3. For https support follow  (you can then add https like a normal express server)
 4. Serve with `node -r dotenv/config server.js` (or `node -r dotenv/config build` if you don't want https)
+
+https use express server under the hood (https://kit.svelte.dev/docs/adapter-node#custom-server), 
+you will need to modify server.js to set your own certificate.
 
 ## Additionals informations
 
