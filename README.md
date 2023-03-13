@@ -10,7 +10,8 @@ The main language used is TypeScript, and the database is a **Postgresql databas
 1. Create a postgresql database
 2. Clone the project
 3. Run `npm install` in the project folder (you need to have nodejs and npm installed)
-4. Create a .env file and fill these information :
+4. (Optional) Change .env to change url and port
+5. Create a .env.local and fill these informations 
 ```
 DB_IP=
 DB_PORT=
@@ -27,6 +28,10 @@ MAIL_PASSWORD=
 5. Run initialize-up migration file in your postgresql database
 6. Run using `npm run dev`
 
+## How to build
+1. run `npm run build`
+2. (Optional) edit .env and .env.local
+3. serve with `node -r dotenv/config build`
 
 ## Additionals informations
 
