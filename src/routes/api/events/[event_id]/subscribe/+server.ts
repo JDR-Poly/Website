@@ -1,7 +1,7 @@
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
-import type { Event } from "src/types";
+import type { Event } from "$gtypes";
 import type { RequestEvent } from "./$types";
 
 /** 
@@ -11,17 +11,16 @@ import type { RequestEvent } from "./$types";
  export function GET({ params }: RequestEvent) {
 	const event_id = params.event_id
 	return db.any(
-		` SELECT
-		users.id id,users.email email, users.name name, users.role role,
-		users.account_creation account_creation, users.discord_id discord_id,
-		users.bio bio, users.member_start member_start, users.member_stop member_stop
-	FROM
-		users 
-	INNER JOIN event_inscription 
-	ON users.id = event_inscription.user_id AND event_inscription.event_id = $1;`
+		`SELECT
+			users.id as id,
+			users.name as name
+		FROM
+			users
+			INNER JOIN event_inscription ON users.id = event_inscription.user_id
+			AND event_inscription.event_id = $1;`
 	,[event_id]
-	).then((res) => {		
-		return json(res)
+	).then((res) => {	
+		return json(res)		
 	}).catch((err) => {
 		throw error(500, err.message)
 	})

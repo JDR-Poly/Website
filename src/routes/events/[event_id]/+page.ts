@@ -20,7 +20,9 @@ export async function load({ params, fetch }) {
 							event.date = new Date(event.date)
 							if(event.inscription_start) event.inscription_start = new Date(event.inscription_start)
 							if(event.inscription_stop) event.inscription_stop = new Date(event.inscription_stop)
+							
 							event.subscribed = await subscribed_fetch.json()
+							
 							return event;
 						})
 				})
