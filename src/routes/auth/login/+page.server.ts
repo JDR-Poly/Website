@@ -95,8 +95,8 @@ export const actions = {
 	}
 };
 
-function validateEmail(email?: string): Boolean { //TODO 
-	return true
+function validateEmail(email?: string): Boolean { 
+	return new RegExp("^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$").test(email)
 }
 
 function validateUsername(email?: string): Boolean {
