@@ -1,7 +1,7 @@
 import type { RequestEvent } from "./$types";
 import { json } from '@sveltejs/kit';
 
-const CATEGORIES = ["2022-2023", "2021-2022"]
+const CATEGORIES = ["2022-2023"].reverse() //order should be ["2021-2022", "2022-2023"]
 
 /**
  * Get all the years of the committee
