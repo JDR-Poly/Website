@@ -3,6 +3,10 @@
 	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from '@smui/data-table'
 	import type { Event } from '$gtypes';
 	import IconButton from '@smui/icon-button';
+	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
+	import { page } from '$app/stores';
+	import Fab, { Icon } from '@smui/fab';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 
@@ -74,6 +78,14 @@
 			{/each}
 		</Body>
 	</DataTable>
+
+	{#if hasRolePermission(UserPermission.CREATE_EVENT, $page.data.user?.role)}
+		<div class="add-button-container">
+			<Fab style="width:80px;height:80px;" on:click={() => goto('/events/create')}>
+				<Icon class="material-icons" style="font-size:40px;">add</Icon>
+			</Fab>
+		</div>
+	{/if}
 </main>
 
 <style lang="scss">
@@ -86,6 +98,21 @@
 			font-family: 'Ubuntu';
 			margin-bottom: 0.5em;
 			width: fit-content;
+		}
+	}
+
+	.add-button-container {
+		position: absolute;
+		bottom: 40px;
+		right: 40px;
+		z-index: 1;
+
+		:global(.mdc-fab__icon) {
+			color: $secondary;
+		}
+
+		:global(*) {
+			--mdc-theme-secondary: limegreen;
 		}
 	}
 </style>
