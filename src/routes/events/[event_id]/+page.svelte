@@ -82,7 +82,9 @@
 	<div id="img"/>
 	
 	<div id="wrapper">
-		<ImageB64 imageb64={data.event.imageb64} alt="Événement" alternativeImageSrc=""/>
+		{#if data.event.imageb64}
+			<ImageB64 imageb64={data.event.imageb64} alt="Événement" alternativeImageSrc=""/>
+		{/if}
 		<h2>{data.event.title}</h2>
 		<h3>{new Intl.DateTimeFormat('fr-Fr', {
 			dateStyle: 'medium',
