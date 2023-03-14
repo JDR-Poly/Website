@@ -5,7 +5,7 @@
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
 	import Button, { Label } from '@smui/button';
-	import type { ActionResult } from '@sveltejs/kit';
+	import LinearProgress from '@smui/linear-progress';
 	import { applyAction, enhance } from '$app/forms';
 
 	let errorMails: string[] = [];
@@ -13,6 +13,7 @@
 	let periodsNumber = 1;
 	let mailText = '';
 
+	let waitingForResult = false
 </script>
 
 <svelte:head>
@@ -22,9 +23,15 @@
 <main>
 	<h2>Envoyer des codes membres</h2>
 	<form method="POST" use:enhance={({ }) => {
-		return async ({ result }) => {
+		waitingForResult = true
+
+		return async ({ result, update }) => {
+			waitingForResult = false
 			if (result.type == 'success') {
 				errorMails = result.data?.errorMails
+				if(!(errorMails.length > 0)) {
+					update()
+				}
 			} else if(result.type === 'error' && result.error.message) {
 				$error = result.error.message
 			}
@@ -41,14 +48,21 @@
 			</FormField>
 		{/each}
 		<br>
-		<Button color="primary" variant="unelevated">
+		{#if waitingForResult}
+			<LinearProgress indeterminate/>
+		{/if}
+		<Button color="primary" variant="unelevated" disabled={waitingForResult}>
 			<Label>Ajouter</Label>
 		</Button>
+
+		
 	</form>
 
+	
 	{#if errorMails.length > 0}
 		<div id="error">
 			<h3>Erreurs dans ces mails :</h3>
+			<p>(Les autres mails ont bien été envoyés)</p>
 			<ul>
 				{#each errorMails as mail}
 					<li>{mail}</li>
@@ -72,21 +86,35 @@
 		}
 
 		#error {
+			font-family: 'Ubuntu';
+			h3,p {
+				color: red;
+			}
 			h3 {
-				font-family: 'Ubuntu';
 				text-transform: uppercase;
 				font-weight: 600;
 				letter-spacing: 0.15em;
-				margin: 2em 0;
-				color: red;
+				margin-top: 2em;
 			}
 			ul {
+				margin: 2em 0;
 				margin-left: 35px;
 			}
 			
 		}
 	}
 	
+	form {
+		width: fit-content;
+
+		:global(.mdc-linear-progress) {
+			margin: 2em 0;
+		}
+
+		:global(.mdc-button) {
+			margin: 1em 0
+		}
+	}
 	:global(.mdc-text-field__input) {
 		width: 500px;
 	}
