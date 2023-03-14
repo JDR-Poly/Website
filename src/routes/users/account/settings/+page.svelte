@@ -34,9 +34,10 @@
 
 	<!-- Mail Update -->
 	<form method="POST" action="?/updateEmail" use:enhance={({ }) => {
-		return async ({ result }) => {
+		return async ({ result, update }) => {
 			if(result.type == "success") {
 				$info = "Votre mail a été mis à jour."
+				update()
 			} else if(result.type == "failure") {
 				$error = result.data?.message
 			}
@@ -55,9 +56,10 @@
 
 	<!-- Name update -->
 	<form method="POST" action="?/updateName" use:enhance={({ }) => {
-		return async ({ result }) => {
+		return async ({ result, update }) => {
 			if(result.type == "success") {
 				$info = "Votre nom a été mis à jour."
+				update()
 			} else if(result.type == "failure") {
 				$error = result.data?.message
 			}
@@ -74,9 +76,10 @@
 
 	<!-- Password update -->
 	<form method="POST" action="?/updatePassword" use:enhance={({ }) => {
-		return async ({ result }) => {
+		return async ({ result, update }) => {
 			if(result.type == "success") {
 				$info = "Votre mot de passe a été mis à jour."
+				update()
 			} else if(result.type == "failure") {
 				$error = result.data?.message
 			}

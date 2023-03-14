@@ -23,7 +23,7 @@ export const actions = {
 			const password = await db.one(`SELECT password FROM users WHERE id=$1`
 			, [locals.user?.id], a => a.password
 			)
-			const isPasswordCorrect = await compare(password, oldPassword)
+			const isPasswordCorrect = await compare(oldPassword, password)
 			if (!isPasswordCorrect) return fail(400, {message: "Mot de passe incorrect."})
 
 			const newHashPassword = await hash(newPassword, 15)					
