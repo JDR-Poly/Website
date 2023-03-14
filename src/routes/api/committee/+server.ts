@@ -7,6 +7,7 @@ import { __envDir } from "$lib/utils";
 
 /**
  * Update one or a list of committees
+ * does not accept image modification
  * @param {RequestEvent} request
  * @param {Committee | Committee[]} request.body the committee(s) to update
  * @type {import('./$types').RequestHandler} 

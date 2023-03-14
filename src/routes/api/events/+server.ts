@@ -23,7 +23,7 @@ import { __envDir } from "$lib/utils";
  * @param {string} inscription_stop the UTCdate of when people can no longer join an event
  * @type {import('./$types').RequestHandler} 
  */
-export async function POST({ request, locals }: RequestEvent) {		
+export async function POST({ request, locals }: RequestEvent) {			
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.CREATE_EVENT, locals.user?.role)) throw error(403)
 	
@@ -63,10 +63,10 @@ export async function POST({ request, locals }: RequestEvent) {
 		RETURNING id;`,
 		[parsedData.title, locals.user?.id, parsedData.category, parsedData.date, parsedData.inscription, parsedData.inscription_group, parsedData.inscription_start, parsedData.inscription_stop, parsedData.description, barray ? Buffer.from(barray) : null],
 		a => a.id)
-		.then((id) => {						
-			return json({id: id})
+		.then((id) => {									
+			return json({id})
 		})
-		.catch((err) => {
+		.catch((err) => {			
 			throw error(500, err.message)
 		})
 }

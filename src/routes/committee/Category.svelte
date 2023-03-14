@@ -61,9 +61,13 @@
 	}
 
 	async function updateOrders(committees: Committee[]) {
+		const committesWithoutImages = committees
+		committesWithoutImages.forEach(committee => {
+			committee.imageb64 = undefined
+		});
 		fetch('/api/committee', {
 			method: 'PATCH',
-			body: JSON.stringify(committees)
+			body: JSON.stringify(committesWithoutImages)
 		})
 			.then(() => {
 				location.reload();
