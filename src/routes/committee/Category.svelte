@@ -151,16 +151,15 @@
 	}
 	.card {
 		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-		max-width: 20vw;
 		margin: 1em 1em;
-		min-width: 280px;
   		transition: 0.3s;
+		width: 384px;
 		position: relative;
 
 		:global(img) {
-			width: 384px;
-			height: 384px;
 			object-fit: cover;
+			width: 100%;
+			aspect-ratio: 1/ 1;
 		}
 		.text-container {
 			padding: 8px 16px;
@@ -221,5 +220,11 @@
 	}
 	:global(#fab-container ) {
 		background-color: limegreen;
+	}
+
+	@media only screen and (max-width: 600px) {
+		.itemorder {
+			top: 10px;
+		}
 	}
 </style>
