@@ -2,7 +2,7 @@
 	import Textfield from '@smui/textfield';
 	import Button, { Label } from '@smui/button';
 	import { applyAction, enhance } from "$app/forms";
-	import { warning } from "$lib/stores"
+	import { warning, info } from "$lib/stores"
 	import { goto, invalidateAll } from "$app/navigation";
 	import LinearProgress from '@smui/linear-progress';
 
@@ -65,7 +65,7 @@
 						{/if}
 
 						<div class="button">
-							<Button on:click={() => ""} touch variant="unelevated" disabled={!email || !password || email.match(EMAIL_REGEX) == null}>
+							<Button touch variant="unelevated" disabled={!email || !password || email.match(EMAIL_REGEX) == null}>
 								<Label>Se connecter</Label>
 							</Button>
 						</div>
@@ -98,17 +98,38 @@
 						{/if}
 
 						<div class="button">
-							<Button on:click={() => ""} touch variant="unelevated" disabled={!email || !password || !username || email.match(EMAIL_REGEX) == null}>
+							<Button touch variant="unelevated" disabled={!email || !password || !username || email.match(EMAIL_REGEX) == null}>
 								<Label>S'inscrire</Label>
 							</Button>
 						</div>
 					</form>
 				{:else}
-					<form method="POST" action="?/lostpassword">
-						<Textfield type="email" bind:value={email} label="Mail" style="width: 100%" variant="outlined"/>
-		
+					<form method="POST" action="?/resetPassword" use:enhance={({ }) => {
+						loading = true
+						const timeoutId = setTimeout(() => {
+							loading = false
+						}, 6000)
+						return async ({ result, update }) => {	
+							loading = false
+							if (result.type == "failure") {
+								$warning = `Le mail n'est pas valide`
+								console.error(result.data?.message);
+								update()
+							} else if(result.type == "success") {
+								$info = "Un mail a été envoyé."
+								update()
+								formType = form.LOGIN
+							}
+						}
+					}}>
+						<Textfield input$name="email" type="email" bind:value={email} label="Mail" style="width: 100%" variant="outlined"/>
+						
+						{#if loading}
+							<LinearProgress indeterminate/>
+						{/if}
+
 						<div class="button">
-							<Button on:click={() => ""} touch variant="unelevated">
+							<Button touch variant="unelevated" disabled={!email || email.match(EMAIL_REGEX) == null}>
 								<Label>Demander un nouveau mot de passe</Label>
 							</Button>
 						</div>

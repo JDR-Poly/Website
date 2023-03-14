@@ -4,7 +4,9 @@ import { compare } from "bcrypt";
 import { v4 as uuid } from "uuid";
 import type { RequestEvent } from "./$types";
 import { hash } from "bcrypt";
-import { sendMailValidationToken } from "$lib/server/mailClient";
+import { sendMail, sendMailValidationToken } from "$lib/server/mailClient";
+import { readFile } from "fs/promises";
+import { __envDir } from "$lib/utils";
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ locals }: RequestEvent) {
@@ -92,10 +94,37 @@ export const actions = {
 			.catch(err => {		
 				return fail(401, { message: err.message})
 			})
+	},
+	/**
+	 * Reset a password from the email
+	 * Generate a new password sent by email
+	 * @param {string} request.email 
+	 */
+	resetPassword: async ({ request, url }: RequestEvent) => {
+		const form = await request.formData();
+		const email = form.get('email')?.toString();
+
+		if(!email) return fail(400, { message: "Email not defined."})
+		
+		const newPassword = generatePassword(12)
+		const hashPassword = await hash(newPassword!, 15)
+
+		return await db.one('UPDATE users SET password=$1 WHERE email=$2 RETURNING id;', [hashPassword, email], a => a.id)
+			.then(async () => {
+				let text = await readFile(__envDir + 'mails/resetPassword.html', 'utf-8')
+				text = text.replace("%PASSWORD%", newPassword)
+				const res = await sendMail(email, "JDRPoly : Mot de passe réinitialisé", text)
+				if(res instanceof Error) return fail(400, { message: "Mail couldn't be sent"})
+				return { success: true }
+			})
+			.catch((err) => {
+				return fail(500	, { message: err.message})
+			})
 	}
 };
 
 function validateEmail(email?: string): Boolean { 
+	if(!email) return false
 	return new RegExp("^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$").test(email)
 }
 
@@ -105,4 +134,13 @@ function validateUsername(email?: string): Boolean {
 
 function validatePassword(password?: string): Boolean {
 	return true
+}
+
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789%!$*#@?a"
+function generatePassword(length: number) {
+    let password = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        password += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return password;
 }
