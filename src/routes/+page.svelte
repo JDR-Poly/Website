@@ -12,7 +12,7 @@
 
 <main>
 	<div id="banner">
-		<img src="/images/main/banner.png" alt="banière jdrpoly" />
+		<img src="/images/main/banner.webp" alt="banière jdrpoly" />
 		<div id="banner-text">
 			<h2>JDRPoly</h2>
 			<p>Le jeu de rôle <br /> à l'<strong>EPFL</strong></p>
