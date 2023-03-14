@@ -2,19 +2,13 @@
 	import IconButton from '@smui/icon-button';
 	import Dropdown from './Dropdown.svelte';
 	import { page } from '$app/stores';
-	import type { User } from '$gtypes';
 	import { goto, invalidateAll } from '$app/navigation';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 
 	let responsive = false;
 
-	let user: User;
-	let authenticated: Boolean;
-	$: user = $page.data.user;
-	$: authenticated = $page.data.authenticated;
-
 	async function logout() {
-		const res = await fetch('/api/auth/logout', { method: 'POST' });
+		await fetch('/api/auth/logout', { method: 'POST' });
 		await goto('/')
 		invalidateAll();
 		
@@ -100,8 +94,8 @@
 
 
 
-	{#if authenticated}
-		{#if hasRolePermission(UserPermission.ADMIN_PANEL, user.role)}
+	{#if $page.data.authenticated}
+		{#if hasRolePermission(UserPermission.ADMIN_PANEL, $page.data.user?.role)}
 			<Dropdown
 				{responsive}
 				data={{
@@ -141,7 +135,7 @@
 				data={{
 					element: {
 						prefix_icon: 'person',
-						text: user.name ? user.name : "Utilisateur"
+						text: $page.data.user?.name ? $page.data.user?.name : "Utilisateur"
 					},
 					links: [
 						{
@@ -149,7 +143,7 @@
 								prefix_icon: 'person',
 								text: 'Profile'
 							},
-							link: `/users/profile/${user.id}`
+							link: `/users/profile/${$page.data.user?.id}`
 						},
 						{
 							element: {
