@@ -19,7 +19,7 @@
 <main>
 	<Accordion>
 		{#each data.categories as category, i}
-			<Category {category} open={i == 0} />
+			<Category {category} defaultOpen={i == 0} />
 		{/each}
 	</Accordion>
 </main>

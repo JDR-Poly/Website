@@ -1,6 +1,4 @@
 <script lang="ts">
-	export let category: string;
-	export let open: boolean;
 	import { Panel, Header, Content } from '@smui-extra/accordion';
 	import Fab, { Label, Icon } from '@smui/fab';
 	import { error } from '$lib/stores';
@@ -11,16 +9,33 @@
 	import { onMount } from 'svelte';
 	import ImageB64 from '$components/ImageB64.svelte';
 
+	export let category: string;
+	export let defaultOpen: boolean;
+
+	let open = defaultOpen
 	let change = false;
 	let reqCommittee: Promise<Committee[]> = (async () => {return []})() //Evil hack to allow svelte to rerender {#each} loop
-	onMount(async () => {
+	let hasFetched = false
+	let hasBeenMounted = false
+
+	onMount(() => {
+		hasBeenMounted = true
+	})
+
+	async function fetchCommittees(open: boolean) {
+		if(!open || hasFetched) return		
 		const res = await fetch('/api/committee/categories/' + category);
 		const body = await res.json();
+		hasFetched = true
 		if(res.ok) reqCommittee = (async () => {return sortByItemOrder(body)})()
 		else {
 			$error = body.message
 		}
-	});
+	} 
+
+	$: {
+		if(hasBeenMounted) fetchCommittees(open) 
+	}
 
 	function sortByItemOrder(committees: any) {
 		return committees.sort((a: any, b: any) => (a.item_order >= b.item_order ? 1 : -1));
@@ -77,8 +92,7 @@
 			});
 	}
 </script>
-
-<Panel {open}>
+<Panel {open} on:SMUIAccordionPanel:opening={() => {open = true}} on:SMUIAccordionPanel:closing={() => {open = false}}>
 <Header>{category}</Header>
 
 <Content>
