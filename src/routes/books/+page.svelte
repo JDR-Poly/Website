@@ -75,10 +75,10 @@
 <main>
 	<h2>Livres :</h2>
 
-	<p>Bienvenue sur la magnifique page de la bibliothèque de JdrPoly.
-		Tu as toujours voulu essayé d'être mj dans un de tes univers préféré ? ou alors t'es un passionné des mondes de fiction et de leur lore ?
+	<p>Bienvenue sur la magnifique page de la bibliothèque de JDR-Poly.
+		Tu as toujours voulu essayer d'être MJ dans un de tes univers préférés ? Uu alors tu es un passionné des mondes de fiction et de leur lore ?
 		Voici une liste de livres dont nous disposons et qui (on l'espère) feront ton bonheur et celui de tes joueurs.
-		Si tu veux réserver un livre, nous poser une question sur une date de retour prévue ou nous envoyer plein de coeur, utilise le petit formulaire juste en dessous.</p>
+		Si tu veux réserver un livre, nous poser une question sur une date de retour prévue ou nous envoyer plein de coeurs, utilise le petit formulaire juste en dessous.</p>
 	<ul>
 		{#each bookList as book}
 			<li class="book">

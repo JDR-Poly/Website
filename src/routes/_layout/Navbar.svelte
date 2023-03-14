@@ -37,7 +37,7 @@
 
 	<a href="/events" class="nav-link nav-button">
 		<span class="material-symbols-outlined link-icon">event</span>
-		<p>Évenements</p>
+		<p>Événements</p>
 	</a>
 	
 

@@ -164,7 +164,7 @@
 						</div>
 					{/if}
 				{:else}
-					<p color="green">Il n'y a pas besoin de s'inscrire pour cette événements</p>
+					<p color="green">Il n'y a pas besoin de s'inscrire pour cet événement</p>
 				{/if}
 			</div>
 		</div>

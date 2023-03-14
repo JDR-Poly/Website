@@ -23,7 +23,7 @@
 <main>
 	{#if data.success}
 		<h2>Vous avez bien validé votre email !</h2>
-		<p>Vous allez êtes rediriger sous peu.</p>
+		<p>Vous allez être redirigé sous peu.</p>
 	{:else}
 		<h2>Code invalide</h2>
 		<p>Le code <strong>{uuid}</strong> n'est pas un code valide.</p>
