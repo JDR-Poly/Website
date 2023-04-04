@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express';
 import fs from 'fs';
 import http from 'http';

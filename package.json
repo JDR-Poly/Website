@@ -3,6 +3,7 @@
 	"version": "1.0.1",
 	"scripts": {
 		"dev": "env-cmd vite dev",
+		"start": "NODE_OPTIONS='-r dotenv/config' node server.js",
 		"build": "env-cmd vite build",
 		"package": "vite package",
 		"preview": "env-cmd vite preview",
