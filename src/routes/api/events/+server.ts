@@ -19,6 +19,7 @@ import { __envDir } from "$lib/utils";
  * @param {Blob} image the image of the event
  * @param {string} inscription the string of a boolean, indicating if people can join the event
  * @param {string} inscription_group name of the group that are allowed to join
+ * @param {number?} inscription_limit limit of people that can subscribe to this event
  * @param {string} inscription_start the UTCdate of when people can join an event
  * @param {string} inscription_stop the UTCdate of when people can no longer join an event
  * @type {import('./$types').RequestHandler} 
@@ -41,6 +42,7 @@ export async function POST({ request, locals }: RequestEvent) {
 		image: data.get("image")?.valueOf() as Blob | undefined,
 		inscription: data.get("inscription")?.toString(),
 		inscription_group: data.get("inscription_group")?.toString().toUpperCase(),
+		inscription_limit: data.get("inscription_limit") ? parseInt(data.get("inscription_limit")!.toString()) : null,
 		inscription_start: (() => {
 			const date = data.get("inscription_start")
 			if(date == null) return null
@@ -57,11 +59,11 @@ export async function POST({ request, locals }: RequestEvent) {
 
 	return db.one(
 		`INSERT INTO events
-			(title,author,category,date,inscription,inscription_group,inscription_start,inscription_stop,description, image)
+			(title,author,category,date,inscription,inscription_group, inscription_limit, inscription_start,inscription_stop,description, image)
 		VALUES
 			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 		RETURNING id;`,
-		[parsedData.title, locals.user?.id, parsedData.category, parsedData.date, parsedData.inscription, parsedData.inscription_group, parsedData.inscription_start, parsedData.inscription_stop, parsedData.description, barray ? Buffer.from(barray) : null],
+		[parsedData.title, locals.user?.id, parsedData.category, parsedData.date, parsedData.inscription, parsedData.inscription_group, parsedData.inscription_limit, parsedData.inscription_start, parsedData.inscription_stop, parsedData.description, barray ? Buffer.from(barray) : null],
 		a => a.id)
 		.then((id) => {									
 			return json({id})

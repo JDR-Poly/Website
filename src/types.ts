@@ -9,6 +9,7 @@ type Event = {
 	date: Date,
 	inscription: boolean,
 	inscription_group: string,
+	inscription_limit?: number,
 	inscription_start?: Date,
 	inscription_stop?: Date,
 	imageb64?: string

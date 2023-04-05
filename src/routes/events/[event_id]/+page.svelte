@@ -74,6 +74,13 @@
 	let addedUser = ''
 
 	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role)
+
+	let canSubscribe = data.event.inscription || ($page.data.authenticated 
+						&& hasRolePermission('JOIN_EVENT_' + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)
+						&& data.event.subscribed.length < data.event.inscription_limit
+						&& (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start))
+						&& (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))
+	)
 </script>
 <svelte:head>
 	<title>{data.event.title} | JDRPoly</title> 
@@ -93,25 +100,32 @@
 		}).format(data.event.date)}</h3>
 
 		<div id="split">
-			<p id="description">{data.event.description.replace("\n", "\n\n")}</p>
+			<p id="description">{data.event.description ? data.event.description.replace("\n", "\n\n") : ""}</p>
 			<div id="inscription">
 				{#if data.event.inscription}
 					{#if $page.data.authenticated && hasRolePermission('JOIN_EVENT_' + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)}
-						{#if eventHasUser(data.event.subscribed)}
-							<Button on:click={() => unsubscribe()} variant="raised">
-								<Icon class="material-icons">person_remove</Icon>
-								<Label>Se désinscrire</Label>
-							</Button>
+						{#if data.event.subscribed.length < data.event.inscription_limit}
+							{#if (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start)) && (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))}
+								{#if eventHasUser(data.event.subscribed)}
+									<Button on:click={() => unsubscribe()} variant="raised">
+										<Icon class="material-icons">person_remove</Icon>
+										<Label>Se désinscrire</Label>
+									</Button>
+								{:else}
+									<Button on:click={() => subscribe()} variant="raised">
+										<Icon class="material-icons">person_add</Icon>
+										<Label>M'inscrire</Label>
+									</Button>
+								{/if}
+							{:else}
+								<p>Les inscriptions ne sont pas ouvertes.</p>
+							{/if}
 						{:else}
-							<Button on:click={() => subscribe()} variant="raised">
-								<Icon class="material-icons">person_add</Icon>
-								<Label>M'inscrire</Label>
-							</Button>
+							<p>L'événement est complet. </p>
 						{/if}
+						
 					{:else}
-						<p color="red">
-							Vous devez être {translateRole(Roles[data.event.inscription_group])} pour pouvoir vous inscrire à cette événement
-						</p>
+						<p>Vous devez être {translateRole(Roles[data.event.inscription_group])} pour pouvoir vous inscrire à cette événement </p>
 					{/if}
 			
 					<h5>Joueurs participants :</h5>

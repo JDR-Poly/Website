@@ -1,7 +1,6 @@
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
-import type { Event } from "$gtypes";
 import type { RequestEvent } from "./$types";
 
 /** 
@@ -36,15 +35,28 @@ import type { RequestEvent } from "./$types";
 	const event_id = params.event_id
 
 	return db.one(
-		` SELECT * FROM events
-            WHERE id = $1
+		` 
+		SELECT events.*, subscribed_size FROM events
+		LEFT JOIN (
+			SELECT event_id, COUNT(*) as subscribed_size
+			FROM event_inscription
+			GROUP BY (event_id)
+		) AS s ON s.event_id = id
+		WHERE id = $1
         `,
 		[event_id]
-	).then((event: Event) => {
+	).then((event: any) => {
 		if(!event.inscription) throw error(400, "Can't subscribe to an event where there is no inscription")
 		if (!hasRolePermission('JOIN_EVENT_' + event.inscription_group.toUpperCase(), locals.user?.role)) 
 			throw error(403)
-		
+		if(event.inscription_limit && event.subscribed_size >= event.inscription_limit) 
+			throw error(403, "Can not subscribe when event is full")
+		let now = Date.now()
+		if(event.inscription_start && now < Date.parse(event.inscription_start) )
+			throw error(403, "Inscription are not yet open")
+		if(event.inscription_stop && now >= Date.parse(event.inscription_stop) )
+			throw error(403, "Inscription are now closed")
+
 		return db.none(
 			`INSERT into event_inscription(user_id, event_id)
 			VALUES ($1,$2)`

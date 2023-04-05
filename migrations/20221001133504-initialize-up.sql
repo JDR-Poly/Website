@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS public.events(
 	date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	inscription BOOLEAN NOT NULL DEFAULT true,
 	inscription_group VARCHAR(255) NOT NULL DEFAULT 'USER',
+	inscription_limit SMALLINT,
 	inscription_start TIMESTAMP WITHOUT TIME ZONE,
 	inscription_stop TIMESTAMP WITHOUT TIME ZONE,
 	description TEXT,

@@ -15,13 +15,16 @@
 	let category = categories[0]
 	let inscription = false
 	let inscription_group = 'MEMBER'
+	let inscription_limit: number = 16
 	let inscription_start: string = ''
 	let inscription_stop: string = ''
 	
 	let images: null | FileList = null;
 	let image: File
 
-	let isInscriptionStop = false //Not an actual stored value in the database
+	//Not actual stored values in the database
+	let isInscriptionStop = false 
+	let hasInscriptionLimit = false
 	let submitDisabled = true
 
 	async function submit() {	
@@ -33,6 +36,7 @@
 		if(image) formData.append("image", image)
 		formData.append("inscription", inscription.toString())
 		formData.append("inscription_group", inscription_group)
+		if(hasInscriptionLimit) formData.append("inscription_limit", inscription_limit.toString())
 		if(inscription_start) formData.append("inscription_start", new Date(Date.parse(inscription_start)).toUTCString())
 		if(inscription_stop) formData.append("inscription_stop", new Date(Date.parse(inscription_stop)).toUTCString())
 		
@@ -68,7 +72,7 @@
 					<Option value={category}>{category}</Option>
 				{/each}
 			</Select>
-			<Textfield type="text" name="title" bind:value={title} label="Titre" style="width: 100%" required/>
+			<Textfield type="text" bind:value={title} label="Titre" style="width: 100%" required/>
 			<Textfield type="text" bind:value={description} label="Description" style="width: 100%" textarea/>
 			
 			<Textfield bind:value={date} type="datetime-local" label="Date" class="small-field" required input$min={new Date(Date.now()).toISOString().slice(0, -8)}></Textfield>
@@ -112,7 +116,16 @@
 				</Select>
 
 				<Textfield bind:value={inscription_start} type="datetime-local" label="Début d'inscription" class="small-field" required></Textfield>
-		
+				
+				<FormField>
+					<Checkbox bind:checked={hasInscriptionLimit} touch/>
+					<span slot="label">Limite d'inscriptions </span>
+				</FormField>
+
+				{#if hasInscriptionLimit}
+					<Textfield type="number" bind:value={inscription_limit} label="Limite" style="width: 100%" required/>
+				{/if}
+
 				<FormField>
 					<Checkbox bind:checked={isInscriptionStop} touch on:change={() => {		
 						if(!isInscriptionStop) {

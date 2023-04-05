@@ -78,17 +78,17 @@ export function DELETE({ params, locals }: RequestEvent) {
  * @param {Blob} image the image of the event
  * @param {string} inscription the string of a boolean, indicating if people can join the event
  * @param {string} inscription_group name of the group that are allowed to join
+ * @param {number?} inscription_limit limit of people that can subscribe to this event
  * @param {string} inscription_start the UTCdate of when people can join an event
  * @param {string} inscription_stop the UTCdate of when people can no longer join an event
  * @type {import('./$types').RequestHandler} */
 
-export async function PATCH({ params, request, locals }: RequestEvent) {
+export async function PATCH({ params, request, locals }: RequestEvent) {	
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role)) throw error(403)
 
 	const id = params.event_id
 	const data = await request.formData()
-	
 	const parsedData = {
 		title: data.get("title")?.toString(),
 		category: data.get("category")?.toString(),
@@ -101,8 +101,9 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 		image: data.get("image")?.valueOf() as Blob,
 		inscription: data.get("inscription")?.toString(),
 		inscription_group: data.get("inscription_group")?.toString().toUpperCase(),
+		inscription_limit: data.get("inscription_limit") ? parseInt(data.get("inscription_limit")!.toString()) : null,
 		inscription_start: (() => {
-			const date = data.get("inscription_start")
+			const date = data.get("inscription_start")			
 			if(date == null) return null
 			else return new Date(Date.parse(date.toString()))
 		})(),
@@ -112,7 +113,7 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 			else return new Date(Date.parse(date.toString()))
 		})(),
 	}
-		
+	const barray = parsedData.image ? await parsedData.image.arrayBuffer() : undefined
 	if (parsedData.inscription_group !== "USER" && parsedData.inscription_group !== "MEMBER" && parsedData.inscription_group !== "COMMITTEE") throw error(400, "inscription_group is not valid, should be either user, member or committee")
 
 	return db.one(
@@ -120,10 +121,11 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 			title=$[title], category=$[category],
 			description=$[description],date=$[date],
 			inscription=$[inscription], inscription_group=$[inscription_group],
+			inscription_limit=$[inscription_limit], image=COALESCE(image, $[barray]),
 			inscription_start=$[inscription_start],inscription_stop=$[inscription_stop]
 		WHERE id=$[id]
 		RETURNING *;`,
-		{id: id, ...parsedData}
+		{id: id, barray, ...parsedData}
 	)
 		.then(async (res) => {
 			if(!parsedData.inscription) {
@@ -132,9 +134,6 @@ export async function PATCH({ params, request, locals }: RequestEvent) {
 						WHERE event_id = $1`
 					,[id]
 				)
-			}
-			if(parsedData.image) {
-				const file = await parsedData.image.arrayBuffer()
 			}
 			return json(res)
 		})

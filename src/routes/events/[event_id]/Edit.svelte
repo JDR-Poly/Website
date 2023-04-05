@@ -27,6 +27,7 @@
 		if(image) formData.append("image", image)
 		formData.append("inscription", event.inscription.toString())
 		formData.append("inscription_group", event.inscription_group)
+		if(hasInscriptionLimit) formData.append("inscription_limit", event.inscription_limit!.toString())
 		if(event.inscription_start) formData.append("inscription_start", event.inscription_start.toUTCString())
 		if(event.inscription_stop) formData.append("inscription_stop", event.inscription_stop.toUTCString())
 
@@ -43,6 +44,7 @@
 	}
 
 	let isInscriptionStop = false
+	let hasInscriptionLimit = Boolean(event.inscription_limit)
 
 	//trick for bind:value for date
 	let internal_date: string = ''
@@ -113,6 +115,20 @@
 
 				<Textfield bind:value={internal_inscription_start} type="datetime-local" label="Début d'inscription" class="small-field" required></Textfield>
 		
+
+				<FormField>
+					<Checkbox bind:checked={hasInscriptionLimit} touch on:change={() => {
+						if(hasInscriptionLimit && !event.inscription_limit) {
+							event.inscription_limit = 16
+						} 
+					}}/>
+					<span slot="label">Limite d'inscriptions </span>
+				</FormField>
+
+				{#if hasInscriptionLimit}
+					<Textfield type="number" bind:value={event.inscription_limit} label="Limite" style="width: 100%" required/>
+				{/if}
+
 				<FormField>
 					<Checkbox bind:checked={isInscriptionStop} touch on:change={() => {	
 						if(!event) return	
@@ -126,7 +142,7 @@
 				</FormField>
 		
 				{#if isInscriptionStop}
-					<Textfield bind:value={internal_inscription_stop} type="datetime-local" label="Fin d'inscription" class="small-field" required input$min={new Date(Date.now()).toISOString().slice(0, -1)}></Textfield>
+					<Textfield bind:value={internal_inscription_stop} type="datetime-local" label="Fin d'inscription" class="small-field" required  input$min={new Date(Date.now()).toISOString().slice(0, -8)}></Textfield>
 				{/if}
 			{/if}
 
