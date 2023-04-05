@@ -182,7 +182,7 @@
 				{/if}
 			</div>
 		</div>
-		{#if hasRolePermission(UserPermission.MODIFY_EVENT) || data.event.author === $page.data.user?.id}
+		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user.role)}
 			<div class="delete-btn">
 				<IconButton class="material-icons" on:click={() => deleteEvent(data.event.id)}>close</IconButton>
 			</div>

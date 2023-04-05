@@ -43,24 +43,32 @@
 			});
 	}
 
-	let isInscriptionStop = false
-	let hasInscriptionLimit = Boolean(event.inscription_limit)
+	$: submitDisabled = (() => {
+				if(!event.title || !event.category || !event.date) return true
+
+				if(event.inscription && (!event.inscription_group || !event.inscription_start)) return true
+				if(isInscriptionStop && (!event.inscription_stop)) return true
+				return false
+			})()
 
 	//trick for bind:value for date
-	let internal_date: string = ''
-	
+	let internal_date: string = event.date ? event.date.toISOString().slice(0, -8) : ""
 	$: if(internal_date) event.date = new Date(Date.parse(internal_date))
-
-	let internal_inscription_start: string = ''
+	
+	let internal_inscription_start: string = event.inscription_start ? event.inscription_start.toISOString().slice(0, -8) : ""
 	$: if(internal_inscription_start) event.inscription_start = new Date(Date.parse(internal_inscription_start))
 
-	let internal_inscription_stop: string = ''
+	let internal_inscription_stop: string = event.inscription_stop ? event.inscription_stop.toISOString().slice(0, -8) : ""
 	$: if(internal_inscription_stop) event.inscription_stop = new Date(Date.parse(internal_inscription_stop))
+
+	//Checkbot value
+	let isInscriptionStop = Boolean(internal_inscription_stop)
+	let hasInscriptionLimit = Boolean(event.inscription_limit)
 </script>
 
 {#if event != undefined} 
 <Dialog bind:open={$open}>
-	<Title id="simple-title">Editer un livre</Title>
+	<Title id="simple-title">Editer l'événement</Title>
 	<Content id="list-selection-content">
 		<Select bind:value={event.category} label="Catégorie" class="small-field" required>
 			<Icon class="material-icons" slot="leadingIcon">event</Icon>
@@ -151,7 +159,7 @@
 		<Button>
 			<Label>Annuler</Label>
 		</Button>
-		<Button on:click={editEvent}>
+		<Button on:click={editEvent} disabled={submitDisabled}>
 			<Label>Modifier</Label>
 		</Button>
 	</Actions>
