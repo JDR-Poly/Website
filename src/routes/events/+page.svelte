@@ -107,7 +107,7 @@
 			position: relative;
 			border-radius: 8px;
 			max-width: 20vw;
-			min-width: 280px;
+			min-width: 230px;
 			margin: 2em;
 			width: 18vw;
 			height: 45vh;

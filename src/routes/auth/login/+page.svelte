@@ -28,7 +28,7 @@
 </svelte:head>
 
 <main>
-	<img src="/images/events/banner.png" alt="banner">
+	<img src="/images/events/banner.webp" alt="banner">
 	<div id="form-wrapper">
 		<div id="logo">
 			<object type="image/svg+xml" data="/images/logo-black.svg" title="Logo jdrpoly">
@@ -173,7 +173,7 @@
 			width: 70%;
 			height: 100%;	
 			object-fit: cover;
-			object-position: 100% 100%;
+			object-position: 50% 100%;
 			display: block;
 			left: 0;
 			filter: blur(1px);
@@ -200,7 +200,6 @@
 				width: 70%;
 				margin: 1em auto;
 				position: relative;
-				right: -15px;
 			}
 			#input {
 				:global(form > *) {
@@ -260,6 +259,14 @@
 			:global(.mdc-button ) {
 				padding: 20px 20px;
 				width: 100%;
+			}
+		}
+	}
+
+	@media only screen and (max-width: 1200px) {
+		main {
+			#form-wrapper {
+				width: 45%;
 			}
 		}
 	}

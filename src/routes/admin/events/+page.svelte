@@ -108,7 +108,7 @@
 		z-index: 1;
 
 		:global(.mdc-fab__icon) {
-			color: $secondary;
+			color: white;
 		}
 
 		:global(*) {

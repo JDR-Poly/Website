@@ -188,7 +188,7 @@
 		}
 	}
 
-	@media screen and (max-width: 600px) {
+	@media screen and (max-width: 700px) {
 		#contact {
 			display: block;
 
@@ -206,6 +206,10 @@
 			#links {
 				width: 100%;
 				padding: 0;
+
+				section {
+					left: -2em;
+				}
 			}
 		}
 		

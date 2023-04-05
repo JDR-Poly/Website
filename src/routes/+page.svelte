@@ -70,6 +70,9 @@
 
 		img {
 			width: 100%;
+			height: 65vh;
+			object-fit: cover;
+			object-position: 80% 100%;
 		}
 
 		#banner-text {
@@ -197,6 +200,7 @@
 		h1 {
 			color: $secondary;
 			margin-top: 2em;
+			text-align: center;
 		}
 
 		#title {
@@ -207,7 +211,7 @@
 			font-weight: 700;
 			letter-spacing: 0.25em;
 			font-size: 1.3em;
-			width: 25em;
+			width: min(25em, 100%);
 			height: 3.25em;
 			top: -3.25em;
 			line-height: 3.25em;
@@ -330,7 +334,7 @@
 		#events {
 			.event {
 				width: 80%;
-				padding: 1em 2em 7em em;
+				padding: 3em 2em 6em 2em;
 			}
 		}
 

@@ -116,6 +116,6 @@
 		}
 	}
 	:global(.mdc-text-field__input) {
-		width: 500px;
+		width: min(500px, 70vw);
 	}
 </style>

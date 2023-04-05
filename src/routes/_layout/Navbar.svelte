@@ -354,13 +354,4 @@
 			}
 		}
 	}
-
-	@media screen and (max-width: 330px) {
-		#svg {
-			display: none;
-		}
-		.topnav {
-			padding: 40px;
-		}
-	}
 </style>
