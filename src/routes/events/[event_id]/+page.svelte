@@ -71,6 +71,13 @@
 		return subscribed.map(v => v.id).includes($page.data.user?.id)
 	}
 
+	function copyMails() {
+		const mails = data.event.subscribed.flatMap((v: {email: string;}) => `${v.email}, `)
+		const text = "".concat(...mails).slice(0, -2)
+		navigator.clipboard.writeText(text);
+		$info = "Les emails ont été copiés."
+	}
+
 	let addedUser = ''
 
 	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role)
@@ -188,12 +195,7 @@
 				<div class="admin-btn" style="right: 180px;">
 					<IconButton
 							class="material-icons"
-							on:click={() => {
-								const mails = data.event.subscribed.flatMap((v) => `${v.email}, `)
-								const text = "".concat(...mails).slice(0, -2)
-								navigator.clipboard.writeText(text);
-								$info = "Les emails ont été copiés."
-							}}>
+							on:click={copyMails}>
 							mark_email_read
 					</IconButton>
 				</div>
