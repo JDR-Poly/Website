@@ -74,13 +74,6 @@
 	let addedUser = ''
 
 	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role)
-
-	let canSubscribe = data.event.inscription || ($page.data.authenticated 
-						&& hasRolePermission('JOIN_EVENT_' + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)
-						&& data.event.subscribed.length < data.event.inscription_limit
-						&& (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start))
-						&& (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))
-	)
 </script>
 <svelte:head>
 	<title>{data.event.title} | JDRPoly</title> 
@@ -104,7 +97,7 @@
 			<div id="inscription">
 				{#if data.event.inscription}
 					{#if $page.data.authenticated && hasRolePermission('JOIN_EVENT_' + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)}
-						{#if data.event.subscribed.length < data.event.inscription_limit}
+						{#if !data.event.inscription_limit || data.event.subscribed.length < data.event.inscription_limit}
 							{#if (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start)) && (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))}
 								{#if eventHasUser(data.event.subscribed)}
 									<Button on:click={() => unsubscribe()} variant="raised">
@@ -125,17 +118,15 @@
 						{/if}
 						
 					{:else}
-						<p>Vous devez être {translateRole(Roles[data.event.inscription_group])} pour pouvoir vous inscrire à cette événement </p>
+						<p class="inscriptionInfo" style="color: darkred;">Vous devez être {translateRole(Roles[data.event.inscription_group])} pour pouvoir vous inscrire à cette événement </p>
 					{/if}
-			
-					<h5>Joueurs participants :</h5>
-					<p>Il y a actuellement {data.event.subscribed.length} joueurs inscrits</p>
+					<h5>Joueurs participants ({data.event.subscribed.length}{data.event.inscription_limit ? `/${data.event.inscription_limit}` : ""}) :</h5>
 					{#each data.event.subscribed as user}
 						<div class="positioner">
 							{#if canSeeProfile}
 								<a href="/users/profile/{user.id}">{user.name}</a>
 							{:else}
-								<a href="">{user.name}</a>
+								<p>{user.name}</p>
 							{/if}
 
 							{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
@@ -178,11 +169,11 @@
 						</div>
 					{/if}
 				{:else}
-					<p color="green">Il n'y a pas besoin de s'inscrire pour cet événement</p>
+					<p class="inscriptionInfo" style="color: green;">Il n'y a pas besoin de s'inscrire pour cet événement</p>
 				{/if}
 			</div>
 		</div>
-		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user.role)}
+		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
 			<div class="delete-btn">
 				<IconButton class="material-icons" on:click={() => deleteEvent(data.event.id)}>close</IconButton>
 			</div>
@@ -280,6 +271,12 @@
 				text-align: center;
 				:global(.mdc-button) {
 					width: 60%;
+					margin: 1em;
+				}
+				.inscriptionInfo {
+					border-bottom: 2px solid lightgrey;
+					margin-bottom: 1em;
+					padding: 0.2em;
 				}
 				h5 {
 					font-size: 1.25em;
@@ -294,12 +291,12 @@
 					margin-bottom: 10px;
 				}
 
-				a {
+				a,p {
 					font-size: 20px;
 					color: #666;
 					text-decoration: none;
-					border-bottom: solid 1px #ddd;
 				}
+
 				.positioner {
 					position: relative;
 					margin: 10px 0;
