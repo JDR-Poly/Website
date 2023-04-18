@@ -1,8 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
+import type { PageLoad } from './$types';
 
-/** @type {import('./$types').PageLoad} */
-export async function load({ params, fetch }) {
-	return {
+export const load = (({ params, fetch }) => {	return {
 		event: 
 			fetch('/api/events/' + params.event_id)
 				.then(async (res) => {
@@ -30,4 +29,4 @@ export async function load({ params, fetch }) {
 					throw redirect(307, '/404');
 				})
 	}
-}
+}) satisfies PageLoad;
