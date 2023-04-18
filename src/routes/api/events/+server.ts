@@ -61,7 +61,7 @@ export async function POST({ request, locals }: RequestEvent) {
 		`INSERT INTO events
 			(title,author,category,date,inscription,inscription_group, inscription_limit, inscription_start,inscription_stop,description, image)
 		VALUES
-			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 		RETURNING id;`,
 		[parsedData.title, locals.user?.id, parsedData.category, parsedData.date, parsedData.inscription, parsedData.inscription_group, parsedData.inscription_limit, parsedData.inscription_start, parsedData.inscription_stop, parsedData.description, barray ? Buffer.from(barray) : null],
 		a => a.id)
