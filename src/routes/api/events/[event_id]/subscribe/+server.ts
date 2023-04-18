@@ -1,5 +1,5 @@
 import { db } from "$lib/server/postgresClient";
-import { hasRolePermission } from "$lib/userPermissions";
+import { UserPermission, hasRolePermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
 import type { RequestEvent } from "./$types";
 
@@ -7,18 +7,23 @@ import type { RequestEvent } from "./$types";
  * Get the list of all users subscribed to an event
  * @type {import('./$types').RequestHandler} 
  */
- export function GET({ params }: RequestEvent) {
+ export function GET({ params, locals }: RequestEvent) {
 	const event_id = params.event_id
 	return db.any(
 		`SELECT
 			users.id as id,
-			users.name as name
+			users.name as name,
+			users.email as email
 		FROM
 			users
 			INNER JOIN event_inscription ON users.id = event_inscription.user_id
 			AND event_inscription.event_id = $1;`
 	,[event_id]
-	).then((res) => {	
+	).then((res) => {		
+		if(!hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role)) {			
+			res.map((v) => v.email = undefined)
+		}
+		
 		return json(res)		
 	}).catch((err) => {
 		throw error(500, err.message)
