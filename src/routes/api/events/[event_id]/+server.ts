@@ -2,7 +2,6 @@ import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import { __envDir } from "$lib/utils";
 import { error, json } from "@sveltejs/kit";
-import { writeFileSync } from "fs";
 import type { RequestEvent } from "./$types";
 
 /**  ---Event GET---  */

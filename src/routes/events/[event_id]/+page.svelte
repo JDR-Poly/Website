@@ -219,7 +219,7 @@
 
 		#img {
 			filter: blur(3px);
-			background: url('/images/events/banner.png') center/cover;
+			background: url('/images/events/banner.webp') center/cover;
 			aspect-ratio: 16/9;
 			position: absolute;
 			height: 100%;

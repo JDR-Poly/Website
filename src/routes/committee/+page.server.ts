@@ -2,7 +2,6 @@ import type { Actions } from './$types';;
 import { fail } from '@sveltejs/kit';
 import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 import { db } from '$lib/server/postgresClient';
-import { writeFileSync } from 'fs';
 import { __envDir } from '$lib/utils';
 
 export const actions = {

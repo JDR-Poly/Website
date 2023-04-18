@@ -2,7 +2,7 @@ import { createTestAccount, createTransport, type Transporter, getTestMessageUrl
 import type { Id } from "$gtypes";
 import { v4 as uuid } from "uuid"
 import { db } from "./postgresClient";
-import { readFile, readdir } from 'fs';
+import { readFile } from 'fs';
 import { MAIL_HOST, MAIL_PASSWORD, MAIL_PORT, MAIL_USER } from '$env/static/private';
 import { __envDir } from "$lib/utils";
 
