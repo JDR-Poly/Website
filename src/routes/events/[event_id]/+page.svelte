@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { error, warning } from '$lib/stores';
+	import { error, warning, info } from '$lib/stores';
 	import { page } from '$app/stores';
 	import { hasRolePermission, Role, Roles, UserPermission } from '$lib/userPermissions';
 	import { goto } from '$app/navigation';
@@ -174,16 +174,30 @@
 			</div>
 		</div>
 		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
-			<div class="delete-btn">
+			<div class="admin-btn" style="right: 60px;">
 				<IconButton class="material-icons" on:click={() => deleteEvent(data.event.id)}>close</IconButton>
 			</div>
-			<div id="edit-event">
+			<div class="admin-btn" style="right: 120px;">
 				<IconButton
 						class="material-icons"
 						on:click={() => openEditDialog.set(true)}>
 						edit
 				</IconButton>
 			</div>
+			{#if hasRolePermission(UserPermission.SEE_MAIL, $page.data.user?.role)}
+				<div class="admin-btn" style="right: 180px;">
+					<IconButton
+							class="material-icons"
+							on:click={() => {
+								const mails = data.event.subscribed.flatMap((v) => `${v.email}, `)
+								const text = "".concat(...mails).slice(0, -2)
+								navigator.clipboard.writeText(text);
+								$info = "Les emails ont été copiés."
+							}}>
+							mark_email_read
+					</IconButton>
+				</div>
+			{/if}
 			<Edit event={data.event} open={openEditDialog}></Edit>
 		{/if}
 
@@ -210,7 +224,7 @@
 			width: 100%;
 		}
 
-		#edit-event {
+		.admin-btn {
 			position: absolute;
 			top: 20px;
 			right: 60px;
@@ -318,12 +332,6 @@
 				}
 				
 			}
-		}
-
-		.delete-btn {
-			position: absolute;
-			top: 20px;
-			right: 10px;
 		}
 	}
 </style>
