@@ -3,20 +3,19 @@ import type { Id } from "$gtypes";
 import { v4 as uuid } from "uuid"
 import { db } from "./postgresClient";
 import { readFile } from 'fs';
-import { MAIL_HOST, MAIL_PASSWORD, MAIL_PORT, MAIL_USER } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { __envDir } from "$lib/utils";
-
 
 let transporter: Transporter | undefined
 let ethereal = false
 if (import.meta.env.PROD) {
 	const testTransporter = createTransport({
-		host: MAIL_HOST,
-		port: parseInt(MAIL_PORT || "465"),
-		secure: (MAIL_PORT === "465" || MAIL_PORT === undefined),
+		host: env.MAIL_HOST,
+		port: parseInt(env.MAIL_PORT || "465"),
+		secure: (env.MAIL_PORT === "465" || env.MAIL_PORT === undefined),
 		auth: {
-			user: MAIL_USER,
-			pass: MAIL_PASSWORD
+			user: env.MAIL_USER,
+			pass: env.MAIL_PASSWORD
 		}
 	});
 	testTransporter.verify((error, success) => {
