@@ -10,9 +10,9 @@ The main language used is TypeScript, and the database is a **Postgresql databas
 1. Create a postgresql database and run files in ./migrations/ on it
 2. Clone the project
 3. Run `npm install` in the project folder (you need to have nodejs and npm installed)
-4. (Optional) Change .env to change url and port
-5. Create a .env.local (you can also create a .env.production.local for production) and fill these informations 
+4. Create .env file with all the appropriates settings
 ```
+BODY_SIZE_LIMIT=0
 DB_IP=
 DB_PORT=
 DB_NAME=
