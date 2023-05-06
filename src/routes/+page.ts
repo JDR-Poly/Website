@@ -8,7 +8,7 @@ export async function load({ fetch }) {
 				return (res.ok ? res.json() : []) as Event[];
 			})
 			.then((res) => {
-				if(res.length > 3) res.splice(0, res.length - 3)
+				if(res.length > 3) res.splice(3, res.length - 3)
 				return res
 			})
 			.catch((err) => {
