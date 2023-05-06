@@ -1,7 +1,6 @@
 import 'dotenv/config'
 import express from 'express';
 import fs from 'fs';
-import http from 'http';
 import https from 'https';
 import {handler} from './build/handler.js';
 
@@ -14,7 +13,6 @@ var credentials = {
 
 const app = express();
 
-const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 
 const SSLPORT = 443;
