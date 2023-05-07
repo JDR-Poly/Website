@@ -8,7 +8,8 @@
   	import FormField from '@smui/form-field';
 	import IconButton from '@smui/icon-button';
 	import { categories, returnJoinEventRoles } from "$lib/events";
-		
+	import Compressor from 'compressorjs';
+
 	let title = ''
 	let description = ''
 	let date: string = ''
@@ -20,14 +21,19 @@
 	let inscription_stop: string = ''
 	
 	let images: null | FileList = null;
-	let image: File
+	let image: File | Blob
 
 	//Not actual stored values in the database
 	let isInscriptionStop = false 
 	let hasInscriptionLimit = false
 	let submitDisabled = true
+	let isImageProcessing = false
 
 	async function submit() {	
+		if(isImageProcessing) {
+			$warning = "L'image est en cours de traitement. Attendez 5 secondes et recommencez."
+			return
+		}
 		const formData = new FormData();
 		formData.append("title", title)
 		formData.append("category", category)
@@ -83,7 +89,22 @@
 							$warning = 'Image max 4MB';
 							images = null;
 						} else {
-							image = images[0]
+							isImageProcessing = true
+							console.log("Processing image");
+							new Compressor(images[0], {
+								quality: 0.7,
+								mimeType: "image/webp",
+								maxWidth: 1920,
+								maxHeight: 1080,
+							success(result) {
+								console.log("Image processing finished.");
+								image = result
+								isImageProcessing = false
+							},
+							error(err) {
+								console.log(err.message);
+							},
+						});
 						}
 					}
 				}}/>
