@@ -54,7 +54,7 @@ export async function POST({ request, locals }: RequestEvent) {
 			else return new Date(date.toString())
 		})(),
 	}	
-	const barray = parsedData.image ? await parsedData.image.arrayBuffer() : undefined
+	const barray = parsedData.image ? Buffer.from(await parsedData.image.arrayBuffer()) : null
 	if (parsedData.inscription_group !== "USER" && parsedData.inscription_group !== "MEMBER" && parsedData.inscription_group !== "COMMITTEE") throw error(400, "inscription_group is not valid, should be either user, member or committee")
 
 	return db.one(
@@ -63,7 +63,7 @@ export async function POST({ request, locals }: RequestEvent) {
 		VALUES
 			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 		RETURNING id;`,
-		[parsedData.title, locals.user?.id, parsedData.category, parsedData.date, parsedData.inscription, parsedData.inscription_group, parsedData.inscription_limit, parsedData.inscription_start, parsedData.inscription_stop, parsedData.description, barray ? Buffer.from(barray) : null],
+		[parsedData.title, locals.user?.id, parsedData.category, parsedData.date, parsedData.inscription, parsedData.inscription_group, parsedData.inscription_limit, parsedData.inscription_start, parsedData.inscription_stop, parsedData.description, barray],
 		a => a.id)
 		.then((id) => {									
 			return json({id})
