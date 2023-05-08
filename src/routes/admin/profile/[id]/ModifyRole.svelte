@@ -7,7 +7,6 @@
 	import Radio from '@smui/radio';
 	import Button, { Label } from '@smui/button';
 	import { Period } from '$lib/publicMemberPeriod';
-	import Checkbox from '@smui/checkbox';
 
 	export let user: User;
 
@@ -18,7 +17,6 @@
 	let period = userPeriod.clone()
 
 	let periodsNumber = 1;
-	let addMemberPeriod = false;
 	updatePeriod(periodsNumber);
 
 	function updatePeriod(periodsNumber: number) {
@@ -43,7 +41,7 @@
 			body: JSON.stringify({
 				id: user.id,
 				role: roleName,
-				periodsNumber: addMemberPeriod ? periodsNumber : 0
+				periodsNumber: roleName == Roles.MEMBER.name ? periodsNumber : 0
 			}),
 			headers: { 'Content-Type': 'application/json' }
 		});
@@ -78,34 +76,29 @@
 
 <br />
 
-{#if roleName == Roles.MEMBER.name || roleName == Roles.USER.name}
-	<FormField>
-		<Checkbox bind:checked={addMemberPeriod} />
-		<span slot="label">Ajouter une période de membre.</span>
-	</FormField>
-
-	{#if addMemberPeriod}
-		{#if period.start}
-			<p>Membre à partir de: <strong>{dateFormater.format(period.start)}</strong></p>
-		{/if}
-		{#if period.stop}
-			<p>Fin de membre: <strong>{dateFormater.format(period.stop)}</strong></p>
-		{/if}
-		<br />
-		{#each ['1 semestre', '2 semestres'] as option, i}
-			<FormField>
-				<Radio
-					bind:group={periodsNumber}
-					value={i + 1}
-					touch
-					on:change={() => {
-						updatePeriod(periodsNumber);
-					}}
-				/><span slot="label">{option}</span>
-			</FormField>
-		{/each}
+{#if roleName == Roles.MEMBER.name}
+	{#if period.start}
+		<p>Membre à partir de: <strong>{dateFormater.format(period.start)}</strong></p>
 	{/if}
+	{#if period.stop}
+		<p>Fin de membre: <strong>{dateFormater.format(period.stop)}</strong></p>
+	{/if}
+	<br />
+	Ajouter : 
+	{#each ['1 semestre', '2 semestres'] as option, i}
+	<FormField>
+			<Radio
+				bind:group={periodsNumber}
+				value={i + 1}
+				touch
+				on:change={() => {
+					updatePeriod(periodsNumber);
+				}}
+			/><span slot="label">{option}</span>
+		</FormField>
+	{/each}
 {/if}
+
 <br />
 <Button on:click={() => submitChange()} touch variant="unelevated" disabled={!roleName}>
 	<Label>Changer</Label>

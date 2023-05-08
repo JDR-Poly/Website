@@ -55,21 +55,24 @@ export const POST = (async ({ request, locals }) => {
 		.then((user) => {
 			const roleModified = user.role != body.role
 			if (roleModified && !hasRolePermission(`GRANT_ROLE_${user.role}`, locals.user?.role)) throw error(403, { message: "This user has a protected role." })
-
-			let period = new Period(user.member_start, user.member_stop)
-			period.addSemesters(periodsNumber)
-			updateMemberPeriod({ id: body.id, email: user.email, role: Roles[user.role] }, period)
+			let period = null
+			if(body.periodsNumber > 0) {
+				period = new Period(user.member_start, user.member_stop)
+				period.addSemesters(periodsNumber)
+				updateMemberPeriod({ id: body.id, email: user.email, role: Roles[body.role] }, period)
+			}
 
 			if (roleModified) {
-				db.none(`UPDATE users SET role=$1, member_start=$2, member_stop=$3 WHERE id=$4`, [body.role, period.start, period.stop, body.id])
+				db.none(`UPDATE users SET role=$1 WHERE id=$2`, [body.role, body.id])
+				if(body.role != Roles.MEMBER.name) db.none(`UPDATE users SET member_start=NULL, member_stop=NULL WHERE id=$1`, [body.id])
 			}
 
 			//Return new period
 			return json({
 				user: {
 					id: body.id,
-					member_start: period.start,
-					member_stop: period.stop
+					member_start: period ? period.start : null,
+					member_stop: period ? period.stop : null
 				},
 				message: "Added period to user"
 			})
