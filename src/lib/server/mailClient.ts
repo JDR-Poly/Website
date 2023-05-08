@@ -51,6 +51,7 @@ async function sendMail(to: any, subject: string, html: string): Promise<any> {
 			html: html
 		})
 		if (ethereal) console.info("Preview Mail: %s", getTestMessageUrl(result));
+		else { console.info("Mail sent to: %s", to)}
 		return result
 	} catch (err: any) {		
 		return Error(err.message)

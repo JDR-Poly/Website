@@ -1,7 +1,7 @@
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import { error } from "@sveltejs/kit";
-import type { RequestEvent, RequestHandler } from "./$types";
+import type { RequestHandler } from "./$types";
 
 //This file handle admin force put/delete of users from event
 
@@ -25,6 +25,7 @@ export const DELETE = (async ({ params, request, locals }) => {
 		[user_id, event_id]
 	)
 		.then(() => {
+			console.info(`{id:${locals.user!.id},name:${locals.user!.name}} force removed user {id:${user_id}} from event {id:${event_id}}`);
 			return new Response()
 		})
 		.catch((err) => {
@@ -35,7 +36,6 @@ export const DELETE = (async ({ params, request, locals }) => {
 /** 
  * Force the add of an user to the list of subscribed users of the event
  * @param {number} request.user_id the id of the user to add 
- * @type {import('./$types').RequestHandler} 
  */
 export const POST = (async ({ params, request, locals }) => {
 	if (!locals.authenticated) throw error(401)
@@ -45,7 +45,6 @@ export const POST = (async ({ params, request, locals }) => {
 
 	const body = await request.json()
 	const user_id = body.user_id
-
 	return db.none(
 		`INSERT into event_inscription(user_id, event_id)
 		VALUES ($1,$2)
@@ -53,6 +52,7 @@ export const POST = (async ({ params, request, locals }) => {
 		[user_id, event_id]
 	)
 		.then(() => {
+			console.info(`{id:${locals.user!.id},name:${locals.user!.name}} force subscribed user {id:${user_id}} into event {id:${event_id}}`);
 			return new Response()
 		})
 		.catch((err) => {
