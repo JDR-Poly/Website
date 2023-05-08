@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
+	import { hasRolePermission, Roles, UserPermission } from '$lib/userPermissions';
 	import type { PageData } from './$types';
 
 	const { id } = $page.params;
@@ -11,6 +11,27 @@
 		dateStyle: 'long',
 		timeZone: 'Europe/Paris'
 	})
+
+	function getTranslatedRoleName(name: string): string {
+		switch(name) {
+			case Roles.ADMIN.name:
+				return "Administrateur"
+				break
+			case Roles.COMMITTEE.name:
+				return "Comité"
+				break
+			case Roles.HONORARY_MEMBER.name:
+				return "Membre d'honneur"
+				break
+			case Roles.MEMBER.name:
+				return "Membre"
+				break
+			case Roles.USER.name:
+				return "Utilisateur"
+				break
+		}
+		return "Erreur de rôle"
+	}
 </script>
 
 <svelte:head>
@@ -25,7 +46,7 @@
 	{/if}
 	<p>Nom: <strong>{data.profile.name}</strong></p>
 	<p>Date de création: <strong>{dateFormater.format(Date.parse(data.profile.account_creation))}</strong></p>
-	<p>Role: <strong>{data.profile.role?.name}</strong></p>
+	<p>Role: <strong>{getTranslatedRoleName(data.profile.role?.name)}</strong></p>
 
 	{#if data.profile.member_start}
 		<p>Membre à partir de: <strong>{dateFormater.format(Date.parse(data.profile.member_start))}</strong></p>

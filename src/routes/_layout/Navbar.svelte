@@ -137,7 +137,7 @@
 						{
 							element: {
 								prefix_icon: 'person',
-								text: 'Profile'
+								text: 'Profil'
 							},
 							link: `/users/profile/${$page.data.user?.id}`
 						},
