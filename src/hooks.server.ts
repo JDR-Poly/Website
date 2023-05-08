@@ -1,6 +1,7 @@
 import { db } from "$lib/server/postgresClient"
 import { error as throwError, type Handle, type HandleServerError } from "@sveltejs/kit"
 import { Roles } from "$lib/userPermissions"
+import type { User } from "$gtypes";
 
 export const handle: Handle = async function ({ event, resolve }) {
 	const session = event.cookies.get('session');
@@ -21,30 +22,24 @@ export const handle: Handle = async function ({ event, resolve }) {
 	if(!id) return resolve(event);
 	
 	//Get user
-	const user = await db.one(
-		`SELECT id, email, name, role, account_creation, is_email_validated 
+	const user: User = await db.one(
+		`SELECT id, email, name, role, account_creation, is_email_validated, member_start, member_stop
 		FROM users WHERE id=$1`
 		,[id]
-	).catch((err) => {
+	).then((user) => {
+		user.role = Roles[user.role].toJSON()
+		if (!user.role) {
+			throw throwError(500, `User with email,id ${user.email},${user.id} has an invalid role ${user.role}`)
+		}
+		return user
+	}).catch((err) => {
 		throw throwError(500, err.message)
 	})
-		
-	const role = Roles[user.role] //Get role from rolename
-
-	if (role) {
-		event.locals = {
-			authenticated: true,
-			user: {
-				id: user.id,
-				email: user.email,
-				role: role.toJSON(),
-				name: user.name,
-				account_creation: user.account_creation,
-				is_email_validated: user.is_email_validated
-			}
-		}
-	} else {
-		throw throwError(500, `User with email,id ${user.email},${user.id} has an invalid role ${user.role}`)
+	
+	//Transfer data to sveltekit
+	event.locals = {
+		authenticated: true,
+		user: user
 	}
 	return resolve(event);
 }

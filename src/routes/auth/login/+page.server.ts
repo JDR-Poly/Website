@@ -7,15 +7,15 @@ import { hash } from "bcrypt";
 import { sendMail, sendMailValidationToken } from "$lib/server/mailClient";
 import { readFile } from "fs/promises";
 import { __envDir } from "$lib/utils";
+import type { PageServerLoad } from './$types';
 
-/** @type {import('./$types').PageServerLoad} */
-export function load({ locals }: RequestEvent) {
+export const load = (({locals}) => {
 	if (locals.authenticated && locals.user?.is_email_validated) {
 		throw redirect(307, '/');
 	} else if(locals.authenticated) {
 		throw redirect(307, '/auth/validate-email');
 	} 
-}
+}) satisfies PageServerLoad;
 
 export const actions = {
 	login: async ({ request, cookies }: RequestEvent) => {

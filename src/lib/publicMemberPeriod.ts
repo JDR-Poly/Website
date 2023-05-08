@@ -1,37 +1,44 @@
 /**
- * Increse the end of the period to next closest period's end
- * without changing the period start (except if not existing)
- * @param {Period} period the period to increase
- * @returns {Period} the next period
+ * A period represent the time between which 
+ * a user is a member.
  */
-function getNextPeriod(period: Period): Period {
-	let closestNextPeriod: Period = {}
-	if (!period.stop) { period = { start: period.start, stop: new Date(Date.now()) } }
+class Period {
+	start?: Date
+	stop?: Date
+	/**
+	 * Create a period from dates or UTC Date string
+	 * or undefined
+	 * @param start when the period start 
+	 * @param stop when the period end
+	 */
+	constructor(start?: Date | string, stop?: Date | string) {
+		const now = new Date(Date.now())
+		if(start && typeof start == 'string') start = new Date(Date.parse(start))
+		if(stop && typeof stop == 'string') stop = new Date(Date.parse(stop))
 
-	periods.forEach(newPeriod => {
-		if (newPeriod.stop) {
-			if (newPeriod.stop > period.stop! && (!closestNextPeriod.stop || newPeriod.stop < closestNextPeriod.stop)) {
-				closestNextPeriod = newPeriod
+		this.start = start ? start as Date : now
+		this.stop = stop ? stop as Date : now
+	}
+
+	/**
+	 * Increase the end of the period to next closest period's end
+	 * without changing the period start.
+	 * @param {number} semesters how many semesters to add
+	 * @returns {Period} this
+	 */
+	addSemesters(semesters: number): Period {
+		for (let i = 0; i < semesters; i++) {
+			if (this.stop!!.getMonth() <= 6) {
+				this.stop?.setMonth(8)
+				this.stop?.setDate(0)
+			} else {
+				this.stop?.setMonth(0)
+				this.stop?.setDate(30)
+				this.stop?.setFullYear(this.stop.getFullYear() + 1)
 			}
 		}
-	})
-	
-	return {
-		start: !period.start ? closestNextPeriod.start : period.start,
-		stop: closestNextPeriod.stop ? closestNextPeriod.stop : period.stop
+		return this
 	}
 }
 
-type Period = {
-	start?: Date,
-	stop?: Date
-}
-
-const periods: Period[] = [
-	{ start: new Date(2022, 8, 10), stop: new Date(2023, 0, 10) },
-	{ start: new Date(2023, 0, 10), stop: new Date(2023, 6, 10) },
-	{ start: new Date(2024, 8, 10), stop: new Date(2024, 0, 10) },
-	{ start: new Date(2024, 0, 10), stop: new Date(2024, 6, 10) }
-]
-
-export { type Period, getNextPeriod}
+export { Period }

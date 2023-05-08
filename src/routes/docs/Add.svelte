@@ -8,6 +8,7 @@
 
 	export let open: Writable<boolean>;
 
+	// TODO: This should be a form action
 	async function uploadHonorMember() {
 		const data = {
 			name: name,

@@ -1,29 +1,32 @@
 <script lang="ts">
 	import { info, error } from '$lib/stores';
 	import { page } from '$app/stores';
-	import { invalidateAll } from '$app/navigation';
 	import Button, { Label } from '@smui/button';
 	import { enhance } from '$app/forms';
-
 </script>
 
 <svelte:head>
-	<title>Valider email | JDRPoly</title> 
+	<title>Valider email | JDRPoly</title>
 </svelte:head>
 
 <main>
 	<h2>En attente de validation du mail</h2>
-	<p>Vous avez dû recevoir un mail de validation à l'email: <strong>{$page.data.user.email}</strong></p>
+	<p>
+		Vous avez dû recevoir un mail de validation à l'email: <strong>{$page.data.user.email}</strong>
+	</p>
 
-	<form method="POST" use:enhance={({ }) => {
+	<form
+		method="POST"
+		use:enhance={({}) => {
 			return async ({ result }) => {
-				if(result.type == "success") {
+				if (result.type == 'success') {
 					$info = "Le mail vient d'être envoyé";
-				} else if(result.type == "failure") {
-					$error = result?.data?.message
+				} else if (result.type == 'failure') {
+					$error = result?.data?.message;
 				}
-			}
-		}}>
+			};
+		}}
+	>
 		<div class="button">
 			<Button touch variant="unelevated">
 				<Label>Renvoyer un mail</Label>

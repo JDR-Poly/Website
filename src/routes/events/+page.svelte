@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { error, warning } from '$lib/stores';
+	import { error } from '$lib/stores';
 	import { page } from '$app/stores';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 	import Fab, { Icon } from '@smui/fab';
 	import { goto } from '$app/navigation';
 	import IconButton from '@smui/icon-button';
 	import ImageB64 from '$components/ImageB64.svelte';
+	import type { PageData } from './$types';
 
-	export let data: any;
+	export let data: PageData;
 
 	async function deleteEvent(id: number) {
 		const res = await fetch('/api/events/' + id, {
@@ -19,36 +20,41 @@
 			const body = await res.json();
 			$error = body.message;
 		}
-	}	
+	}
 </script>
 
 <svelte:head>
-	<title>Événements | JDRPoly</title> 
+	<title>Événements | JDRPoly</title>
 </svelte:head>
 
 <main>
-	{#if hasRolePermission(UserPermission.CREATE_EVENT, $page.data.user?.role)}
+	{#if hasRolePermission(UserPermission.CREATE_EVENT, data.user?.role)}
 		<div class="add-button-container">
 			<Fab style="width:80px;height:80px;" on:click={() => goto('/events/create')}>
 				<Icon class="material-icons" style="font-size:40px;">add</Icon>
 			</Fab>
 		</div>
 	{/if}
-	{#if data.events.length == 0} 
+	{#if data.events.length == 0}
 		<h1>Il n'y a aucun événement prévu pour le moment</h1>
 	{/if}
 	<div id="event-container">
 		{#each data.events as event}
-
 			<div class="event">
 				{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
 					<div class="delete-btn">
-						<IconButton class="material-icons" on:click={() => deleteEvent(event.id)}>close</IconButton>
+						<IconButton class="material-icons" on:click={() => deleteEvent(event.id)}
+							>close</IconButton
+						>
 					</div>
 				{/if}
 				<div class="img">
 					{#if event.imageb64}
-						<ImageB64 imageb64={event.imageb64} alt={`Événement ${event.name}`} alternativeImageSrc=""/>
+						<ImageB64
+							imageb64={event.imageb64}
+							alt={`Événement ${event.title}`}
+							alternativeImageSrc=""
+						/>
 					{/if}
 				</div>
 				<h3>{event.title}</h3>
@@ -57,7 +63,7 @@
 						dateStyle: 'medium',
 						timeStyle: 'short',
 						timeZone: 'Europe/Paris'
-					}).format(event.date)}
+					}).format(Date.parse(event.date))}
 				</h5>
 				<p>{event.description}</p>
 				<a href={'/events/' + event.id} class="button">Découvrir</a>
@@ -91,7 +97,7 @@
 			font-size: 2.5rem;
 		}
 	}
-	
+
 	#event-container {
 		display: flex;
 		flex-wrap: wrap;
@@ -135,9 +141,8 @@
 					height: 100%;
 					object-fit: cover;
 				}
-
 			}
-			
+
 			h3 {
 				margin: 15px 5px;
 				letter-spacing: 0.025em;

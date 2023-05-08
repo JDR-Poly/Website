@@ -4,18 +4,19 @@
 	import Fab, { Icon, Label } from '@smui/fab';
 	import { error, warning } from '$lib/stores';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import { page } from '$app/stores';
 	import Edit from './Edit.svelte';
-	import { _sortByItemOrder } from './+page';
+	import { __sortByItemOrder } from './+page';
 	import type { Book } from '$gtypes';
+	import type { PageData } from './$types';
+
 	const openAddDialog = writable(false);
 	const openEditDialog = writable(false);
 
-	export let data: any;
+	export let data: PageData;
 
-	let change = false; //Indicate if the order was changed and the new order need to be saved
-	
-	let bookList: Book[] = data.books
+	let isAChange = false; //Indicate if the order was changed and the new order need to be saved
+
+	let bookList: Book[] = data.books;
 
 	function addOneToOrder(books: Book[], current_book: Book) {
 		//Change the order of the committes
@@ -30,8 +31,8 @@
 		});
 
 		current_book.item_order++;
-		change = true;
-		bookList = [..._sortByItemOrder(books)]
+		isAChange = true;
+		bookList = [...__sortByItemOrder(books)];
 	}
 
 	function removeOneToOrder(books: Book[], current_book: Book) {
@@ -47,52 +48,56 @@
 		});
 
 		current_book.item_order--;
-		change = true;
-		bookList = [..._sortByItemOrder(books)]		
+		isAChange = true;
+		bookList = [...__sortByItemOrder(books)];
 	}
 
 	async function updateOrders(books: Book[]) {
 		fetch('/api/books/', {
-				method: 'PATCH',
-				body: JSON.stringify(books)
+			method: 'PATCH',
+			body: JSON.stringify(books)
+		})
+			.then(() => {
+				location.reload();
 			})
-				.then(() => {
-					location.reload();
-				})
-				.catch((err) => {
-					$error = err.message;
-				});
+			.catch((err) => {
+				$error = err.message;
+			});
 	}
 
-	const statusList = ['Disponible', 'Indisponible'];
+	const statusList = ['Disponible', 'Indisponible', 'WANTED'];
 	let editBook: Book | undefined = undefined;
 </script>
 
 <svelte:head>
-	<title>Livres | JDRPoly</title> 
+	<title>Livres | JDRPoly</title>
 </svelte:head>
 
 <main>
 	<h2>Livres :</h2>
 
-	<p>Bienvenue sur la magnifique page de la bibliothèque de JDR-Poly.
-		Tu as toujours voulu essayer d'être MJ dans un de tes univers préférés ? Uu alors tu es un passionné des mondes de fiction et de leur lore ?
-		Voici une liste de livres dont nous disposons et qui (on l'espère) feront ton bonheur et celui de tes joueurs.
-		Si tu veux réserver un livre, nous poser une question sur une date de retour prévue ou nous envoyer plein de coeurs, utilise le petit formulaire juste en dessous.</p>
+	<p>
+		Bienvenue sur la magnifique page de la bibliothèque de JDR-Poly. Tu as toujours voulu essayer
+		d'être MJ dans un de tes univers préférés ? Uu alors tu es un passionné des mondes de fiction et
+		de leur lore ? Voici une liste de livres dont nous disposons et qui (on l'espère) feront ton
+		bonheur et celui de tes joueurs. Si tu veux réserver un livre, nous poser une question sur une
+		date de retour prévue ou nous envoyer plein de coeurs, utilise le petit formulaire juste en
+		dessous.
+	</p>
 	<ul>
 		{#each bookList as book}
 			<li class="book">
 				<p>
-					{book.title} | <b>Disponible:</b> <Icon class="material-icons">{book.status == 'Disponible' ? 'done' : 'close'}</Icon> 
-					<br>
+					{book.title} | <b>Disponible:</b>
+					<Icon class="material-icons">{book.status == 'Disponible' ? 'done' : 'close'}</Icon>
+					<br />
 					<i>Caution: {book.caution} CHF</i>
-					
 				</p>
-				{#if hasRolePermission(UserPermission.MODIFY_BOOKS, $page.data.user?.role)}
+				{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.role)}
 					<div class="admin-buttons">
 						<Fab
 							on:click={() => {
-								if (change) {
+								if (isAChange) {
 									$warning = "Vous devez d'abord sauvegarder l'ordre";
 									return;
 								}
@@ -131,12 +136,12 @@
 	</ul>
 </main>
 
-{#if hasRolePermission(UserPermission.MODIFY_BOOKS, $page.data.user?.role)}
+{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.role)}
 	<Add open={openAddDialog} {statusList} />
 	{#if editBook}
 		<Edit open={openEditDialog} book={editBook} {statusList} />
 	{/if}
-	{#if change}
+	{#if isAChange}
 		<div id="fab-container">
 			<Fab color="secondary" on:click={() => updateOrders(bookList)} extended>
 				<Icon class="material-icons">done</Icon>

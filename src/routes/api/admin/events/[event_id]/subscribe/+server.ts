@@ -1,17 +1,15 @@
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import { error } from "@sveltejs/kit";
-import type { RequestEvent } from "./$types";
+import type { RequestEvent, RequestHandler } from "./$types";
 
 //This file handle admin force put/delete of users from event
 
-/**  ---Event DELETE---  */
 /**
  * Force remove a user from the list of subscribed 
 * @param {number} request.user_id the id of the user to remove 
- * @type {import('./$types').RequestHandler} 
  */
-export async function DELETE({ params, request, locals }: RequestEvent) {
+export const DELETE = (async ({ params, request, locals }) => {
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, locals.user?.role)) throw error(403)
 
@@ -26,22 +24,20 @@ export async function DELETE({ params, request, locals }: RequestEvent) {
         `,
 		[user_id, event_id]
 	)
-	.then(() => {
-		return new Response()
-	})
-	.catch((err) => {				
-		throw error(500, err.message)
-	})
-}
-
-/**  ---Event POST---  */
+		.then(() => {
+			return new Response()
+		})
+		.catch((err) => {
+			throw error(500, err.message)
+		})
+}) satisfies RequestHandler
 
 /** 
  * Force the add of an user to the list of subscribed users of the event
  * @param {number} request.user_id the id of the user to add 
  * @type {import('./$types').RequestHandler} 
  */
-export async function POST({ params, request, locals }: RequestEvent) {
+export const POST = (async ({ params, request, locals }) => {
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.SUBSCRIBE_USER_TO_EVENT, locals.user?.role)) throw error(403)
 
@@ -56,10 +52,10 @@ export async function POST({ params, request, locals }: RequestEvent) {
 		`,
 		[user_id, event_id]
 	)
-	.then(() => {
-		return new Response()
-	})
-	.catch((err) => {
-		throw error(500, err.message)
-	})
-}
+		.then(() => {
+			return new Response()
+		})
+		.catch((err) => {
+			throw error(500, err.message)
+		})
+}) satisfies RequestHandler

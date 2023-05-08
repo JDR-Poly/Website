@@ -4,16 +4,16 @@
 	import { writable } from 'svelte/store';
 	import Accordion from '@smui-extra/accordion';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import { page } from '$app/stores';
 	import Fab, { Icon } from '@smui/fab';
+	import type { PageData } from './$types';
 
-	export let data: any;
+	export let data: PageData;
 
 	const openAddDialog = writable(false);
 </script>
 
 <svelte:head>
-	<title>Comité | JDRPoly</title> 
+	<title>Comité | JDRPoly</title>
 </svelte:head>
 
 <main>
@@ -24,8 +24,7 @@
 	</Accordion>
 </main>
 
-
-{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
+{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, data.user?.role)}
 	<Add open={openAddDialog} categories={data.categories} />
 	<div class="add-button-container">
 		<Fab style="width:80px;height:80px;" on:click={() => ($openAddDialog = true)}>
@@ -33,7 +32,6 @@
 		</Fab>
 	</div>
 {/if}
-
 
 <style lang="scss">
 	main {
@@ -56,5 +54,4 @@
 			background-color: limegreen;
 		}
 	}
-
 </style>

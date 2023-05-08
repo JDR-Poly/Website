@@ -1,32 +1,24 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
+import type { Event, Id } from '$gtypes';
 
-export const load = (({ params, fetch }) => {	return {
+export const load = (async ({ params, fetch }) => {	
+	return {
 		event: 
-			fetch('/api/events/' + params.event_id)
+			fetch(`/api/events/${params.event_id}`)
 				.then(async (res) => {
 					const body = await res.json()					
 					if(!res.ok) throw error(res.status, body.message)
-					else {
-						if(body.image) body.imageb64 = Buffer.from(body.image).toString("base64") //Convert to b64
-						body.image = undefined
-					}
-					return body;
-				})
-				.then(async (event) => {					
-					return fetch('/api/events/' + params.event_id + '/subscribe')
-						.then(async (subscribed_fetch) => {
-							event.date = new Date(event.date)
-							if(event.inscription_start) event.inscription_start = new Date(event.inscription_start)
-							if(event.inscription_stop) event.inscription_stop = new Date(event.inscription_stop)
-							
-							event.subscribed = await subscribed_fetch.json()
-							
-							return event;
-						})
+					return body as Event;
 				})
 				.catch((err) => {
 					throw redirect(307, '/404');
+				}),
+		subscribed:
+			fetch(`/api/events/${params.event_id}/subscribe`)
+				.then(async (res) => {												
+					return res.json() as Promise<[{id: Id, name: string, email?: string}]>;
 				})
 	}
+				
 }) satisfies PageLoad;

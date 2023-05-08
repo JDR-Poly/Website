@@ -1,14 +1,14 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import type { PageLoad } from './$types';
 
-/** @type {import('./$types').PageLoad} */
-export async function load({ params, fetch }) {
+export const load = (async ({ fetch }) => {
 	return {
 		categories: 
 			fetch('/api/committee/categories')
 				.then(async (res) => {
 					const body = await res.json()					
 					if(!res.ok) throw error(res.status, body.message)			
-					return body.categories;
+					return body.categories as string[];
 				})
 	}
-}
+}) satisfies PageLoad

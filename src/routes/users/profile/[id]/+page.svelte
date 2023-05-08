@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
+	import type { PageData } from './$types';
 
 	const { id } = $page.params;
 
-	export let data: any;
+	export let data: PageData;
 
 	const dateFormater = new Intl.DateTimeFormat('fr-Fr', {
 		dateStyle: 'long',
@@ -13,24 +14,24 @@
 </script>
 
 <svelte:head>
-	<title>{data.user_profile.name} | JDRPoly</title> 
+	<title>{data.profile.name} | JDRPoly</title> 
 </svelte:head>
 
 <main>
 	<h2>Profile</h2>
 
-	{#if hasRolePermission(UserPermission.SEE_MAIL, $page.data.user.role)}
-		<p>Email: <strong>{data.user_profile.email}</strong></p>
+	{#if hasRolePermission(UserPermission.SEE_MAIL, data.user?.role)}
+		<p>Email: <strong>{data.profile.email}</strong></p>
 	{/if}
-	<p>Nom: <strong>{data.user_profile.name}</strong></p>
-	<p>Date de création: <strong>{dateFormater.format(Date.parse(data.user_profile.account_creation))}</strong></p>
-	<p>Role: <strong>{data.user_profile.role?.name}</strong></p>
+	<p>Nom: <strong>{data.profile.name}</strong></p>
+	<p>Date de création: <strong>{dateFormater.format(Date.parse(data.profile.account_creation))}</strong></p>
+	<p>Role: <strong>{data.profile.role?.name}</strong></p>
 
-	{#if data.user_profile.member_start}
-		<p>Membre à partir de: <strong>{dateFormater.format(Date.parse(data.user_profile.member_start))}</strong></p>
+	{#if data.profile.member_start}
+		<p>Membre à partir de: <strong>{dateFormater.format(Date.parse(data.profile.member_start))}</strong></p>
 	{/if}
-	{#if data.user_profile.member_stop}
-		<p>Fin de membre: <strong>{dateFormater.format(Date.parse(data.user_profile.member_stop))}</strong></p>
+	{#if data.profile.member_stop}
+		<p>Fin de membre: <strong>{dateFormater.format(Date.parse(data.profile.member_stop))}</strong></p>
 	{/if}
 
 	{#if hasRolePermission(UserPermission.MODIFY_USERS_DATA, $page.data.user.role)}

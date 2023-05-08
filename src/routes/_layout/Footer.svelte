@@ -6,26 +6,27 @@
 	let name = '';
 	let message = '';
 </script>
+
 <footer>
 	<div id="contact">
 		<div id="form">
 			<form>
 				<div id="info">
 					<Textfield
-					class="email"
-					type="email"
-					bind:invalid={isEmailInvalid}
-					updateInvalid
-					bind:value={email}
-					label="Email"
-					input$autocomplete="email"
+						class="email"
+						type="email"
+						bind:invalid={isEmailInvalid}
+						updateInvalid
+						bind:value={email}
+						label="Email"
+						input$autocomplete="email"
 					/>
 					<Textfield class="name" type="text" bind:value={name} label="Nom" />
 				</div>
 				<div id="textarea">
 					<Textfield textarea bind:value={message} label="Message" />
 				</div>
-		
+
 				<button disabled={!(email && name && message && !isEmailInvalid)}>Envoyer</button>
 			</form>
 		</div>
@@ -41,11 +42,15 @@
 		</div>
 	</div>
 	<div id="bottom">
-		<p>© JDRpoly 2015-2023. All rights reserved. | Home page design: Inspired by <a href="http://html5up.net/" target="_blank" rel="noreferrer">HTML5 UP</a></p>
+		<p>
+			© JDRpoly 2015-2023. All rights reserved. | Home page design: Inspired by <a
+				href="http://html5up.net/"
+				target="_blank"
+				rel="noreferrer">HTML5 UP</a
+			>
+		</p>
 	</div>
 </footer>
-
-
 
 <style lang="scss">
 	footer {
@@ -64,7 +69,6 @@
 	}
 
 	#form {
-		
 		border-right: solid 2px $primary;
 		width: 58%;
 
@@ -80,7 +84,7 @@
 				letter-spacing: 5px;
 				text-align: center;
 				cursor: pointer;
-				
+
 				&:hover {
 					background-color: #062a6c;
 					border: solid 1px white;
@@ -88,11 +92,10 @@
 			}
 		}
 		#info {
-
 			:global(.email) {
 				float: left;
 			}
-			
+
 			:global(.name) {
 				float: right;
 			}
@@ -101,7 +104,6 @@
 				margin-bottom: 2em;
 				width: 48%;
 			}
-			
 		}
 
 		#textarea {
@@ -114,14 +116,11 @@
 				min-height: 225px;
 			}
 		}
-
-		
 	}
 
 	#links {
 		width: 40%;
 		padding: 0 0 0 4em;
-
 
 		section {
 			height: 30%;
@@ -162,7 +161,6 @@
 				span {
 					position: absolute;
 					left: 0;
-					
 				}
 			}
 
@@ -192,7 +190,6 @@
 		#contact {
 			display: block;
 
-
 			#form {
 				width: 100%;
 				padding: 0;
@@ -212,6 +209,5 @@
 				}
 			}
 		}
-		
-	}	
+	}
 </style>

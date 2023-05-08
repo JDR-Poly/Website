@@ -1,4 +1,4 @@
-import type { RequestEvent } from "./$types";
+import type { RequestHandler } from "./$types";
 import { error, json } from '@sveltejs/kit';
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
@@ -6,9 +6,8 @@ import type { Book } from "$gtypes";
 
 /**
  * Get all the books
- * @type {import('./$types').RequestHandler} 
  */
-export function GET({ }: RequestEvent) {
+export const GET = (async ({ }) => {
 	return db.any(
 		` SELECT * FROM books`,
 	)
@@ -18,17 +17,15 @@ export function GET({ }: RequestEvent) {
 		.catch((err) => {
 			throw error(500, err.message)
 		})
-}
+}) satisfies RequestHandler
 
 /**
  * Add a new book
- * @type {import('./$types').RequestHandler}
- * @param {RequestEvent} request
  * @param {string} request.title the title of the book
  * @param {string} request.caution the caution for this book
  * @param {string} request.status the availablity of the book
 */
-export async function POST({ request, locals }: RequestEvent) {
+export const POST = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401)
 
 	const body = await request.json()
@@ -51,15 +48,14 @@ export async function POST({ request, locals }: RequestEvent) {
 		})
 		.catch((err) => { throw error(500, err.message) })
 
-}
+}) satisfies RequestHandler
 
 /**
  * Update a book or a list of books
  * @param {RequestEvent} request
  * @param {Book | Book[]} request.body the book(s) to update
- * @type {import('./$types').RequestHandler} 
  */
-export async function PATCH({ locals, request }: RequestEvent) {
+export const PATCH = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401)
 
 	let body = await request.json()
@@ -84,4 +80,4 @@ export async function PATCH({ locals, request }: RequestEvent) {
 		.catch(err => {
 			throw error(500, err.message)
 		});
-}
+}) satisfies RequestHandler

@@ -70,10 +70,14 @@ class Role {
 
 
 function hasRolePermission(permission: UserPermission | string, role?: Role): boolean {
-	if(!role) return false
+	if (!role) return false
 	const permissions = Roles[role.name].permissions
 	if (typeof permission === "string") {
-		permission = (UserPermission as any)[permission]
+		try {
+			permission = (UserPermission as any)[permission]
+		} catch (exception) {
+			return false
+		}
 	}
 	return permissions.has((permission as UserPermission))
 }
@@ -85,12 +89,12 @@ const Roles: Record<string, Role> = {
 	USER: Role.createRole("USER", [UserPermission.JOIN_EVENT_USER]),
 	MEMBER: Role.createRole("MEMBER", [UserPermission.JOIN_EVENT_MEMBER, UserPermission.SEE_USERS_PROFILE], ["USER"]),
 	HONORARY_MEMBER: Role.createRole("HONORARY_MEMBER", [], ["MEMBER"]),
-	COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER, 
-		UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT, UserPermission.ADMIN_PANEL, UserPermission.JOIN_EVENT_COMMITTEE, 
-		UserPermission.SUBSCRIBE_USER_TO_EVENT, UserPermission.REMOVE_USER_FROM_EVENT, UserPermission.MODIFY_BOOKS, UserPermission.SEE_MAIL], ["MEMBER"]),
+	COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER,
+	UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT, UserPermission.ADMIN_PANEL, UserPermission.JOIN_EVENT_COMMITTEE,
+	UserPermission.SUBSCRIBE_USER_TO_EVENT, UserPermission.REMOVE_USER_FROM_EVENT, UserPermission.MODIFY_BOOKS, UserPermission.SEE_MAIL], ["MEMBER"]),
 	ADMIN: Role.createRole("ADMIN", [UserPermission.GRANT_ROLE_COMMITTEE, UserPermission.GRANT_ROLE_HONORARY_MEMBER, UserPermission.MODIFY_COMMITTEE_PAGE], ["COMMITTEE"])
 }
 
 
 
-export { UserPermission, Role, Roles, hasRolePermission}
+export { UserPermission, Role, Roles, hasRolePermission }

@@ -1,13 +1,12 @@
 import { db } from "$lib/server/postgresClient";
 import { UserPermission, hasRolePermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
-import type { RequestEvent } from "./$types";
+import type { RequestHandler } from "./$types";
 
 /** 
  * Get the list of all users subscribed to an event
- * @type {import('./$types').RequestHandler} 
  */
- export function GET({ params, locals }: RequestEvent) {
+export const GET = (async ({ params, locals }) => {
 	const event_id = params.event_id
 	return db.any(
 		`SELECT
@@ -18,25 +17,24 @@ import type { RequestEvent } from "./$types";
 			users
 			INNER JOIN event_inscription ON users.id = event_inscription.user_id
 			AND event_inscription.event_id = $1;`
-	,[event_id]
-	).then((res) => {		
-		if(!hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role)) {			
+		, [event_id]
+	).then((res) => {
+		if (!hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role)) {
 			res.map((v) => v.email = undefined)
 		}
-		
-		return json(res)		
+
+		return json(res)
 	}).catch((err) => {
 		throw error(500, err.message)
 	})
-}
+}) satisfies RequestHandler
 
 /** 
  * Allows the user to subscribe itself to an event
- * @type {import('./$types').RequestHandler} 
  */
- export function POST({ params, locals }: RequestEvent) {
-	if(!locals.authenticated) throw error(401)
-	
+export const POST = (async ({ params, locals }) => {
+	if (!locals.authenticated) throw error(401)
+
 	const event_id = params.event_id
 
 	return db.one(
@@ -51,34 +49,33 @@ import type { RequestEvent } from "./$types";
         `,
 		[event_id]
 	).then((event: any) => {
-		if(!event.inscription) throw error(400, "Can't subscribe to an event where there is no inscription")
-		if (!hasRolePermission('JOIN_EVENT_' + event.inscription_group.toUpperCase(), locals.user?.role)) 
+		if (!event.inscription) throw error(400, "Can't subscribe to an event where there is no inscription")
+		if (!hasRolePermission('JOIN_EVENT_' + event.inscription_group.toUpperCase(), locals.user?.role))
 			throw error(403)
-		if(event.inscription_limit && event.subscribed_size >= event.inscription_limit) 
+		if (event.inscription_limit && event.subscribed_size >= event.inscription_limit)
 			throw error(403, "Can not subscribe when event is full")
 		let now = Date.now()
-		if(event.inscription_start && now < Date.parse(event.inscription_start) )
+		if (event.inscription_start && now < Date.parse(event.inscription_start))
 			throw error(403, "Inscription are not yet open")
-		if(event.inscription_stop && now >= Date.parse(event.inscription_stop) )
+		if (event.inscription_stop && now >= Date.parse(event.inscription_stop))
 			throw error(403, "Inscription are now closed")
 
 		return db.none(
 			`INSERT into event_inscription(user_id, event_id)
 			VALUES ($1,$2)`
-			,[locals.user?.id, event_id])
+			, [locals.user?.id, event_id])
 			.then(() => {
 				return new Response()
 			})
-	}).catch((err) => {		
+	}).catch((err) => {
 		throw error(500, err.message)
 	})
-}
+}) satisfies RequestHandler
 
 /** 
  * Allows the user to remove itself from an event
- * @type {import('./$types').RequestHandler} 
- */
- export async function DELETE({ params, request, locals }: RequestEvent) {
+*/
+export const DELETE = (async ({ params, locals }) => {
 	if (!locals.authenticated) throw error(401)
 
 	const event_id = params.event_id
@@ -89,10 +86,10 @@ import type { RequestEvent } from "./$types";
         `,
 		[locals.user?.id, event_id]
 	)
-	.then(() => {
-		return new Response()
-	})
-	.catch((err) => {				
-		throw error(500, err.message)
-	})
-}
+		.then(() => {
+			return new Response()
+		})
+		.catch((err) => {
+			throw error(500, err.message)
+		})
+}) satisfies RequestHandler

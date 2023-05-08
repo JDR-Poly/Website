@@ -1,4 +1,4 @@
-import type { RequestEvent } from "./$types";
+import type { RequestHandler } from "./$types";
 import { error } from '@sveltejs/kit';
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
@@ -6,9 +6,8 @@ import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 
 /**
  * Delete a book
- * @type {import('./$types').RequestHandler} 
  */
-export function DELETE({ params, locals }: RequestEvent) {
+export const DELETE = (async ({ params, locals }) => {
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.MODIFY_BOOKS, locals.user?.role)) throw error(403, "User doesn't have the permission to do that")
 
@@ -25,7 +24,7 @@ export function DELETE({ params, locals }: RequestEvent) {
 		.catch((err) => {
 			throw error(500, err.message)
 		})
-}
+}) satisfies RequestHandler
 
 /*
 	Change the database so that all the books are in the correct item_order 
@@ -36,8 +35,8 @@ async function resortItemOrder() {
 			res = res.sort((a: any, b: any) => (a.item_order >= b.item_order ? 1 : -1))
 			let i = 0
 			let newOrder: [number, number][] = []
-			for(let value of res) {
-				newOrder.push([value.id,i])
+			for (let value of res) {
+				newOrder.push([value.id, i])
 				i++
 			}
 
@@ -52,5 +51,5 @@ async function resortItemOrder() {
 				return t.batch(queries); //Execute all the queries
 			})
 		})
-		.catch((err) => {throw error(500, err.message)})
+		.catch((err) => { throw error(500, err.message) })
 }

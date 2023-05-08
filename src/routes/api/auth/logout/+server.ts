@@ -1,7 +1,6 @@
-import type {RequestEvent } from './$types';
+import type { RequestHandler } from './$types.js'
 
-/** @type {import('./$types').RequestHandler} */
-export function POST({cookies}: RequestEvent) {
+export const POST = (({ cookies }) => {
 	cookies.delete("session", {
 		path: '/',
 		httpOnly: true,
@@ -10,4 +9,4 @@ export function POST({cookies}: RequestEvent) {
 	}
 	)
 	return new Response()
-}
+}) satisfies RequestHandler

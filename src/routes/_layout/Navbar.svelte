@@ -9,9 +9,8 @@
 
 	async function logout() {
 		await fetch('/api/auth/logout', { method: 'POST' });
-		await goto('/')
+		await goto('/');
 		invalidateAll();
-		
 	}
 </script>
 
@@ -33,7 +32,6 @@
 		<span class="material-symbols-outlined link-icon">event</span>
 		<p>Événements</p>
 	</a>
-	
 
 	<Dropdown
 		{responsive}
@@ -92,8 +90,6 @@
 		<p>Bibliothèque</p>
 	</a>
 
-
-
 	{#if $page.data.authenticated}
 		{#if hasRolePermission(UserPermission.ADMIN_PANEL, $page.data.user?.role)}
 			<Dropdown
@@ -113,10 +109,10 @@
 						},
 						{
 							element: {
-								text: "Événements",
-								prefix_icon: "dataset"
+								text: 'Événements',
+								prefix_icon: 'dataset'
 							},
-							link: "/admin/events"
+							link: '/admin/events'
 						},
 						{
 							element: {
@@ -135,7 +131,7 @@
 				data={{
 					element: {
 						prefix_icon: 'person',
-						text: $page.data.user?.name ? $page.data.user?.name : "Utilisateur"
+						text: $page.data.user?.name ? $page.data.user?.name : 'Utilisateur'
 					},
 					links: [
 						{

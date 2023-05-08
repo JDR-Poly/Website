@@ -1,13 +1,12 @@
 <script lang="ts">
 	import ImageB64 from '$components/ImageB64.svelte';
-	import { fade } from 'svelte/transition';
+	import type { PageData } from './$types';
 
-	export let data: any;
+	export let data: PageData;
 </script>
 
-
 <svelte:head>
-	<title>Accueil | JDRPoly</title> 
+	<title>Accueil | JDRPoly</title>
 </svelte:head>
 
 <main>
@@ -28,12 +27,15 @@
 			<div class="double-lines" />
 			<h2>Qu'est-ce que JDR-Poly ?</h2>
 			<p>
-				Légalement, JDR-Poly est une commission de l'AGEPoly, l'association générale des étudiants de l'EPFL. 
-				Notre but est avant tout de promouvoir le jeu de rôle et d'organiser divers événements au cours de l'année à destination de tous. Une bonne partie d'entre eux se déroulent le mercredi soir dans le bâtiment <a href="/plan">INM</a>. 
-				Le plus emblématique se déroule toutes les deux semaines, il s'agit des bonnes vieilles nocturnes d'initiation. 
-				Il existe de nombreuses autres activités proposées, allant de la simple mais ludique soirée Loup-garou ambiancée aux fameuses murders party.
-				
-				Que vous soyez débutant intrigué par cet étrange loisir ou vétéran voulant se détendre de temps 	en temps, nous serons ravis de vous accueillir !
+				Légalement, JDR-Poly est une commission de l'AGEPoly, l'association générale des étudiants
+				de l'EPFL. Notre but est avant tout de promouvoir le jeu de rôle et d'organiser divers
+				événements au cours de l'année à destination de tous. Une bonne partie d'entre eux se
+				déroulent le mercredi soir dans le bâtiment <a href="/plan">INM</a>. Le plus emblématique se
+				déroule toutes les deux semaines, il s'agit des bonnes vieilles nocturnes d'initiation. Il
+				existe de nombreuses autres activités proposées, allant de la simple mais ludique soirée
+				Loup-garou ambiancée aux fameuses murders party. Que vous soyez débutant intrigué par cet
+				étrange loisir ou vétéran voulant se détendre de temps en temps, nous serons ravis de vous
+				accueillir !
 			</p>
 		</header>
 		<div id="events">
@@ -43,24 +45,29 @@
 			{/if}
 			{#each data.events as event}
 				<div class="event">
-					<div class="img"> 
-						{#if event.imageb64}
-							<ImageB64 imageb64={event.imageb64} alt={`Événement ${event.name}`} alternativeImageSrc=""/>
+					<div class="img">
+						{#if event}
+							<ImageB64
+								imageb64={event.imageb64}
+								alt={`Événement ${event.title}`}
+								alternativeImageSrc=""
+							/>
 						{/if}
 					</div>
 					<h3>{event.title}</h3>
-					<h5>{new Intl.DateTimeFormat('fr-Fr', {
-						dateStyle: 'medium',
-						timeStyle: 'short',
-						timeZone: 'Europe/Paris'
-					}).format(new Date(event.date))}</h5>
+					<h5>
+						{new Intl.DateTimeFormat('fr-Fr', {
+							dateStyle: 'medium',
+							timeStyle: 'short',
+							timeZone: 'Europe/Paris'
+						}).format(new Date(event.date))}
+					</h5>
 					<p>{event.description}</p>
 					<a class="button" href={`/events/${event.id}`}>Découvrir</a>
 				</div>
 			{/each}
 		</div>
 	</div>
-
 </main>
 
 <style lang="scss">
@@ -188,13 +195,16 @@
 		margin: 8em 0 0 0;
 		min-height: 30vh;
 		padding: 8em 7%;
-		background: rgb(0,2,26);
-		background: linear-gradient(135deg, rgba(0,2,26,1) 0%, rgba(0,12,56,1) 34%, rgba(2,28,85,1) 57%, rgba(7,48,118,1) 85%, rgba(21,137,209,1) 100%);
-		/**
-		background: rgb(2,29,86);
-		background: linear-gradient(135deg, rgba(2,29,86,1) 0%, rgba(7,48,118,1) 9%, rgba(22,71,138,1) 59%, rgba(98,182,235,1) 90%);
-		*/
-		
+		background: rgb(0, 2, 26);
+		background: linear-gradient(
+			135deg,
+			rgba(0, 2, 26, 1) 0%,
+			rgba(0, 12, 56, 1) 34%,
+			rgba(2, 28, 85, 1) 57%,
+			rgba(7, 48, 118, 1) 85%,
+			rgba(21, 137, 209, 1) 100%
+		);
+
 		position: relative;
 
 		h1 {
@@ -219,7 +229,6 @@
 			color: $secondary;
 			background-color: #000c37;
 			transform: translateX(-50%);
-
 		}
 
 		.event {
@@ -255,7 +264,7 @@
 			h3 {
 				margin: 15px 5px;
 				letter-spacing: 0.025em;
-			} 
+			}
 
 			h5 {
 				margin: 0 0 0 5px;
@@ -287,11 +296,15 @@
 				bottom: 10px;
 				transform: translateX(-50%);
 				border-radius: 30px;
-				background: rgb(2,29,86);
-				background: linear-gradient(94deg, rgba(2,29,86,1) 0%, rgba(7,48,118,1) 5%, rgba(98,182,235,1) 98%);
+				background: rgb(2, 29, 86);
+				background: linear-gradient(
+					94deg,
+					rgba(2, 29, 86, 1) 0%,
+					rgba(7, 48, 118, 1) 5%,
+					rgba(98, 182, 235, 1) 98%
+				);
 			}
 		}
-		
 	}
 
 	//Media screen size
@@ -322,8 +335,7 @@
 				padding: 6em 4em 12em 4em;
 				width: 50%;
 			}
-		}	
-		
+		}
 	}
 
 	@media screen and (max-width: 600px) {
@@ -337,12 +349,9 @@
 				padding: 3em 2em 6em 2em;
 			}
 		}
-
 	}
 
-
 	//Animation
-
 	@keyframes fadeIn {
 		0% {
 			opacity: 0;

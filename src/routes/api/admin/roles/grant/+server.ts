@@ -1,22 +1,20 @@
 import { error, json } from "@sveltejs/kit";
 import { hasRolePermission, Role, Roles, UserPermission } from "$lib/userPermissions";
 import { getUserRole } from "$lib/server/backendPermissions";
-import type { RequestEvent } from "./$types";
+import type { RequestHandler } from "./$types";
 import { db } from "$lib/server/postgresClient";
-import { getNextPeriod, type Period } from "$lib/publicMemberPeriod";
+import { Period } from "$lib/publicMemberPeriod";
 import { updateMemberPeriod } from "$lib/server/memberPeriod";
 
 
 /**
  * See all the roles that the user can grant
- * @type {import('./$types').RequestHandler}
- * @param {RequestEvent} request 
  * @param {Id} request.id id of the user of whom to change role
  * @returns all the roles that the user has the permission to grant
  */
-export async function GET({ url, locals}: RequestEvent) {
+export const GET = (async ({ url, locals }) => {
 	if (!locals.authenticated) throw error(401)
-	
+
 	const id = parseInt(url.searchParams.get("id") || "0") || 0
 	if (id && !hasRolePermission("GRANT_ROLE_" + (await getUserRole({ id }))?.name, locals.user?.role)) {
 		throw error(403)
@@ -31,58 +29,52 @@ export async function GET({ url, locals}: RequestEvent) {
 	});
 
 	return json(result)
-}
+}) satisfies RequestHandler
 
 /**
  * Change the period of membership and the role of the user
  * depending of how many periods of membership are added to the user
- * @type {import('./$types').RequestHandler}
  * @param {Id} request.id the id of the user
  * @param {string} request.role the name of the new role
  * @param {number} request.periodsNumber the number of periods to add
  */
-export async function POST({ request, locals }: RequestEvent) {
+export const POST = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401)
 
 	const body = await request.json()
+	body.role = body.role.toUpperCase()
 	const periodsNumber = body.periodsNumber ? body.periodsNumber : 0
-	
-	if (body.periodsNumber > 0 && !hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role)) throw error(403)
-	
 
-	return db.one("SELECT id, role, member_start, member_stop FROM users WHERE id=$1;",
+	//Check if user can change roles
+	if (!hasRolePermission(`GRANT_ROLE_${body.role}`, locals.user?.role)) throw error(403, { message: "You don't have the rights to grand this role." })
+	if (body.periodsNumber > 0 && !hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role)) throw error(403, { message: "You don't have the rights to give memberships." })
+
+	return db.one("SELECT id, role, member_start, member_stop, email FROM users WHERE id=$1;",
 		[body.id]
 	)
-	.then((user) => {
-		const roleModified = user.role != body.role 
-		if(roleModified && !hasRolePermission("GRANT_ROLE_" + body.role, locals.user?.role)) throw error(403)
+		.then((user) => {
+			const roleModified = user.role != body.role
+			if (roleModified && !hasRolePermission(`GRANT_ROLE_${user.role}`, locals.user?.role)) throw error(403, { message: "This user has a protected role." })
 
-		const canRoleBeMember = body.role == Roles.USER.name || body.role == Roles.MEMBER.name
+			let period = new Period(user.member_start, user.member_stop)
+			period.addSemesters(periodsNumber)
+			updateMemberPeriod({ id: body.id, email: user.email, role: Roles[user.role] }, period)
 
-		let period: Period = { start: canRoleBeMember ? user.member_start : undefined, stop: canRoleBeMember ? user.member_stop : undefined }
-		if(body.periodsNumber > 0 && canRoleBeMember) {
-			//Add periods
-			for (let i = 0; i < periodsNumber; i++) {
-				period = getNextPeriod(period)
+			if (roleModified) {
+				db.none(`UPDATE users SET role=$1, member_start=$2, member_stop=$3 WHERE id=$4`, [body.role, period.start, period.stop, body.id])
 			}
-			updateMemberPeriod({ id: body.id }, period)
-		}
 
-		if(roleModified) {
-			db.none(`UPDATE users SET role=$1, member_start=$2, member_stop=$3 WHERE id=$4`, [body.role, period.start, period.stop, body.id])
-		}
-		
-		//Return new period
-		return json({
-			user: {
-				id: body.id,
-				member_start: period.start,
-				member_stop: period.stop
-			},
-			message: "Added period to user"
+			//Return new period
+			return json({
+				user: {
+					id: body.id,
+					member_start: period.start,
+					member_stop: period.stop
+				},
+				message: "Added period to user"
+			})
 		})
-	})
-	.catch((err) => {
-		throw error(500, err.message)
-	})
-}
+		.catch((err) => {
+			throw error(500, err.message)
+		})
+}) satisfies RequestHandler

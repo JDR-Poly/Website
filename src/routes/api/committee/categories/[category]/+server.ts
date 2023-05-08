@@ -1,12 +1,11 @@
-import type { RequestEvent } from "./$types";
 import { error, json } from '@sveltejs/kit';
 import { db } from "$lib/server/postgresClient";
+import type { RequestHandler } from "./$types";
 
 /**
  * Get all the committees of a category
- * @type {import('./$types').RequestHandler} 
  */
-export function GET({ params}: RequestEvent) {
+export const GET = (async ({ params }) => {
 	const category = params.category
 
 	return db.any(
@@ -15,17 +14,17 @@ export function GET({ params}: RequestEvent) {
 	)
 		.then((res) => {
 			res.forEach((v) => {
-				if(v.image) v.imageb64 = Buffer.from(v.image).toString("base64") //Convert to b64
+				if (v.image) v.imageb64 = Buffer.from(v.image).toString("base64") //Convert to b64
 				v.image = undefined
-			})	
-			return res	
+			})
+			return res
 		})
-		.then((res) => {			
+		.then((res) => {
 			return json(res)
 		})
-		.catch((err) => {	
+		.catch((err) => {
 			console.error(err);
-					
+
 			throw error(500, err.message)
 		})
-}
+}) satisfies RequestHandler

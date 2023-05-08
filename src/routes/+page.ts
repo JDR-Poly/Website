@@ -1,11 +1,11 @@
+import type { Event } from '$gtypes';
+import type { PageLoad } from './$types';
 
-/** @type {import('./$types').PageLoad} */
-export async function load({ fetch }) {
+export const load = (async ({ fetch }) => {
 	return {
-		events: 
-		fetch('/api/events')
-			.then((res) => {
-				return (res.ok ? res.json() : []) as Event[];
+		events: fetch('/api/events')
+			.then(async (res) => {
+				return (res.ok ? await res.json() : []) as Event[];
 			})
 			.then((res) => {
 				if(res.length > 3) res.splice(3, res.length - 3)
@@ -15,4 +15,4 @@ export async function load({ fetch }) {
 				return [] as Event[];
 			})
 	}
-}
+}) satisfies PageLoad;

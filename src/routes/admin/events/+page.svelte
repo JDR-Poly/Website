@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from '@smui/data-table'
+	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from '@smui/data-table';
 	import type { Event } from '$gtypes';
 	import IconButton from '@smui/icon-button';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
@@ -10,34 +10,38 @@
 
 	export let data: PageData;
 
-	let events: Event[] = data.events
+	let events: Event[] = data.events;
 	function handleSort() {
 		events.sort((a: Event, b: Event) => {
-			const [aVal, bVal] = [a[sort], b[sort]][sortDirection === 'ascending' ? 'slice' : 'reverse']();			
-			if(!aVal || !bVal) return 0
-			if(aVal instanceof Date && bVal instanceof Date) {				
-				if(aVal < bVal) return -1 
-				else if(aVal.getTime()==bVal.getTime()) return 0
-				else return 1
-			} else if(typeof aVal == 'number' && typeof bVal == 'number') {				
+			const [aVal, bVal] = [a[sort], b[sort]][
+				sortDirection === 'ascending' ? 'slice' : 'reverse'
+			]() as [any, any];
+			if (!aVal || !bVal) return 0;
+			if (sort == 'date') {
+				const aDate = new Date(Date.parse(aVal));
+				const bDate = new Date(Date.parse(bVal));
+				if (aDate < bDate) return -1;
+				else if (aDate.getTime() == bDate.getTime()) return 0;
+				else return 1;
+			} else if (typeof aVal == 'number' && typeof bVal == 'number') {
 				return Number(aVal) - Number(bVal);
 			}
 
-			return 0
+			return 0;
 		});
-		events = events
+		events = events;
 	}
 
 	let sort: keyof Event = 'date';
-  	let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
+	let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
 </script>
 
 <main>
 	<h2>Événements</h2>
 
-	<DataTable 
-		table$aria-label="Événements" 
-		style="width: 100%;" 
+	<DataTable
+		table$aria-label="Événements"
+		style="width: 100%;"
 		sortable
 		bind:sort
 		bind:sortDirection
@@ -63,17 +67,18 @@
 					<Cell numeric>{event.id}</Cell>
 					<Cell><a href="/events/{event.id}">{event.title}</a></Cell>
 					<Cell>{event.category}</Cell>
-					<Cell>{new Intl.DateTimeFormat('fr-Fr', {
-						year: "numeric",
-						month: "numeric",
-						day: "numeric",
-						hour: "numeric",
-						minute: "numeric",
-						second: "numeric",
-						hour12: false,
-						timeZone: 'Europe/Paris'
-					}).format(event.date)}</Cell>
-					
+					<Cell
+						>{new Intl.DateTimeFormat('fr-Fr', {
+							year: 'numeric',
+							month: 'numeric',
+							day: 'numeric',
+							hour: 'numeric',
+							minute: 'numeric',
+							second: 'numeric',
+							hour12: false,
+							timeZone: 'Europe/Paris'
+						}).format(Date.parse(event.date))}</Cell
+					>
 				</Row>
 			{/each}
 		</Body>

@@ -2,16 +2,16 @@ import type { Role } from "$lib/userPermissions"
 
 type Event = {
 	id: Id
-	title: string,
-	description: string,
 	author: Id,
+	title: string,
 	category: string,
-	date: Date,
+	date: UTCStringDate,
+	description: string,
 	inscription: boolean,
 	inscription_group: string,
 	inscription_limit?: number,
-	inscription_start?: Date,
-	inscription_stop?: Date,
+	inscription_start?: UTCStringDate,
+	inscription_stop?: UTCStringDate,
 	imageb64?: string
 }
 
@@ -21,15 +21,14 @@ type Event = {
  */
 type User = {
 	id: Id,
+	name: string,
+	role: Role,
+	is_email_validated: boolean,
+	account_creation: UTCStringDate,
 	email?: string,
-	name?: string,
-	role?: Role,
-	is_email_validated?: boolean,
-	account_creation?: string, //Date
 	discord_id?: string,
-	bio?: string,
-	member_start?: string, //Date
-	member_stop?: string //Date
+	member_start?: UTCStringDate,
+	member_stop?: UTCStringDate
 }
 
 /**
@@ -42,7 +41,7 @@ type Committee = {
 	name?: string,
 	imageb64?: string,
 	description?: string,
-	item_order?: number, //For the order in which to show it on the committee page
+	item_order: number, //For the order in which to show it on the committee page
 }
 
 /**
@@ -64,5 +63,6 @@ type Book = {
 }
 
 type Id = number
+type UTCStringDate = string
 
-export type { User, Event, Id, Committee, HonorMember, Book }
+export type { User, Event, Id, UTCStringDate, Committee, HonorMember, Book }

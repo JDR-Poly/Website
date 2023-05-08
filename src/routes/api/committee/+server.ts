@@ -1,6 +1,6 @@
 import { error } from "@sveltejs/kit";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
-import type { RequestEvent } from "./$types";
+import type { RequestHandler } from "./$types";
 import { db } from "$lib/server/postgresClient";
 import type { Committee } from "$gtypes";
 import { __envDir } from "$lib/utils";
@@ -8,11 +8,9 @@ import { __envDir } from "$lib/utils";
 /**
  * Update one or a list of committees
  * does not accept image modification
- * @param {RequestEvent} request
  * @param {Committee | Committee[]} request.body the committee(s) to update
- * @type {import('./$types').RequestHandler} 
  */
-export async function PATCH({ locals, request }: RequestEvent) {
+export const PATCH = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401)
 
 	let body = await request.json()
@@ -38,4 +36,4 @@ export async function PATCH({ locals, request }: RequestEvent) {
 		.catch(err => {
 			throw error(500, err.message)
 		});
-}
+}) satisfies RequestHandler

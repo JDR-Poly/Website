@@ -1,25 +1,21 @@
 <script lang="ts">
-	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 	import { page } from '$app/stores';
-	import Add from "./Add.svelte";
-	import { writable } from "svelte/store";
+	import Add from './Add.svelte';
+	import { writable } from 'svelte/store';
 	import Fab, { Label, Icon } from '@smui/fab';
-	import type { HonorMember } from "$gtypes";
+	import type { HonorMember } from '$gtypes';
 	import { error } from '$lib/stores';
 	import IconButton from '@smui/icon-button';
+	import type { PageData } from './$types';
+	import { __sortByItemOrder } from './+page';
 
-
-	export let data: any;	
+	export let data: PageData;
 	export let openAddDialog = writable(false);
 
-	let change = false;
-	let reqHonorMembers: Promise<HonorMember[]> = (async () => {return data.honormembers})() //Evil hack to allow svelte to rerender {#each} loop
+	let isAChange = false; //Indicates if there was a change and thus something can be saved
 
-	function sortByItemOrder(members: any) {
-		return members.sort((a: any, b: any) => (a.item_order >= b.item_order ? 1 : -1));
-	}
-
-	function addOneToOrder(members: any, selected_member: any) {
+	function addOneToOrder(members: HonorMember[], selected_member: HonorMember) {
 		//Change the order of the committes
 		const nextMember = members.filter((v: any) => {
 			return v.item_order === selected_member.item_order + 1;
@@ -32,11 +28,11 @@
 		});
 
 		selected_member.item_order++;
-		change = true;
-		reqHonorMembers = (async () => {return sortByItemOrder(members)})()
+		isAChange = true;
+		data.honormembers = [...__sortByItemOrder(members)];
 	}
 
-	function removeOneToOrder(members: any, selected_member: any) {
+	function removeOneToOrder(members: HonorMember[], selected_member: HonorMember) {
 		//Change the order of the committes
 		const nextMember = members.filter((v: any) => {
 			return v.item_order === selected_member.item_order - 1;
@@ -49,8 +45,8 @@
 		});
 
 		selected_member.item_order--;
-		change = true;
-		reqHonorMembers = (async () => {return sortByItemOrder(members)})()
+		isAChange = true;
+		data.honormembers = [...__sortByItemOrder(members)];
 	}
 
 	async function updateOrders(honorMembers: HonorMember[]) {
@@ -68,9 +64,8 @@
 </script>
 
 <svelte:head>
-	<title>Documents officiels | JDRPoly</title> 
+	<title>Documents officiels | JDRPoly</title>
 </svelte:head>
-
 
 <main>
 	<h2>Documents officiels :</h2>
@@ -81,16 +76,14 @@
 	</ul>
 
 	<h2>Membres d'honneur:</h2>
-	{#await reqHonorMembers}
-		<!-- Evil trick to fix {#each} not updating when updating list-->
-	{:then honorMembers}
-		{#each honorMembers as honorMember}
-			<div class="honor-member">
-				<h3>{honorMember.name}</h3>
-				<div>
-					<p>{honorMember.description}</p>
 
-					{#if hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)} 
+	{#each data.honormembers as honorMember}
+		<div class="honor-member">
+			<h3>{honorMember.name}</h3>
+			<div>
+				<p>{honorMember.description}</p>
+
+				{#if hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, data.user?.role)}
 					<div class="admin-buttons">
 						<IconButton
 							class="material-icons"
@@ -103,41 +96,37 @@
 						</IconButton>
 						<IconButton
 							class="material-icons"
-							on:click={() => removeOneToOrder(honorMembers, honorMember)}
+							on:click={() => removeOneToOrder(data.honormembers, honorMember)}
 						>
 							remove
 						</IconButton>
 						<IconButton
 							class="material-icons"
-							on:click={() => addOneToOrder(honorMembers, honorMember)}
+							on:click={() => addOneToOrder(data.honormembers, honorMember)}
 						>
 							add
 						</IconButton>
 					</div>
-					{/if}
-				</div>
-				
+				{/if}
 			</div>
-		{/each}
+		</div>
+	{/each}
 
-		{#if change && hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
-			<Fab
-				id="fab-container"
-				color="secondary"
-				on:click={() => updateOrders(honorMembers)}
-				extended
-			>
-				<Icon class="material-icons">done</Icon>
-				<Label>Sauvegarder</Label>
-			</Fab>
-		{/if}
-{/await}
+	{#if isAChange && hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
+		<Fab
+			id="fab-container"
+			color="secondary"
+			on:click={() => updateOrders(data.honormembers)}
+			extended
+		>
+			<Icon class="material-icons">done</Icon>
+			<Label>Sauvegarder</Label>
+		</Fab>
+	{/if}
 </main>
 
-
-
 {#if hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
-	<Add open={openAddDialog}/>
+	<Add open={openAddDialog} />
 	<div class="add-button-container">
 		<Fab style="width:80px;height:80px;" on:click={() => ($openAddDialog = true)}>
 			<Icon class="material-icons" style="font-size:40px;">add</Icon>
@@ -157,7 +146,7 @@
 			letter-spacing: 0.15em;
 			margin-bottom: 5px;
 		}
-		
+
 		li {
 			margin-left: 50px;
 			font-size: 20px;

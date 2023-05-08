@@ -1,5 +1,5 @@
-import type { User } from "$gtypes";
-import { Role, Roles, UserPermission } from "../userPermissions";
+import type { Id } from "$gtypes";
+import { Role, Roles } from "../userPermissions";
 import { db } from "./postgresClient";
 
 /**
@@ -7,7 +7,7 @@ import { db } from "./postgresClient";
  * @param {User} user a user 
  * @returns {Promise<boolean>} user's role if found, undefined otherwise
  */
-async function getUserRole(user: User): Promise<Role | undefined> {
+async function getUserRole(user: { id: Id }): Promise<Role | undefined> {
 	const userData = (await db.any("SELECT id, role FROM ${table:name} WHERE id=$[id]", {
 		table: "users",
 		id: user.id

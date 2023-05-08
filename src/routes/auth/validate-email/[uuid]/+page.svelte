@@ -2,10 +2,11 @@
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
 
 	const { uuid } = $page.params;
 
-	export let data: any;	
+	export let data: PageData;	
 
 	onMount(() => {
 		if(data.success) {

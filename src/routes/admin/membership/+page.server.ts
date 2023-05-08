@@ -1,20 +1,19 @@
 import { sendMail } from "$lib/server/mailClient"
-import { updateMemberPeriod} from "$lib/server/memberPeriod"
+import { updateMemberPeriod } from "$lib/server/memberPeriod"
 import { db } from "$lib/server/postgresClient"
-import { hasRolePermission, UserPermission } from "$lib/userPermissions"
-import type { RequestEvent, Actions } from "./$types";
+import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions"
+import type { RequestEvent, Actions, PageServerLoad } from "./$types";
 import { v4 as uuid } from "uuid"
 import { error, fail, redirect } from "@sveltejs/kit"
 import { readFile } from 'fs/promises';
-import { getNextPeriod, type Period } from "$lib/publicMemberPeriod";
+import { Period, } from "$lib/publicMemberPeriod";
 import { __envDir } from "$lib/utils";
 
-/** @type {import('./$types').PageServerLoad} */
-export function load({ locals }: RequestEvent) {
+export const load = (async ({ locals }) => {
 	if (!locals.authenticated || !hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role)) {
 		throw redirect(307, '/');
 	}
-}
+}) satisfies PageServerLoad
 
 /**
  * For a list of users, send a code for membership or add
@@ -25,41 +24,39 @@ export function load({ locals }: RequestEvent) {
  * @returns list of mails that are not found and who can't get emails
  */
 export const actions = {
-	default: async ({ request, locals }: RequestEvent) => {
-		if(!locals.authenticated) throw error(401)
+	default: async ({ request, locals }) => {
+		if (!locals.authenticated) throw error(401)
 		if (!hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role)) {
 			throw error(403);
 		}
 
 		const form = await request.formData();
-		const emails: string[] | undefined = form.get('emails')?.toString()?.split(",")?.flatMap((v) => { return v.split(";") })
-		emails?.forEach((str) => str = str.trim())
 		const periodsNumber = parseInt(form.get('periodsNumber')?.toString() || "1") || 1;
-		
-		if (!emails) {
-			return fail(400, { emails, periodsNumber })
-		}
+
+		//Parse emails
+		const emails: string[] | undefined = form.get('emails')?.toString()?.split(",")?.flatMap((v) => { return v.split(";") })
+		emails?.forEach((str) => str = str.trim().toLowerCase())
+
+
+		if (!emails) { return fail(400, { emails, periodsNumber }) }
 		//Query user data
 		const users = await db.any("SELECT id, email, role, member_start, member_stop FROM users WHERE email IN ($[emails:csv]);", {
 			emails: emails
 		})
 
-		const emailsFound = users.flatMap(element => element.email) //Temp variable only useful for finding the emails not found
+		const emailsFound = users.flatMap(element => element.email.toLowerCase()) //Temp variable only useful for finding the emails not found
 		const emailsNotFound = emails.filter(element => !emailsFound.includes(element))
 
 		//Add periods to users with account
 		users.forEach(user => {
-			//Prevent role change for admin
-			if (user.role != "USER" && user.role != "MEMBER") return
+			let period = new Period(user.member_start, user.member_stop)
+			period.addSemesters(periodsNumber)
 
-			let period: Period = { start: user.member_start, stop: user.member_stop }
-			for (let i = 0; i < periodsNumber; i++) {
-				period = getNextPeriod(period)
-			}
+			user.role = Roles[user.role]
 			updateMemberPeriod(user, period)
 		})
 		//Send email and code to users that don't have an account
-		const errorMails = await createAndSendMemberCodes(emailsNotFound, periodsNumber)				
+		const errorMails = await createAndSendMemberCodes(emailsNotFound, periodsNumber)
 		return {
 			success: true,
 			errorMails: errorMails
@@ -85,22 +82,22 @@ async function createAndSendMemberCodes(emails: string[], periodsNumber: number)
 				periods: periodsNumber
 			})
 
-			const promise = ( async () => {
+			const promise = (async () => {
 				let content = await readFile(__envDir + 'mails/memberCode.html', { encoding: 'utf8' })
 				content = content.replace('%CODE%', code)
 				const res = await sendMail(email, "JDRPoly: Code de membre", content)
-				if(res instanceof Error) return email
-				else return ""	
+				if (res instanceof Error) return email
+				else return ""
 			})()
 			promises.push(promise)
-			
-		} catch (err) {			
+
+		} catch (err) {
 			mailsError.push(email)
 		}
 	})
 
-	const res = await (await Promise.all(promises)).filter((str) => str) 
+	const res = await (await Promise.all(promises)).filter((str) => str)
 	mailsError.push(...res)
-	
+
 	return mailsError
 }

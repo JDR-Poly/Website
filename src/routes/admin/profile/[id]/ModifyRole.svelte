@@ -6,46 +6,45 @@
 	import FormField from '@smui/form-field';
 	import Radio from '@smui/radio';
 	import Button, { Label } from '@smui/button';
-	import { getNextPeriod, type Period } from '$lib/publicMemberPeriod';
+	import { Period } from '$lib/publicMemberPeriod';
 	import Checkbox from '@smui/checkbox';
 
 	export let user: User;
 
 	let roleName = user.role?.name;
-	
-	let userPeriod: Period = {
-		start: user.member_start ? new Date(user.member_start) : undefined,
-		stop: user.member_stop ? new Date(user.member_stop) : undefined
-	}
-	let period = userPeriod
+
+	let userPeriod = new Period(user.member_start, user.member_stop);
+
+	let period = userPeriod;
 
 	let periodsNumber = 1;
-	let addMemberPeriod = false
-	updatePeriod(1)
+	let addMemberPeriod = false;
+	updatePeriod(periodsNumber);
 
 	function updatePeriod(periodsNumber: number) {
-		period = userPeriod
-		for (let i = 0; i < periodsNumber; i++) {
-			period = getNextPeriod(period)
-		}
-		if(roleName == Roles.MEMBER.name) {
-			period.start = undefined
+		period = userPeriod;
+		period.addSemesters(periodsNumber);
+		if (roleName == Roles.MEMBER.name) {
+			period.start = undefined;
 		}
 	}
 
-	let roleList: Role[] = []
+	let roleList: Role[] = [];
 
 	onMount(async () => {
-		roleList = await fetch(`/api/admin/roles/grant?id=${user.id}`)
-			.then(async (res) => {
-				return res.ok ? await res.json() : []
-			});				
-	})
+		roleList = await fetch(`/api/admin/roles/grant?id=${user.id}`).then(async (res) => {
+			return res.ok ? await res.json() : [];
+		});
+	});
 
 	async function submitChange() {
 		const res = await fetch('/api/admin/roles/grant', {
 			method: 'POST',
-			body: JSON.stringify({ id: user.id, role: roleName, periodsNumber: addMemberPeriod ? periodsNumber : 0 }),
+			body: JSON.stringify({
+				id: user.id,
+				role: roleName,
+				periodsNumber: addMemberPeriod ? periodsNumber : 0
+			}),
 			headers: { 'Content-Type': 'application/json' }
 		});
 		if (res.ok) {
@@ -59,13 +58,15 @@
 	const dateFormater = new Intl.DateTimeFormat('fr-Fr', {
 		dateStyle: 'long',
 		timeZone: 'Europe/Paris'
-	})
-
+	});
 </script>
 
-
 <!-- Role change -->
-<select bind:value={roleName} disabled={roleList.length <= 1} on:change={() => updatePeriod(periodsNumber)}>
+<select
+	bind:value={roleName}
+	disabled={roleList.length <= 1}
+	on:change={() => updatePeriod(periodsNumber)}
+>
 	{#if roleList.length === 0}
 		<option value={roleName}>{roleName}</option>
 	{:else}
@@ -75,9 +76,7 @@
 	{/if}
 </select>
 
-
-
-<br>
+<br />
 
 {#if roleName == Roles.MEMBER.name || roleName == Roles.USER.name}
 	<FormField>
@@ -95,15 +94,19 @@
 		<br />
 		{#each ['1 semestre', '2 semestres'] as option, i}
 			<FormField>
-				<Radio bind:group={periodsNumber} value={i + 1} touch on:change={() => {updatePeriod(periodsNumber)}}/><span slot="label" >{option}</span>
+				<Radio
+					bind:group={periodsNumber}
+					value={i + 1}
+					touch
+					on:change={() => {
+						updatePeriod(periodsNumber);
+					}}
+				/><span slot="label">{option}</span>
 			</FormField>
 		{/each}
-
 	{/if}
 {/if}
 <br />
 <Button on:click={() => submitChange()} touch variant="unelevated" disabled={!roleName}>
 	<Label>Changer</Label>
 </Button>
-
-

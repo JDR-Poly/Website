@@ -1,10 +1,10 @@
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
-import { error, redirect } from "@sveltejs/kit";
-import type { RequestEvent } from "./$types";
+import { redirect } from "@sveltejs/kit";
+import type { PageServerLoad } from './$types';
 
 /** @type {import('./$types').PageServerLoad} */
-export function load({ locals }: RequestEvent) {
-	if (!locals.authenticated || !hasRolePermission(UserPermission.CREATE_EVENT, locals.user?.role)) {
+export const load = (({locals}) => {
+	if (!hasRolePermission(UserPermission.CREATE_EVENT, locals.user?.role)) {
 	  throw redirect(307, '/events');
 	}
-}
+}) satisfies PageServerLoad;

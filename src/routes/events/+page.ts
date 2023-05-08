@@ -1,22 +1,15 @@
-import { error, json, redirect } from '@sveltejs/kit';
 import type { Event } from '$gtypes';
+import type { PageLoad } from './$types';
 
-/** @type {import('./$types').PageLoad} */
-export async function load({ params, fetch }) {
+export const load = (async ({ fetch }) => {
 	return {
-		events: 
-		fetch('/api/events')
-			.then((res) => {
-				return (res.ok ? res.json() : []) as Event[];
-			})
-			.then((res) => {
-				return res.map((event) => {
-					event.date = new Date(Date.parse(event.date as any));
-					return event;
-				});
-			})
-			.catch((err) => {
-				return [] as Event[];
-			})
+		events:
+			fetch('/api/events')
+				.then((res) => {
+					return (res.ok ? res.json() : []) as Event[];
+				})
+				.catch((err) => {
+					return [] as Event[];
+				})
 	}
-}
+}) satisfies PageLoad;

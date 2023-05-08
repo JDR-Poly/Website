@@ -1,14 +1,15 @@
 <script lang="ts">
+	import type { PageData } from './$types';
 	import ModifyRole from './ModifyRole.svelte';
 
-	export let data: any;
+	export let data: PageData;
 </script>
 
 
 <main>
-	<h2>Modifier les données de {data.name}</h2>
+	<h2>Modifier les données de {data.profileUser.name}</h2>
 
-	<ModifyRole user={data} />
+	<ModifyRole user={data.profileUser} />
 </main>
 
 <style lang="scss">

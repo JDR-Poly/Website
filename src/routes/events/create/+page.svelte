@@ -1,174 +1,231 @@
 <script lang="ts">
-	import {error, info, warning} from "$lib/stores"
+	import { error, info, warning } from '$lib/stores';
 	import Icon from '@smui/select/icon';
 	import Select, { Option } from '@smui/select';
 	import Textfield from '@smui/textfield';
-	import { goto } from "$app/navigation";
+	import { goto } from '$app/navigation';
 	import Checkbox from '@smui/checkbox';
-  	import FormField from '@smui/form-field';
+	import FormField from '@smui/form-field';
 	import IconButton from '@smui/icon-button';
-	import { categories, returnJoinEventRoles } from "$lib/events";
+	import { categories, returnJoinEventRoles } from '$lib/events';
 	import Compressor from 'compressorjs';
+	import { getBase64, getUTCDateStringOrNullFromString } from '$lib/utils';
 
-	let title = ''
-	let description = ''
-	let date: string = ''
-	let category = categories[0]
-	let inscription = false
-	let inscription_group = 'MEMBER'
-	let inscription_limit: number = 16
-	let inscription_start: string = ''
-	let inscription_stop: string = ''
-	
+	let title = '';
+	let description = '';
+	let date: string = '';
+	let category = categories[0];
+	let inscription = false;
+	let inscription_group = 'MEMBER';
+	let inscription_limit: number = 16;
+	let inscription_start: string = '';
+	let inscription_stop: string = '';
+
 	let images: null | FileList = null;
-	let image: File | Blob
+	let image: File | Blob;
 
 	//Not actual stored values in the database
-	let isInscriptionStop = false 
-	let hasInscriptionLimit = false
-	let submitDisabled = true
-	let isImageProcessing = false
+	let isInscriptionStop = false;
+	let hasInscriptionLimit = false;
+	let submitDisabled = true;
+	let isImageProcessing = false;
 
-	async function submit() {	
-		if(isImageProcessing) {
-			$warning = "L'image est en cours de traitement. Attendez 5 secondes et recommencez."
-			return
+	async function submit() {
+		if (isImageProcessing) {
+			$warning = "L'image est en cours de traitement. Attendez 5 secondes et recommencez.";
+			return;
 		}
-		const formData = new FormData();
-		formData.append("title", title)
-		formData.append("category", category)
-		formData.append("description", description)
-		if(date) formData.append("date", new Date(Date.parse(date)).toUTCString())
-		if(image) formData.append("image", image)
-		formData.append("inscription", inscription.toString())
-		formData.append("inscription_group", inscription_group)
-		if(hasInscriptionLimit) formData.append("inscription_limit", inscription_limit.toString())
-		if(inscription_start) formData.append("inscription_start", new Date(Date.parse(inscription_start)).toUTCString())
-		if(inscription_stop) formData.append("inscription_stop", new Date(Date.parse(inscription_stop)).toUTCString())
 		
-		const res = await fetch('/api/events', {
+		fetch('/api/events', {
 			method: 'POST',
-			body: formData
-		});	
-		const body = await res.json();
-		if (res.ok) {			
-			goto('/events/' + body.id)
-			$info = "L'évènement a bien été créé"
-		} else {
-			$error = body.message
-		}
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				title,
+				category,
+				date: getUTCDateStringOrNullFromString(date),
+				image: image ? await getBase64(image) : undefined,
+				description,
+				inscription,
+				inscription_group,
+				inscription_limit,
+				inscription_start: getUTCDateStringOrNullFromString(inscription_start),
+				inscription_stop: getUTCDateStringOrNullFromString(inscription_stop)
+			})
+		}).then(async (res) => {
+			const body = await res.json();
+			if (res.ok) {
+				goto('/events/' + body.id);
+				$info = "L'évènement a bien été créé";
+			} else {
+				$error = body.message;
+			}
+		});
 	}
 </script>
 
 <main>
-	<div id="img"></div>
+	<div id="img" />
 	<div id="wrapper">
-		<form on:change={() => {
-			submitDisabled = (() => {
-				if(!title || !category || !date) return true
+		<form
+			on:change={() => {
+				submitDisabled = (() => {
+					if (!title || !category || !date) return true;
 
-				if(inscription && (!inscription_group || !inscription_start)) return true
-				if(isInscriptionStop && (!inscription_stop)) return true
-				return false
-			})()
-		}}>
+					if (inscription && (!inscription_group || !inscription_start)) return true;
+					if (isInscriptionStop && !inscription_stop) return true;
+					return false;
+				})();
+			}}
+		>
 			<Select bind:value={category} label="Catégorie" class="small-field" required>
 				<Icon class="material-icons" slot="leadingIcon">event</Icon>
 				{#each categories as category}
 					<Option value={category}>{category}</Option>
 				{/each}
 			</Select>
-			<Textfield type="text" bind:value={title} label="Titre" style="width: 100%" required/>
-			<Textfield type="text" bind:value={description} label="Description" style="width: 100%" textarea/>
-			
-			<Textfield bind:value={date} type="datetime-local" label="Date" class="small-field" required input$min={new Date(Date.now()).toISOString().slice(0, -8)}></Textfield>
+			<Textfield type="text" bind:value={title} label="Titre" style="width: 100%" required />
+			<Textfield
+				type="text"
+				bind:value={description}
+				label="Description"
+				style="width: 100%"
+				textarea
+			/>
+
+			<Textfield
+				bind:value={date}
+				type="datetime-local"
+				label="Date"
+				class="small-field"
+				required
+				input$min={new Date(Date.now()).toISOString().slice(0, -8)}
+			/>
 			<div class="hide-file-ui">
-				<Textfield bind:files={images} label="Image" type="file" on:change={async () => {				
-					if (images && images[0]) {
-						if (images[0].size > 4e+6) {
-							$warning = 'Image max 4MB';
-							images = null;
-						} else {
-							isImageProcessing = true
-							console.log("Processing image");
-							new Compressor(images[0], {
-								quality: 0.7,
-								mimeType: "image/webp",
-								maxWidth: 1920,
-								maxHeight: 1080,
-							success(result) {
-								console.log("Image processing finished.");
-								image = result
-								isImageProcessing = false
-							},
-							error(err) {
-								console.log(err.message);
-							},
-						});
+				<Textfield
+					bind:files={images}
+					label="Image"
+					type="file"
+					on:change={async () => {
+						if (images && images[0]) {
+							if (images[0].size > 4e6) {
+								$warning = 'Image max 4MB';
+								images = null;
+							} else {
+								isImageProcessing = true;
+								console.log('Processing image');
+								
+								new Compressor(images[0], {
+									quality: 0.7,
+									mimeType: 'image/webp',
+									maxWidth: 1920,
+									maxHeight: 1080,
+									success(result) {
+										console.log('Image processing finished.');
+										image = result;
+										isImageProcessing = false;
+									},
+									error(err) {
+										console.log(err.message);
+									}
+								});
+							}
 						}
-					}
-				}}/>
+					}}
+				/>
 				<IconButton
 					class="material-icons"
 					on:click={() => {
 						images = null;
-					}}>delete</IconButton>
+					}}>delete</IconButton
+				>
 			</div>
 
 			<FormField>
-				<Checkbox bind:checked={inscription} touch on:change={() => {		
-					if(!inscription) {
-						inscription_group = 'MEMBER'
-						inscription_start = ''
-						inscription_stop = ''
-						isInscriptionStop = false
-					} else {
-						inscription_start = new Date(Date.now()).toUTCString()
-					}
-				}}/>
+				<Checkbox
+					bind:checked={inscription}
+					touch
+					on:change={() => {
+						if (!inscription) {
+							inscription_group = 'MEMBER';
+							inscription_start = '';
+							inscription_stop = '';
+							isInscriptionStop = false;
+						} else {
+							inscription_start = new Date(Date.now()).toUTCString();
+						}
+					}}
+				/>
 				<span slot="label">Inscription </span>
 			</FormField>
-		
+
 			{#if inscription}
-				<Select bind:value={inscription_group} label="Rôle d'inscription" class="small-field" required>
+				<Select
+					bind:value={inscription_group}
+					label="Rôle d'inscription"
+					class="small-field"
+					required
+				>
 					{#each returnJoinEventRoles() as role}
 						<Option value={role}>{role}</Option>
 					{/each}
 				</Select>
 
-				<Textfield bind:value={inscription_start} type="datetime-local" label="Début d'inscription" class="small-field" required></Textfield>
-				
+				<Textfield
+					bind:value={inscription_start}
+					type="datetime-local"
+					label="Début d'inscription"
+					class="small-field"
+					required
+				/>
+
 				<FormField>
-					<Checkbox bind:checked={hasInscriptionLimit} touch/>
+					<Checkbox bind:checked={hasInscriptionLimit} touch />
 					<span slot="label">Limite d'inscriptions </span>
 				</FormField>
 
 				{#if hasInscriptionLimit}
-					<Textfield type="number" bind:value={inscription_limit} label="Limite" style="width: 100%" required/>
+					<Textfield
+						type="number"
+						bind:value={inscription_limit}
+						label="Limite"
+						style="width: 100%"
+						required
+					/>
 				{/if}
 
 				<FormField>
-					<Checkbox bind:checked={isInscriptionStop} touch on:change={() => {		
-						if(!isInscriptionStop) {
-							inscription_stop = ''
-						} else {
-							inscription_stop = new Date(Date.now()).toUTCString()
-						}
-					}}/>
+					<Checkbox
+						bind:checked={isInscriptionStop}
+						touch
+						on:change={() => {
+							if (!isInscriptionStop) {
+								inscription_stop = '';
+							} else {
+								inscription_stop = new Date(Date.now()).toUTCString();
+							}
+						}}
+					/>
 					<span slot="label">Fin d'inscription </span>
 				</FormField>
-		
+
 				{#if isInscriptionStop}
-					<Textfield bind:value={inscription_stop} type="datetime-local" label="Fin d'inscription" class="small-field" required input$min={new Date(Date.now()).toISOString().slice(0, -8)}></Textfield>
+					<Textfield
+						bind:value={inscription_stop}
+						type="datetime-local"
+						label="Fin d'inscription"
+						class="small-field"
+						required
+						input$min={new Date(Date.now()).toISOString().slice(0, -8)}
+					/>
 				{/if}
 			{/if}
-		
-			<button disabled={submitDisabled} on:click={submit}>Créer l'événement</button>		
+
+			<button disabled={submitDisabled} on:click={submit}>Créer l'événement</button>
 		</form>
 	</div>
-	
 </main>
-
 
 <style lang="scss">
 	main {
@@ -190,7 +247,6 @@
 		}
 	}
 
-
 	#wrapper {
 		width: 700px;
 		background: #fff;
@@ -200,7 +256,6 @@
 		z-index: 1;
 
 		form > {
-
 			:global(*:not(.mdc-form-field)) {
 				margin: 10px 5px;
 				width: 100%;

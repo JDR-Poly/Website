@@ -1,18 +1,20 @@
 import { error } from '@sveltejs/kit';
 
-/** @type {import('./$types').PageLoad} */
-export async function load({ fetch }) {
+import type { PageLoad } from './$types';
+import type { Book } from '$gtypes';
+
+export const load = (async ({ fetch }) => {
 	return {
 		books: fetch('/api/books')
 			.then((res) => {
-				return res.json();
+				return res.json() ;
 			})
 			.then((res) => {
-				return _sortByItemOrder(res);
+				return __sortByItemOrder(res) as Book[];
 			})
 	}
-}
+}) satisfies PageLoad
 
-export function _sortByItemOrder(books: any) {
-	return books.sort((a: any, b: any) => (a.item_order >= b.item_order ? 1 : -1));
+export function __sortByItemOrder(books: Book[]) {
+	return books.sort((a, b) => (a.item_order >= b.item_order ? 1 : -1));
 }

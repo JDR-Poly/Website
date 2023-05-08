@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { User } from '$gtypes';
-	import {error} from "$lib/stores"
+	import { error } from '$lib/stores';
 	import { page } from '$app/stores';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table'
-  	import LinearProgress from '@smui/linear-progress';
+	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
+	import LinearProgress from '@smui/linear-progress';
 
 	//Search completion variables
 	let searchCompletion: User[] = [];
@@ -53,29 +53,29 @@
 			userListURL.searchParams.append('index', index as any);
 			userListURL.searchParams.append('searchText', searchText);
 
-			return fetch(userListURL)
-				.then(async (res) => {
-					const body = await res.json()
-					if (res.ok && body.length > 0) {
-						return body;
-					} else if (!res.ok) {
-						$error = body.message
-						return undefined
-					}
-				})			
+			return fetch(userListURL).then(async (res) => {
+				const body = await res.json();
+				if (res.ok && body.length > 0) {
+					return body;
+				} else if (!res.ok) {
+					$error = body.message;
+					return undefined;
+				}
+			});
 		} catch (err) {
 			console.error(err);
-			$error = "An error occured"
+			$error = 'An error occured';
 			return undefined;
 		}
 	}
 
-	let canSeeEmail = $page.data.authenticated && hasRolePermission(UserPermission.SEE_MAIL, $page.data.user.role)
-	let loaded = false
+	let canSeeEmail =
+		$page.data.authenticated && hasRolePermission(UserPermission.SEE_MAIL, $page.data.user.role);
+	let loaded = false;
 </script>
 
 <svelte:head>
-	<title>Utilisateurs | JDRPoly</title> 
+	<title>Utilisateurs | JDRPoly</title>
 </svelte:head>
 
 <main>
@@ -84,11 +84,12 @@
 	<form
 		on:submit|preventDefault={async () => {
 			index = 0;
-			loaded = false
+			loaded = false;
 			users = await search(20, index);
-			loaded = true
+			loaded = true;
 		}}
-		autocomplete="off">
+		autocomplete="off"
+	>
 		<div
 			class="searchBar"
 			on:focusout={(event) => {
@@ -136,12 +137,12 @@
 							<Cell numeric>{user.id}</Cell>
 							<Cell><a href="/users/profile/{user.id}">{user.name}</a></Cell>
 							{#if canSeeEmail}
-									<Cell>{user.email}</Cell>
+								<Cell>{user.email}</Cell>
 							{/if}
 						</Row>
 					{/each}
 				</Body>
-			
+
 				<LinearProgress
 					indeterminate
 					bind:closed={loaded}
@@ -152,9 +153,6 @@
 		{/if}
 	</div>
 </main>
-
-
-
 
 <style lang="scss">
 	* {

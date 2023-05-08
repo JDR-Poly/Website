@@ -13,8 +13,11 @@ export const load = (async ({ fetch }) => {
 				return events
 			}).then((events: Event[]) => {
 				return events.sort((a, b) => {
-					if(a.date < b.date) return -1 
-					else if(a.date.getTime()==b.date.getTime()) return 0
+					const eventADate = new Date(Date.parse(a.date))
+					const eventBDate = new Date(Date.parse(b.date))
+
+					if(eventADate < eventBDate) return -1 
+					else if(eventADate.getTime()==eventBDate.getTime()) return 0
 					else return 1
 				}).reverse()
 			})

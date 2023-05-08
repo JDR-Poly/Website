@@ -13,35 +13,36 @@
 	export let defaultOpen: boolean;
 
 	let open = defaultOpen
-	let change = false;
-	let reqCommittee: Promise<Committee[]> = (async () => {return []})() //Evil hack to allow svelte to rerender {#each} loop
-	let hasFetched = false
+	let isAChange = false;
+	let hasFetched = false //Prevent fetching every time the category is opened
 	let hasBeenMounted = false
+
+	let committees: Committee[] = []
 
 	onMount(() => {
 		hasBeenMounted = true
 	})
 
-	async function fetchCommittees(open: boolean) {
-		if(!open || hasFetched) return		
+	async function fetchCommittees() {
+		if(hasFetched) return		
 		const res = await fetch('/api/committee/categories/' + category);
 		const body = await res.json();
 		hasFetched = true
-		if(res.ok) reqCommittee = (async () => {return sortByItemOrder(body)})()
+		if(res.ok) committees = [...sortByItemOrder(body)]
 		else {
 			$error = body.message
 		}
 	} 
 
 	$: {
-		if(hasBeenMounted) fetchCommittees(open) 
+		if(hasBeenMounted && open) fetchCommittees() 
 	}
 
-	function sortByItemOrder(committees: any) {
-		return committees.sort((a: any, b: any) => (a.item_order >= b.item_order ? 1 : -1));
+	function sortByItemOrder(committees: Committee[]) {
+		return committees.sort((a, b) => (a.item_order >= b.item_order ? 1 : -1));
 	}
 
-	function addOneToOrder(committees: any, current_committee: any) {
+	function addOneToOrder(committeesParam: Committee[], current_committee: Committee) {
 		//Change the order of the committes
 		const nextCommittee = committees.filter((v: any) => {
 			return v.item_order === current_committee.item_order + 1;
@@ -54,11 +55,11 @@
 		});
 
 		current_committee.item_order++;
-		change = true;
-		reqCommittee = (async () => {return sortByItemOrder(committees)})()
+		isAChange = true;
+		committees = [...sortByItemOrder(committeesParam)]
 	}
 
-	function removeOneToOrder(committees: any, current_committee: any) {
+	function removeOneToOrder(committeesParam: Committee[], current_committee: Committee) {
 		//Change the order of the committes
 		const nextCommittee = committees.filter((v: any) => {
 			return v.item_order === current_committee.item_order - 1;
@@ -71,8 +72,8 @@
 		});
 
 		current_committee.item_order--;
-		change = true;
-		reqCommittee = (async () => {return sortByItemOrder(committees)})()
+		isAChange = true;
+		committees = [...sortByItemOrder(committeesParam)]
 	}
 
 	async function updateOrders(committees: Committee[]) {
@@ -97,9 +98,6 @@
 
 <Content>
 
-{#await reqCommittee}
-	<!-- Evil hack to allow svelte to rerender {#each} loop-->
-{:then committees}
 <div class="grid">
 	{#each committees as committee, i}
 		<div class="card">
@@ -140,7 +138,7 @@
 	{/each}
 </div>
 		
-{#if change && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
+{#if isAChange && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
 	<Fab
 		id="fab-container"
 		color="secondary"
@@ -151,8 +149,6 @@
 		<Label>Sauvegarder</Label>
 	</Fab>
 {/if}
-
-{/await}	
 </Content>
 </Panel>
 

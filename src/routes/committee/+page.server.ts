@@ -9,8 +9,8 @@ export const actions = {
 	/**
 	 * Create a new committee for the committee page
 	 * @param {string} request.category the category of the committee (like "2022-2023") 
-	 * @param {string?} request.title title of committee 
-	 * @param {string?} request.name name of committee
+	 * @param {string} request.title title of committee 
+	 * @param {string} request.name name of committee
 	 * @param {string?} request.description description of committee
 	 * @param {Blob?} request.image description of committee 
 	 */
@@ -22,7 +22,7 @@ export const actions = {
 		const category = body.get('category')?.toString()
 		if (!category) return fail(400, {message: 'No category found'})
 		const image = body.get("image")?.valueOf() as Blob | undefined
-		const barray = image ? await image.arrayBuffer() : undefined
+		const barray = image ? Buffer.from(await image.arrayBuffer()) : undefined
 				
 		return db.any("SELECT item_order FROM committee_info WHERE category = $1", [category])
 			.then((res) => {
@@ -33,7 +33,7 @@ export const actions = {
 					`INSERT INTO committee_info
 					(category,title,item_order,name,description,image)
 					VALUES ($1,$2,$3,$4,$5,$6)`
-					, [category, body.get('title')?.toString(), maxOrder + 1, body.get('name')?.toString(), body.get('description')?.toString(), barray ? Buffer.from(barray) : undefined]
+					, [body.get('category')?.toString(), body.get('title')?.toString(), maxOrder + 1, body.get('name')?.toString(), body.get('description')?.toString(), barray]
 				)
 					.then(() => {		
 						return { success: true }

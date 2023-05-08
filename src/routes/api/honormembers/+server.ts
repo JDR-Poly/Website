@@ -1,30 +1,28 @@
 import { error, json } from "@sveltejs/kit";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
-import type { RequestEvent } from "./$types";
+import type { RequestHandler } from "./$types";
 import { db } from "$lib/server/postgresClient";
 import type { HonorMember } from "$gtypes";
 
 
 /**
  * Get all the members of honor for /docs/
- * @type {import('./$types').RequestHandler}
 */
-export async function GET({ }: RequestEvent) {
+export const GET = (async ({ }) => {
 	return db.any("SELECT * FROM honor_members")
 		.then((res) => {
 			return json(res)
 		})
 		.catch((err) => { throw error(500, err.message) })
-}
+}) satisfies RequestHandler
 
 /**
  * Add a member of honor for /docs/
- * @type {import('./$types').RequestHandler}
  * @param {RequestEvent} request
  * @param {string} request.name the name of the member ("Scrooge Mcduck")
  * @param {string} request.description the description of the member (ex: "Never gave any penny")
 */
-export async function POST({ request, locals }: RequestEvent) {
+export const POST = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401)
 
 	const body = await request.json()
@@ -39,21 +37,20 @@ export async function POST({ request, locals }: RequestEvent) {
 				`INSERT INTO honor_members
 				(name,description,item_order)
 				VALUES ($1,$2,$3)`
-				,[body.name, body.description, maxOrder + 1]
+				, [body.name, body.description, maxOrder + 1]
 			)
 			return new Response()
 		})
 		.catch((err) => { throw error(500, err.message) })
 
-}
+}) satisfies RequestHandler
 
 /**
  * Update one or a list of members of honor
  * @param {RequestEvent} request
  * @param {HonorMember | HonorMember[]} request.body the member(s) to update
- * @type {import('./$types').RequestHandler} 
  */
-export async function PATCH({ locals, request }: RequestEvent) {
+export const PATCH = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401)
 
 	let body = await request.json()
@@ -78,4 +75,4 @@ export async function PATCH({ locals, request }: RequestEvent) {
 		.catch(err => {
 			throw error(500, err.message)
 		});
-}
+}) satisfies RequestHandler

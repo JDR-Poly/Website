@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { hasRolePermission, Role, Roles, UserPermission } from '$lib/userPermissions';
 	import { goto } from '$app/navigation';
-	import {error as messageError} from "$lib/stores"
+	import { error as messageError } from '$lib/stores';
 	import IconButton from '@smui/icon-button';
 	import Button, { Label, Icon } from '@smui/button';
 	import Textfield from '@smui/textfield';
@@ -11,9 +11,10 @@
 	import Edit from './Edit.svelte';
 	import { writable } from 'svelte/store';
 	import ImageB64 from '$components/ImageB64.svelte';
+	import type { PageData } from './$types';
 
-	export let data: any;
-	
+	export let data: PageData;
+
 	const openEditDialog = writable(false);
 	const { event_id } = $page.params;
 
@@ -47,66 +48,71 @@
 		fetch('/api/events/' + event_id + '/subscribe', {
 			method: 'POST'
 		})
-		.then(() => {
-			location.reload()
-		})
-		.catch((err) => {
-			$messageError = err.message
-		})
+			.then(() => {
+				location.reload();
+			})
+			.catch((err) => {
+				$messageError = err.message;
+			});
 	}
 
 	async function unsubscribe() {
 		fetch('/api/events/' + event_id + '/subscribe', {
 			method: 'DELETE'
 		})
-		.then(() => {
-			location.reload()
-		})
-		.catch((err) => {
-			$messageError = err.message
-		})
+			.then(() => {
+				location.reload();
+			})
+			.catch((err) => {
+				$messageError = err.message;
+			});
 	}
 
-	function eventHasUser(subscribed: User[]): Boolean {
-		return subscribed.map(v => v.id).includes($page.data.user?.id)
+	function eventHasUser(): Boolean {
+		return data.subscribed.map((v) => v.id).includes($page.data.user?.id);
 	}
 
 	function copyMails() {
-		const mails = data.event.subscribed.flatMap((v: {email: string;}) => `${v.email}, `)
-		const text = "".concat(...mails).slice(0, -2)
+		const mails = data.subscribed.flatMap((v) => `${v.email}, `);
+		const text = ''.concat(...mails).slice(0, -2);
 		navigator.clipboard.writeText(text);
-		$info = "Les emails ont été copiés."
+		$info = 'Les emails ont été copiés.';
 	}
 
-	let addedUser = ''
+	let addedUser = '';
 
-	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role)
+	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role);
 </script>
+
 <svelte:head>
-	<title>{data.event.title} | JDRPoly</title> 
+	<title>{data.event.title} | JDRPoly</title>
 </svelte:head>
+
 <main>
-	<div id="img"/>
-	
+	<div id="img" />
 	<div id="wrapper">
 		{#if data.event.imageb64}
-			<ImageB64 imageb64={data.event.imageb64} alt="Événement" alternativeImageSrc=""/>
+			<ImageB64 imageb64={data.event.imageb64} alt="Événement" alternativeImageSrc="" />
 		{/if}
 		<h2>{data.event.title}</h2>
-		<h3>{new Intl.DateTimeFormat('fr-Fr', {
-			dateStyle: 'medium',
-			timeStyle: 'short',
-			timeZone: 'Europe/Paris'
-		}).format(data.event.date)}</h3>
+		<h3>
+			{new Intl.DateTimeFormat('fr-Fr', {
+				dateStyle: 'medium',
+				timeStyle: 'short',
+				timeZone: 'Europe/Paris'
+			}).format(Date.parse(data.event.date))}
+		</h3>
 
 		<div id="split">
-			<p id="description">{data.event.description ? data.event.description.replace("\n", "\n\n") : ""}</p>
+			<p id="description">
+				{data.event.description ? data.event.description.replace('\n', '\n\n') : ''}
+			</p>
 			<div id="inscription">
 				{#if data.event.inscription}
 					{#if $page.data.authenticated && hasRolePermission('JOIN_EVENT_' + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)}
-						{#if !data.event.inscription_limit || data.event.subscribed.length < data.event.inscription_limit}
+						{#if !data.event.inscription_limit || data.subscribed.length < data.event.inscription_limit}
 							{#if (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start)) && (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))}
-								{#if eventHasUser(data.event.subscribed)}
+								{#if eventHasUser()}
 									<Button on:click={() => unsubscribe()} variant="raised">
 										<Icon class="material-icons">person_remove</Icon>
 										<Label>Se désinscrire</Label>
@@ -121,14 +127,20 @@
 								<p>Les inscriptions ne sont pas ouvertes.</p>
 							{/if}
 						{:else}
-							<p>L'événement est complet. </p>
+							<p>L'événement est complet.</p>
 						{/if}
-						
 					{:else}
-						<p class="inscriptionInfo" style="color: darkred;">Vous devez être {translateRole(Roles[data.event.inscription_group])} pour pouvoir vous inscrire à cette événement </p>
+						<p class="inscriptionInfo" style="color: darkred;">
+							Vous devez être {translateRole(Roles[data.event.inscription_group])} pour pouvoir vous
+							inscrire à cette événement
+						</p>
 					{/if}
-					<h5>Joueurs participants ({data.event.subscribed.length}{data.event.inscription_limit ? `/${data.event.inscription_limit}` : ""}) :</h5>
-					{#each data.event.subscribed as user}
+					<h5>
+						Joueurs participants ({data.subscribed.length}{data.event.inscription_limit
+							? `/${data.event.inscription_limit}`
+							: ''}) :
+					</h5>
+					{#each data.subscribed as user}
 						<div class="positioner">
 							{#if canSeeProfile}
 								<a href="/users/profile/{user.id}">{user.name}</a>
@@ -137,72 +149,85 @@
 							{/if}
 
 							{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
-								<IconButton class="material-icons" on:click={() => {
-									fetch('/api/admin/events/' + event_id + '/subscribe', {
-										method: 'DELETE',
-										body: JSON.stringify({
-											user_id: user.id
+								<IconButton
+									class="material-icons"
+									on:click={() => {
+										fetch('/api/admin/events/' + event_id + '/subscribe', {
+											method: 'DELETE',
+											body: JSON.stringify({
+												user_id: user.id
+											})
 										})
-									}).then(() => {
-										location.reload()
-									}).catch((err) => {
-										$messageError = err.message
-									})	
-								}}>close</IconButton>
+											.then(() => {
+												location.reload();
+											})
+											.catch((err) => {
+												$messageError = err.message;
+											});
+									}}>close</IconButton
+								>
 							{/if}
 						</div>
 					{/each}
 					{#if hasRolePermission(UserPermission.SUBSCRIBE_USER_TO_EVENT, $page.data.user?.role)}
 						<div id="addUser">
-							<Textfield type="number" bind:value={addedUser} label="Id d'utilisateur" style="width: 50%"/>
-							<IconButton class="material-icons" on:click={() => {
-								fetch('/api/admin/events/' + event_id + '/subscribe', {
-									method: 'POST',
-									body: JSON.stringify({
-										user_id: parseInt(addedUser)
+							<Textfield
+								type="number"
+								bind:value={addedUser}
+								label="Id d'utilisateur"
+								style="width: 50%"
+							/>
+							<IconButton
+								class="material-icons"
+								on:click={() => {
+									fetch('/api/admin/events/' + event_id + '/subscribe', {
+										method: 'POST',
+										body: JSON.stringify({
+											user_id: parseInt(addedUser)
+										})
 									})
-								}).then(async (res) => {
-									if(!res.ok) {
-										const body = await res.json()
-										$warning = body.message.includes("duplicate key value violates") ? "Cette utilisateur est déjà dans la liste" : body.message
-
-									} else {
-										location.reload()
-									}
-								}).catch((err) => {
-									$error = err.message
-								})	
-							}}>done</IconButton>
+										.then(async (res) => {
+											if (!res.ok) {
+												const body = await res.json();
+												$warning = body.message.includes('duplicate key value violates')
+													? 'Cette utilisateur est déjà dans la liste'
+													: body.message;
+											} else {
+												location.reload();
+											}
+										})
+										.catch((err) => {
+											$error = err.message;
+										});
+								}}>done</IconButton
+							>
 						</div>
 					{/if}
 				{:else}
-					<p class="inscriptionInfo" style="color: green;">Il n'y a pas besoin de s'inscrire pour cet événement</p>
+					<p class="inscriptionInfo" style="color: green;">
+						Il n'y a pas besoin de s'inscrire pour cet événement
+					</p>
 				{/if}
 			</div>
 		</div>
 		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
 			<div class="admin-btn" style="right: 60px;">
-				<IconButton class="material-icons" on:click={() => deleteEvent(data.event.id)}>close</IconButton>
+				<IconButton class="material-icons" on:click={() => deleteEvent(data.event.id)}
+					>close</IconButton
+				>
 			</div>
 			<div class="admin-btn" style="right: 120px;">
-				<IconButton
-						class="material-icons"
-						on:click={() => openEditDialog.set(true)}>
-						edit
+				<IconButton class="material-icons" on:click={() => openEditDialog.set(true)}>
+					edit
 				</IconButton>
 			</div>
 			{#if hasRolePermission(UserPermission.SEE_MAIL, $page.data.user?.role)}
 				<div class="admin-btn" style="right: 180px;">
-					<IconButton
-							class="material-icons"
-							on:click={copyMails}>
-							mark_email_read
-					</IconButton>
+					<IconButton class="material-icons" on:click={copyMails}>mark_email_read</IconButton>
 				</div>
 			{/if}
-			<Edit event={data.event} open={openEditDialog}></Edit>
+			<Edit event={data.event} open={openEditDialog} />
 		{/if}
-
 	</div>
 </main>
 
@@ -242,7 +267,6 @@
 		z-index: 1;
 		position: relative;
 
-
 		h2 {
 			font-size: 1.65em;
 			font-weight: 400;
@@ -250,7 +274,7 @@
 			margin: 0 0 0.5em 0;
 			line-height: 1.75em;
 		}
-		
+
 		h3 {
 			font-weight: 400;
 			letter-spacing: 2px;
@@ -307,7 +331,8 @@
 					margin-bottom: 10px;
 				}
 
-				a,p {
+				a,
+				p {
 					font-size: 20px;
 					color: #666;
 					text-decoration: none;
@@ -328,11 +353,8 @@
 					margin: 2em 0 0 20%;
 					:global(.mdc-text-field) {
 						float: left;
-
 					}
-
 				}
-				
 			}
 		}
 	}

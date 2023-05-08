@@ -1,9 +1,8 @@
-import type { RequestEvent } from "./$types";
+import type { LayoutServerLoad } from "./$types";
 import { redirect } from "@sveltejs/kit";
 
-/** @type {import('./$types').LayoutServerLoad} */
-export function load({ locals }: RequestEvent) {
+export const load = (async ({locals}) => {
 	if (locals.authenticated && locals.user?.is_email_validated) {
 	  throw redirect(307, '/');
 	}
-}
+}) satisfies LayoutServerLoad
