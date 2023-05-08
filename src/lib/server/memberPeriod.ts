@@ -1,4 +1,4 @@
-import type { Id, User } from "$gtypes"
+import type { Id } from "$gtypes"
 import { sendMail } from "./mailClient"
 import { db } from "./postgresClient"
 import { readFile } from 'fs';
@@ -29,9 +29,14 @@ function updateMemberPeriod(user: { id: Id, email: string, role: Role }, period:
 	})
 	readFile(__envDir + 'mails/updateMemberPeriod.html', function (err, data) {
 		let html = data.toString()
-		if (period.start) html = html.replace('%START%', period.start?.toLocaleDateString())
-		if (period.stop) html = html.replace('%STOP%', period.stop?.toLocaleDateString())
-		sendMail(user.email, "JDRPoly: Vous êtes membres !", html)
+		let formater = new Intl.DateTimeFormat('fr-Fr', {
+			dateStyle: 'medium',
+			timeStyle: 'short',
+			timeZone: 'Europe/Paris'
+		})
+		html = html.replace('%START%', formater.format(period.start))
+		html = html.replace('%STOP%', formater.format(period.stop))
+		sendMail(user.email, "JDRPoly: Tu es membre !", html)
 	})
 }
 

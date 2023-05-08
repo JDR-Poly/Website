@@ -26,19 +26,20 @@ if (import.meta.env.PROD) {
 			console.error(error)
 		}
 	});
-}
-if (transporter == undefined) {
-	let testAccount = await createTestAccount(); //Generate email using ethereal
-	transporter = createTransport({
-		host: "smtp.ethereal.email",
-		port: 587,
-		secure: false,
-		auth: {
-			user: testAccount.user, // generated ethereal user
-			pass: testAccount.pass // generated ethereal password
-		}
-	});
-	ethereal = true
+} else {
+	if (transporter == undefined) {
+		let testAccount = await createTestAccount(); //Generate email using ethereal
+		transporter = createTransport({
+			host: "smtp.ethereal.email",
+			port: 587,
+			secure: false,
+			auth: {
+				user: testAccount.user, // generated ethereal user
+				pass: testAccount.pass // generated ethereal password
+			}
+		});
+		ethereal = true
+	}
 }
 
 async function sendMail(to: any, subject: string, html: string): Promise<any> {	
