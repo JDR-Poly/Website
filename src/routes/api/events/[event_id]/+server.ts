@@ -77,7 +77,7 @@ export const DELETE = (async ({ params, locals }) => {
  * @param {string} inscription_start the UTCdate of when people can join an event
  * @param {string} inscription_stop the UTCdate of when people can no longer join an event
  */
-export const PATCH = (async ({ params, request, locals }) => {	
+export const PATCH = (async ({ params, request, locals }) => {		
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role)) throw error(403)
 
@@ -85,17 +85,17 @@ export const PATCH = (async ({ params, request, locals }) => {
 	const data = await request.json()
 	if(data.image) data.image = getByteArrayFromBase64(data.image)
 	if (data.inscription_group !== Roles.USER.name && data.inscription_group !== Roles.MEMBER.name && data.inscription_group !== Roles.COMMITTEE.name) throw error(400, "inscription_group is not valid, should be either user, member or committee")
-
+	
 	return db.one(
 		`UPDATE events SET
 			title=$[title], category=$[category],
 			description=$[description],date=$[date],
 			inscription=$[inscription], inscription_group=$[inscription_group],
-			inscription_limit=$[inscription_limit], image=COALESCE(image, $[image]),
+			inscription_limit=$[inscription_limit], image=COALESCE($[image], image),
 			inscription_start=$[inscription_start],inscription_stop=$[inscription_stop]
 		WHERE id=$[id]
 		RETURNING *;`,
-		{ ...data, id: id }
+		{ id: id, ...data, image: data.image  }
 	)
 		.then(async (res) => {
 			if (!data.inscription) {
