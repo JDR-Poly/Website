@@ -15,17 +15,17 @@
 
 	let userPeriod = new Period(user.member_start, user.member_stop);
 
-	let period = userPeriod;
+	let period = userPeriod.clone()
 
 	let periodsNumber = 1;
 	let addMemberPeriod = false;
 	updatePeriod(periodsNumber);
 
 	function updatePeriod(periodsNumber: number) {
-		period = userPeriod;
+		period = userPeriod.clone()	
 		period.addSemesters(periodsNumber);
 		if (roleName == Roles.MEMBER.name) {
-			period.start = undefined;
+			period.start = new Date(Date.now());
 		}
 	}
 

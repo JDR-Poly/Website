@@ -3,8 +3,8 @@
  * a user is a member.
  */
 class Period {
-	start?: Date
-	stop?: Date
+	start: Date
+	stop: Date
 	/**
 	 * Create a period from dates or UTC Date string
 	 * or undefined
@@ -38,6 +38,13 @@ class Period {
 			}
 		}
 		return this
+	}
+
+	/**
+	 * Do a deep clone of the object
+	 */
+	clone(): Period {
+		return new Period(new Date(this.start.getTime()), new Date(this.stop.getTime()));	
 	}
 }
 
