@@ -1,6 +1,6 @@
 
 import { db } from "$lib/server/postgresClient"
-import { hasRolePermission, Role, Roles, UserPermission } from "$lib/userPermissions"
+import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions"
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { __envDir, getByteArrayFromBase64 } from "$lib/utils";
@@ -47,27 +47,26 @@ export const POST = (async ({ request, locals }) => {
 /**
  * Get all events sorted by their date
  * @param {boolean?} url.searchParams.excludeExpiredEvents exclude event in the past (default true)
+ * @param {boolean?} url.searchParams.noImage don't send images (default false)
  * @param {number} url.searchParams.limit how many events to search for
  * @return {Event[]} list of events
  * */
 export const GET = (async ({ url }) => {
-	const excludeExpiredEvents = !(url.searchParams.get("excludeExpiredEvents") === "false")
+	const excludeExpiredEventsString = !(url.searchParams.get("excludeExpiredEvents") === "false") ? "WHERE date >= $1" : ""
+	const noImage = url.searchParams.get("noImage") === "true" ? "" : ", image"
 
-	const db_req = excludeExpiredEvents ?
-		`SELECT * FROM events
-		WHERE date >= $1
-		ORDER BY date;
-		`
-		:
-		`SELECT * FROM events
-		ORDER BY date;
-		`
+	const db_req = `SELECT id, title, author, category, date, inscription, inscription_group, inscription_limit, inscription_start, inscription_stop, description${noImage} FROM events
+					${excludeExpiredEventsString}
+					ORDER BY date;
+					`
 	return db.any(db_req, [new Date(Date.now())])
 		.then((res) => {
 			res.forEach((v) => {
-				if (v.image) v.imageb64 = Buffer.from(v.image).toString("base64") //Convert to base64
-				v.image = undefined
-			})
+				if (v.image) {
+					v.imageb64 = Buffer.from(v.image).toString("base64") //Convert to base64
+					v.image = undefined
+				}
+			})			
 			return res
 		})
 		.then((result) => {

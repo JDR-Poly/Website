@@ -3,7 +3,7 @@ import type { PageLoad } from './$types';
 
 export const load = (async ({ fetch }) => {
 	return { 
-		events: fetch('/api/events?excludeExpiredEvents=false')
+		events: fetch('/api/events?excludeExpiredEvents=false&noImage=true')
 			.then(async (res) => {
 				return res.json()
 			}).then((events) => {
