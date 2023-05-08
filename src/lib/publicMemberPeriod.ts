@@ -12,12 +12,12 @@ class Period {
 	 * @param stop when the period end
 	 */
 	constructor(start?: Date | string, stop?: Date | string) {
-		const now = new Date(Date.now())
+		const now = Date.now()
 		if(start && typeof start == 'string') start = new Date(Date.parse(start))
 		if(stop && typeof stop == 'string') stop = new Date(Date.parse(stop))
 
-		this.start = start ? start as Date : now
-		this.stop = stop ? stop as Date : now
+		this.start = start ? start as Date : new Date(now)
+		this.stop = stop ? stop as Date : new Date(now)
 	}
 
 	/**
@@ -28,13 +28,13 @@ class Period {
 	 */
 	addSemesters(semesters: number): Period {
 		for (let i = 0; i < semesters; i++) {
-			if (this.stop!!.getMonth() <= 6) {
-				this.stop?.setMonth(8)
-				this.stop?.setDate(0)
+			if (this.stop.getMonth() <= 6) {
+				this.stop.setMonth(8)
+				this.stop.setDate(0)
 			} else {
-				this.stop?.setMonth(0)
-				this.stop?.setDate(30)
-				this.stop?.setFullYear(this.stop.getFullYear() + 1)
+				this.stop.setMonth(0)
+				this.stop.setDate(30)
+				this.stop.setFullYear(this.stop.getFullYear() + 1)
 			}
 		}
 		return this

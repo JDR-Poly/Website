@@ -22,7 +22,7 @@ function updateMemberPeriod(user: { id: Id, email: string, role: Role }, period:
 
 	db.none("UPDATE $[table:name] SET role=$[role], member_start=$[member_start], member_stop=$[member_stop] WHERE id=$[id]", {
 		table: "users",
-		member_start: newRole == "MEMBER" ? null : period.start,
+		member_start: period.start,
 		member_stop: period.stop,
 		role: newRole,
 		id: user.id
