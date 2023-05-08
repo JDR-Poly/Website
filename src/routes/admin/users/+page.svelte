@@ -3,17 +3,22 @@
 	import { error } from '$lib/stores';
 	import { page } from '$app/stores';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import DataTable, { Head, Body, Row, Cell } from '@smui/data-table';
+	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from '@smui/data-table';
 	import LinearProgress from '@smui/linear-progress';
+	import type { PageData } from './$types';
+	import IconButton from '@smui/icon-button';
+
+	export let data: PageData;
 
 	//Search completion variables
-	let searchCompletion: User[] = [];
+	let usersSearchBar: User[] = [];
 	let selectedIndex = -1;
 
-	//Search result variable
 	let searchText = '';
 	let index = 0;
-	let users: Array<User> | undefined;
+
+	//List of users
+	let users: User[] = data.users;
 
 	/**
 	 * Handle when the user write text in the searchBar
@@ -21,10 +26,10 @@
 	 */
 	async function inputChange() {
 		if (searchText.length < 3) {
-			searchCompletion = [];
+			usersSearchBar = [];
 			return;
 		}
-		searchCompletion = (await search(4, 0)) || [];
+		usersSearchBar = (await search(5, 0)) || [];
 	}
 
 	/**
@@ -34,7 +39,7 @@
 	 */
 	function onKeypressInput(event: KeyboardEvent) {
 		if (event.key === 'ArrowDown') {
-			selectedIndex = Math.min(selectedIndex + 1, searchCompletion.length - 1);
+			selectedIndex = Math.min(selectedIndex + 1, usersSearchBar.length - 1);
 		} else if (event.key === 'ArrowUp') {
 			selectedIndex = Math.max(0, selectedIndex - 1);
 		}
@@ -46,8 +51,9 @@
 	 * @param number how many users to search for
 	 * @param index offset of the index
 	 */
-	async function search(number: number, index: number): Promise<User[] | undefined> {
+	async function search(number: number, index: number): Promise<User[]> {
 		try {
+			loaded = false;
 			let userListURL = new URL($page.url.origin + '/api/users/search');
 			userListURL.searchParams.append('number', number as any);
 			userListURL.searchParams.append('index', index as any);
@@ -55,23 +61,35 @@
 
 			return fetch(userListURL).then(async (res) => {
 				const body = await res.json();
+				loaded = true;
 				if (res.ok && body.length > 0) {
 					return body;
 				} else if (!res.ok) {
 					$error = body.message;
-					return undefined;
+					return [];
 				}
 			});
 		} catch (err) {
 			console.error(err);
 			$error = 'An error occured';
-			return undefined;
+			loaded = true;
+			return [];
 		}
+	}
+
+	function handleSort() {
+		users.sort((a, b) => {
+			return sortDirection === 'ascending' ? a.id - b.id : b.id - a.id
+		});
+		users = users;
 	}
 
 	let canSeeEmail =
 		$page.data.authenticated && hasRolePermission(UserPermission.SEE_MAIL, $page.data.user.role);
-	let loaded = false;
+	let loaded = true;
+
+	let sort = 'id';
+	let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
 </script>
 
 <svelte:head>
@@ -85,7 +103,7 @@
 		on:submit|preventDefault={async () => {
 			index = 0;
 			loaded = false;
-			users = await search(20, index);
+			users = await search(100, index);
 			loaded = true;
 		}}
 		autocomplete="off"
@@ -95,7 +113,7 @@
 			on:focusout={(event) => {
 				setTimeout(() => {
 					selectedIndex = -1;
-					searchCompletion = [];
+					usersSearchBar = [];
 				}, 100);
 			}}
 		>
@@ -107,7 +125,7 @@
 				on:keydown={onKeypressInput}
 			/>
 			<div class="searchBar-items">
-				{#each searchCompletion as result, i}
+				{#each usersSearchBar as result, i}
 					<a href="/users/profile/{result.id}"
 						><div class={i == selectedIndex ? 'searchBar-active' : ''}>
 							<strong>{result.name}</strong>
@@ -121,13 +139,24 @@
 
 	<div id="datatable">
 		{#if users}
-			<DataTable table$aria-label="User list" style="width: 100%;">
+			<DataTable
+				table$aria-label="User list"
+				style="width: 100%;"
+				sortable
+				bind:sort
+				bind:sortDirection
+				on:SMUIDataTable:sorted={handleSort}
+			>
 				<Head>
 					<Row>
-						<Cell numeric>ID</Cell>
-						<Cell style="width: 100%;">Nom</Cell>
+						<Cell numeric columnId="id">
+							<IconButton class="material-icons">arrow_upward</IconButton>
+							<Label>Id</Label>
+						</Cell>
+						<Cell style="width: 100%;" sortable={false}>Nom</Cell>
+						<Cell sortable={false}>Rôle</Cell>
 						{#if canSeeEmail}
-							<Cell>Email</Cell>
+							<Cell sortable={false}>Email</Cell>
 						{/if}
 					</Row>
 				</Head>
@@ -136,6 +165,7 @@
 						<Row>
 							<Cell numeric>{user.id}</Cell>
 							<Cell><a href="/users/profile/{user.id}">{user.name}</a></Cell>
+							<Cell>{user.role}</Cell>
 							{#if canSeeEmail}
 								<Cell>{user.email}</Cell>
 							{/if}

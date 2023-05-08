@@ -19,7 +19,7 @@ export const GET = (async ({ url, locals }) => {
 	const mailSQLText = locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role) ? "email, " : "" 
 
 	return db.any(
-		`SELECT id, ${mailSQLText}name 
+		`SELECT id, ${mailSQLText}name, role 
 		FROM users WHERE name ~~* $1 OR email ~~* $1 
 		LIMIT $2 OFFSET $3;`,
 		[searchText, number, index]
