@@ -21,8 +21,8 @@ export const actions = {
 	login: async ({ request, cookies }: RequestEvent) => {
 		const form = await request.formData();
 
-		const email = form.get('email')?.toString();
-		const password = form.get('password')?.toString();
+		const email = form.get('email')?.toString().trim();
+		const password = form.get('password')?.toString().trim();
 
 		const userResult = await db.any('SELECT id,email,password FROM users WHERE email = $1', [email])
 		if(!userResult || userResult.length == 0) return fail(401, { message: "Mail ou mot de passe invalide"})
@@ -57,9 +57,9 @@ export const actions = {
 	},
 	register: async ({ request, cookies, url }: RequestEvent) => {
 		const form = await request.formData();
-		const email = form.get('email')?.toString();
-		const username = form.get('username')?.toString();
-		const password = form.get('password')?.toString();
+		const email = form.get('email')?.toString().trim();
+		const username = form.get('username')?.toString().trim();
+		const password = form.get('password')?.toString().trim();
 	
 		if (!validateEmail(email) || !validateUsername(username) || !validatePassword(password))
 			return fail(406, { message: "email, username or password invalid"});
@@ -102,7 +102,7 @@ export const actions = {
 	 */
 	resetPassword: async ({ request, url }: RequestEvent) => {
 		const form = await request.formData();
-		const email = form.get('email')?.toString();
+		const email = form.get('email')?.toString().trim();
 
 		if(!email) return fail(400, { message: "Email not defined."})
 		
