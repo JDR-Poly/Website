@@ -3,6 +3,7 @@ import { fail } from '@sveltejs/kit';
 import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 import { db } from '$lib/server/postgresClient';
 import { __envDir } from '$lib/utils';
+import { logger } from '$lib/server/logger';
 
 export const actions = {
 
@@ -40,7 +41,7 @@ export const actions = {
 					})
 			})
 			.catch((err) => { 
-				console.error(err);
+				logger.error(err);
 				return fail(500, err.message) })
 
 	}

@@ -5,6 +5,7 @@ import { db } from "./postgresClient";
 import { readFile } from 'fs';
 import { env } from '$env/dynamic/private';
 import { __envDir } from "$lib/utils";
+import { logger } from "./logger";
 
 let transporter: Transporter | undefined
 let ethereal = false
@@ -21,9 +22,9 @@ if (import.meta.env.PROD) {
 	testTransporter.verify((error, success) => {
 		if (!error) {
 			transporter = testTransporter
-			console.info("Email transporter is correctly linked")
+			logger.info("Email transporter is correctly linked")
 		} else {
-			console.error(error)
+			logger.error(error)
 		}
 	});
 } else {
@@ -50,8 +51,8 @@ async function sendMail(to: any, subject: string, html: string): Promise<any> {
 			subject: subject,
 			html: html
 		})
-		if (ethereal) console.info("Preview Mail: %s", getTestMessageUrl(result));
-		else { console.info("Mail sent to: %s", to)}
+		if (ethereal) logger.info("Preview Mail: %s", getTestMessageUrl(result));
+		else { logger.info("Mail sent to: %s", to)}
 		return result
 	} catch (err: any) {		
 		return Error(err.message)

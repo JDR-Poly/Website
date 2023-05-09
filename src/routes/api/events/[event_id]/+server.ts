@@ -3,6 +3,7 @@ import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions";
 import { __envDir, getByteArrayFromBase64 } from "$lib/utils";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { logger } from "$lib/server/logger";
 
 /** 
  * Get a specific event
@@ -108,7 +109,7 @@ export const PATCH = (async ({ params, request, locals }) => {
 			return json(res)
 		})
 		.catch((err) => {
-			console.error(err.message);
+			logger.error(err.message);
 			throw error(500, err.message)
 		})
 }) satisfies RequestHandler

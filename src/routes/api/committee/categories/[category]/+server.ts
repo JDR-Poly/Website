@@ -1,6 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { db } from "$lib/server/postgresClient";
 import type { RequestHandler } from "./$types";
+import { logger } from '$lib/server/logger';
 
 /**
  * Get all the committees of a category
@@ -23,7 +24,7 @@ export const GET = (async ({ params }) => {
 			return json(res)
 		})
 		.catch((err) => {
-			console.error(err);
+			logger.error(err);
 
 			throw error(500, err.message)
 		})
