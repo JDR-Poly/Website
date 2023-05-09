@@ -160,7 +160,7 @@
 						{
 							element: {
 								prefix_icon: 'logout',
-								text: 'Déconnection'
+								text: 'Déconnexion'
 							},
 							action: logout
 						}
