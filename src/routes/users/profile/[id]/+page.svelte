@@ -39,14 +39,14 @@
 </svelte:head>
 
 <main>
-	<h2>Profile</h2>
+	<h2>Profil</h2>
 
 	{#if hasRolePermission(UserPermission.SEE_MAIL, data.user?.role)}
 		<p>Email: <strong>{data.profile.email}</strong></p>
 	{/if}
 	<p>Nom: <strong>{data.profile.name}</strong></p>
 	<p>Date de création: <strong>{dateFormater.format(Date.parse(data.profile.account_creation))}</strong></p>
-	<p>Role: <strong>{getTranslatedRoleName(data.profile.role?.name)}</strong></p>
+	<p>Rôle: <strong>{getTranslatedRoleName(data.profile.role?.name)}</strong></p>
 
 	{#if data.profile.member_start}
 		<p>Membre à partir de: <strong>{dateFormater.format(Date.parse(data.profile.member_start))}</strong></p>
