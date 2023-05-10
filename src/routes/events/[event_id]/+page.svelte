@@ -122,6 +122,11 @@
 	}
 
 	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role);
+	const dateFormater = new Intl.DateTimeFormat('fr-Fr', {
+				dateStyle: 'medium',
+				timeStyle: 'short',
+				timeZone: 'Europe/Paris'
+			})
 </script>
 
 <svelte:head>
@@ -136,11 +141,7 @@
 		{/if}
 		<h2>{data.event.title}</h2>
 		<h3>
-			{new Intl.DateTimeFormat('fr-Fr', {
-				dateStyle: 'medium',
-				timeStyle: 'short',
-				timeZone: 'Europe/Paris'
-			}).format(Date.parse(data.event.date))}
+			{dateFormater.format(Date.parse(data.event.date))}
 		</h3>
 
 		<div id="split">
@@ -165,6 +166,9 @@
 								{/if}
 							{:else}
 								<p>Les inscriptions ne sont pas ouvertes.</p>
+								{#if data.event.inscription_start && Date.now() < Date.parse(data.event.inscription_start) }
+									<p>Ouverture des inscriptions le {dateFormater.format(Date.parse(data.event.inscription_start))}</p>
+								{/if}
 							{/if}
 						{:else}
 							<p>L'événement est complet.</p>
