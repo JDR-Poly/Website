@@ -45,7 +45,7 @@
 				title,
 				category,
 				date: getLocalDateStringOrNullFromString(date),
-				image: image ? await getBase64(image) : undefined,
+				image: image ? await getBase64(image) : null,
 				description,
 				inscription,
 				inscription_group,

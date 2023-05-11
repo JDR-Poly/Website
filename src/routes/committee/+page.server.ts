@@ -23,7 +23,7 @@ export const actions = {
 		const category = body.get('category')?.toString()
 		if (!category) return fail(400, {message: 'No category found'})
 		const image = body.get("image")?.valueOf() as Blob | undefined
-		const barray = image ? Buffer.from(await image.arrayBuffer()) : undefined
+		const barray = image ? Buffer.from(await image.arrayBuffer()) : null
 				
 		return db.any("SELECT item_order FROM committee_info WHERE category = $1", [category])
 			.then((res) => {
