@@ -26,7 +26,6 @@ export const POST = (async ({ request, locals }) => {
 
 	const data = await request.json()
 	if(data.image) data.image = getByteArrayFromBase64(data.image)
-	console.log({...data, author: locals.user?.id});
 	
 	if (data.inscription_group !== Roles.USER.name && data.inscription_group !== Roles.MEMBER.name && data.inscription_group !== Roles.COMMITTEE.name) throw error(400, "inscription_group is not valid, should be either user, member or committee")
 
