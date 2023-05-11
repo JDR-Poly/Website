@@ -4,6 +4,7 @@ import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions"
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { __envDir, getByteArrayFromBase64 } from "$lib/utils";
+import type { DateString } from "$gtypes";
 
 /**
  * Create an event
@@ -11,13 +12,13 @@ import { __envDir, getByteArrayFromBase64 } from "$lib/utils";
  * @param {string} title the title of the event
  * @param {string} category the category of the event
  * @param {string?} description the description of the event
- * @param {string} date the UTCdate of the event
+ * @param {DateString} date the local date of the event
  * @param {string?} image the base64 image of the event
  * @param {string} inscription the string of a boolean, indicating if people can join the event
  * @param {string?} inscription_group name of the group that are allowed to join
  * @param {number?} inscription_limit limit of people that can subscribe to this event
- * @param {string?} inscription_start the UTCdate of when people can join an event
- * @param {string?} inscription_stop the UTCdate of when people can no longer join an event
+ * @param {DateString?} inscription_start the local date of when people can join an event
+ * @param {DateString?} inscription_stop the local date of when people can no longer join an event
  */
 export const POST = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401)

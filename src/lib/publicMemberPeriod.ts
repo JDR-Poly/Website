@@ -1,3 +1,5 @@
+import type { DateString } from "$gtypes"
+
 /**
  * A period represent the time between which 
  * a user is a member.
@@ -6,12 +8,12 @@ class Period {
 	start: Date
 	stop: Date
 	/**
-	 * Create a period from dates or UTC Date string
+	 * Create a period from dates or Local Date string
 	 * or undefined
 	 * @param start when the period start 
 	 * @param stop when the period end
 	 */
-	constructor(start?: Date | string, stop?: Date | string) {
+	constructor(start?: Date | DateString, stop?: Date | DateString) {
 		const now = Date.now()
 		if(start && typeof start == 'string') start = new Date(Date.parse(start))
 		if(stop && typeof stop == 'string') stop = new Date(Date.parse(stop))

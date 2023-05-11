@@ -11,7 +11,7 @@
 	import Checkbox from '@smui/checkbox';
 	import FormField from '@smui/form-field';
 	import { categories, returnJoinEventRoles } from '$lib/events';
-	import { getBase64, getUTCDateStringOrNullFromString } from '$lib/utils';
+	import { getBase64, getLocalDateStringOrNullFromString, parseToLocalDateStringWithoutMilis } from '$lib/utils';
 
 	export let event: Event;
 	let images: null | FileList = null;
@@ -19,7 +19,7 @@
 
 	export let open: Writable<boolean>;
 
-	async function editEvent() {
+	async function editEvent() {		
 		fetch(`/api/events/${event.id}`, {
 			method: 'PATCH',
 			headers: {
@@ -29,14 +29,14 @@
 			body: JSON.stringify({
 				title: event.title,
 				category: event.category,
-				date: getUTCDateStringOrNullFromString(event.date),
+				date: event.date,
 				description: event.description,
 				image: image ? await getBase64(image) : undefined,
 				inscription: event.inscription,
 				inscription_group: event.inscription_group,
 				inscription_limit: event.inscription_limit,
-				inscription_start: getUTCDateStringOrNullFromString(event.inscription_start),
-				inscription_stop: getUTCDateStringOrNullFromString(event.inscription_stop)
+				inscription_start: event.inscription_start,
+				inscription_stop: event.inscription_stop
 			})
 		})
 			.then((res) => {
@@ -55,20 +55,22 @@
 		return false;
 	})();
 
+	
 	//trick for bind:value for date
-	let internal_date: string = event.date ? event.date.slice(0, -8) : '';
-	$: if (internal_date) event.date = getUTCDateStringOrNullFromString(internal_date) as string
+	let internal_date: string = event.date ? parseToLocalDateStringWithoutMilis(event.date) : '';
+	$: if (internal_date) event.date = getLocalDateStringOrNullFromString(internal_date) as string
 
 	let internal_inscription_start: string = event.inscription_start
-		? event.inscription_start.slice(0, -8)
+		? parseToLocalDateStringWithoutMilis(event.inscription_start)
 		: '';
-	$: if (internal_inscription_start) event.inscription_start = getUTCDateStringOrNullFromString(internal_inscription_start) as string
+	
+	$: if (internal_inscription_start) event.inscription_start = getLocalDateStringOrNullFromString(internal_inscription_start) as string
 
 	let internal_inscription_stop: string = event.inscription_stop
-		? event.inscription_stop.slice(0, -8)
+		? parseToLocalDateStringWithoutMilis(event.inscription_stop)
 		: '';
 	$: if (internal_inscription_stop)
-		event.inscription_stop = getUTCDateStringOrNullFromString(internal_inscription_stop) as string
+		event.inscription_stop = getLocalDateStringOrNullFromString(internal_inscription_stop) as string
 
 	//Checkbot value
 	let isInscriptionStop = Boolean(internal_inscription_stop);
