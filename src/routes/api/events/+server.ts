@@ -56,11 +56,13 @@ export const GET = (async ({ url }) => {
 	const excludeExpiredEventsString = !(url.searchParams.get("excludeExpiredEvents") === "false") ? "WHERE date >= $1" : ""
 	const noImage = url.searchParams.get("noImage") === "true" ? "" : ", image"
 
+	const nowLenient = new Date(Date.now())
+	nowLenient.setHours(nowLenient.getHours() + 3)
 	const db_req = `SELECT id, title, author, category, date, inscription, inscription_group, inscription_limit, inscription_start, inscription_stop, description${noImage} FROM events
 					${excludeExpiredEventsString}
 					ORDER BY date;
 					`
-	return db.any(db_req, [new Date(Date.now())])
+	return db.any(db_req, [nowLenient])
 		.then((res) => {
 			res.forEach((v) => {
 				if (v.image) {
