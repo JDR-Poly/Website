@@ -17,6 +17,7 @@
 </svelte:head>
 
 <main>
+	<h2>Comité :</h2>
 	<Accordion>
 		{#each data.categories as category, i}
 			<Category {category} defaultOpen={i == 0} />

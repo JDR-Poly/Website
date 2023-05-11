@@ -75,7 +75,7 @@
 		<li><a href="/files/Organigramme_2021.pdf">Organigramme</a></li>
 	</ul>
 
-	<h2>Membres d'honneur:</h2>
+	<h2>Membres d'honneur :</h2>
 
 	{#each data.honormembers as honorMember}
 		<div class="honor-member">

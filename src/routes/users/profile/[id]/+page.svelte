@@ -39,7 +39,7 @@
 </svelte:head>
 
 <main>
-	<h2>Profil</h2>
+	<h2>Profil :</h2>
 
 	{#if hasRolePermission(UserPermission.SEE_MAIL, data.user?.role)}
 		<p>Email: <strong>{data.profile.email}</strong></p>
