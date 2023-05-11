@@ -222,7 +222,6 @@
 				margin-top: 2em;
 				text-align: center;
 				color: #707070;
-				font-family: 'Ubuntu';
 				&::before, &::after {
 					border-bottom: 1px solid #707070;
 					content: '';

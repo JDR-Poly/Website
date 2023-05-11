@@ -25,7 +25,6 @@
 		margin: 8em auto;
 
 		h2 {
-			font-family: 'Ubuntu';
 			text-transform: uppercase;
 			font-weight: 600;
 			letter-spacing: 0.15em;
@@ -37,7 +36,6 @@
 			text-align: justify;
 			margin-bottom: 2em;
 			color: #777;
-			font-family: 'Ubuntu';
 		}
 		p {
 			line-height: 27px;

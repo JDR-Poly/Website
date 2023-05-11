@@ -76,7 +76,6 @@
 	main {
 		min-height: 90vh;
 		position: relative;
-		font-family: 'Ubuntu';
 		background: rgb(0, 2, 26);
 		background: linear-gradient(
 			135deg,

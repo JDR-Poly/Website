@@ -354,7 +354,6 @@
 			#description {
 				display: block;
 				width: 60%;
-				font-family: 'Ubuntu';
 				font-size: 20px;
 				letter-spacing: 1px;
 				line-height: 1.25em;

@@ -200,7 +200,6 @@
 		background-color: #030528;
 		overflow: hidden;
 		padding: 0.9em 4em 0.9em 4em;
-		font-family: Open Sans, sans-serif;
 		display: flex;
 
 		.log-button {
@@ -282,6 +281,7 @@
 
 			p {
 				letter-spacing: 0.05em;
+				font-size: 19px;
 			}
 
 			&:hover {

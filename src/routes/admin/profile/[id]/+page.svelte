@@ -19,7 +19,6 @@
 		min-height: 40vh;
 
 		h2 {
-			font-family: 'Ubuntu';
 			text-transform: uppercase;
 			font-weight: 600;
 			letter-spacing: 0.15em;

@@ -173,7 +173,6 @@
 		}
 		.text-container {
 			padding: 8px 16px;
-			font-family: 'Ubuntu';
 
 			h4 {
 				font-size: 20px;

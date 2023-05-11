@@ -188,7 +188,6 @@
 		margin: 8em auto;
 		min-height: 40vh;
 		color: #777;
-		font-family: 'Ubuntu';
 
 		p {
 			font-size: 20px;
