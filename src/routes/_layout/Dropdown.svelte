@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { element, text } from 'svelte/internal';
-
 	export let data: DdData;
 	export let responsive: boolean;
-
+	export let closeNavBar: () => void;
 	let open = true;
 
 	type DdData = {
@@ -46,7 +44,7 @@
 	</button>
 	<div class="drop-content" class:closed={!open}>
 		{#each data.links as element}
-			<a href={element.link} class="drop-link drop-element">
+			<a href={element.link} class="drop-link drop-element" on:click={closeNavBar}>
 				{#if element.element.prefix_icon}
 					<span class="material-symbols-outlined icon">{element.element.prefix_icon}</span>
 				{/if}

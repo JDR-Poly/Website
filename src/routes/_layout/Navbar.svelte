@@ -12,6 +12,10 @@
 		await goto('/');
 		invalidateAll();
 	}
+
+	function closeNavBar() {
+		responsive = false;
+	}
 </script>
 
 <div class="topnav" class:responsive>
@@ -23,7 +27,7 @@
 		<IconButton
 			class="material-icons"
 			on:click={() => {
-				responsive = false;
+				closeNavBar()
 			}}>close</IconButton
 		>
 	</div>
@@ -35,6 +39,7 @@
 
 	<Dropdown
 		{responsive}
+		{closeNavBar}
 		data={{
 			element: {
 				prefix_icon: 'info',
@@ -68,6 +73,7 @@
 
 	<Dropdown
 		{responsive}
+		{closeNavBar}
 		data={{
 			element: {
 				prefix_icon: 'group',
@@ -85,7 +91,7 @@
 		}}
 	/>
 
-	<a href="/books" class="nav-link nav-button">
+	<a href="/books" class="nav-link nav-button" on:click={closeNavBar}>
 		<span class="material-symbols-outlined link-icon">book</span>
 		<p>Bibliothèque</p>
 	</a>
@@ -94,6 +100,7 @@
 		{#if hasRolePermission(UserPermission.ADMIN_PANEL, $page.data.user?.role)}
 			<Dropdown
 				{responsive}
+				{closeNavBar}
 				data={{
 					element: {
 						prefix_icon: 'admin_panel_settings',
@@ -128,6 +135,7 @@
 		<div id="user-div">
 			<Dropdown
 				{responsive}
+				{closeNavBar}
 				data={{
 					element: {
 						prefix_icon: 'person',
@@ -169,7 +177,7 @@
 			/>
 		</div>
 	{:else}
-		<a class="log-button nav-button" href="/auth/login">
+		<a class="log-button nav-button" href="/auth/login"  on:click={closeNavBar}>
 			<span class="material-symbols-outlined link-icon">login</span>
 			<p class="">Se connecter</p>
 		</a>
