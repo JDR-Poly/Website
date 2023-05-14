@@ -5,13 +5,17 @@
 	import { writable } from 'svelte/store';
 	import Fab, { Label, Icon } from '@smui/fab';
 	import type { HonorMember } from '$gtypes';
-	import { error } from '$lib/stores';
+	import { error, warning } from '$lib/stores';
 	import IconButton from '@smui/icon-button';
 	import type { PageData } from './$types';
 	import { __sortByItemOrder } from './+page';
+	import Edit from './Edit.svelte';
 
 	export let data: PageData;
-	export let openAddDialog = writable(false);
+	const openAddDialog = writable(false);
+	const openEditDialog = writable(false);
+
+	let editedHonorMember: HonorMember | undefined = undefined;
 
 	let isAChange = false; //Indicates if there was a change and thus something can be saved
 
@@ -87,6 +91,19 @@
 					<div class="admin-buttons">
 						<IconButton
 							class="material-icons"
+							on:click={() => {
+								if (isAChange) {
+									$warning = "Vous devez d'abord sauvegarder l'ordre";
+									return;
+								}
+								editedHonorMember = honorMember;
+								$openEditDialog = true;
+							}}
+						>
+							edit
+						</IconButton>
+						<IconButton
+							class="material-icons"
 							on:click={() =>
 								fetch('/api/honormembers/' + honorMember.id, {
 									method: 'DELETE'
@@ -127,6 +144,9 @@
 
 {#if hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
 	<Add open={openAddDialog} />
+	{#if editedHonorMember}
+		<Edit open={openEditDialog} honorMember={editedHonorMember}/>
+	{/if}
 	<div class="add-button-container">
 		<Fab style="width:80px;height:80px;" on:click={() => ($openAddDialog = true)}>
 			<Icon class="material-icons" style="font-size:40px;">add</Icon>
