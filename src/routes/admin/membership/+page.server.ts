@@ -34,8 +34,8 @@ export const actions = {
 		const periodsNumber = parseInt(form.get('periodsNumber')?.toString() || "1") || 1;
 
 		//Parse emails
-		const emails: string[] | undefined = form.get('emails')?.toString()?.split(",")?.flatMap((v) => { return v.split(";") })
-		emails?.forEach((str) => str = str.trim().toLowerCase())
+		let emails: string[] | undefined = form.get('emails')?.toString()?.split(",")?.flatMap((v) => { return v.split(";") })
+		emails = emails?.map((str) => str.trim().toLowerCase())
 
 
 		if (!emails) { return fail(400, { emails, periodsNumber }) }
