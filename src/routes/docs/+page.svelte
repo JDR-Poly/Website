@@ -88,7 +88,7 @@
 						<IconButton
 							class="material-icons"
 							on:click={() =>
-								fetch('/api/honormember/' + honorMember.id, {
+								fetch('/api/honormembers/' + honorMember.id, {
 									method: 'DELETE'
 								}).then(() => location.reload())}
 						>
