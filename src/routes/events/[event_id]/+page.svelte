@@ -429,4 +429,15 @@
 			}
 		}
 	}
+
+	@media screen and (max-width: 950px) {
+		#split {
+			flex-direction: column;
+
+			& > * {
+				width: 100% !important;
+				margin-bottom: 3em;
+			}
+		}
+	}
 </style>
