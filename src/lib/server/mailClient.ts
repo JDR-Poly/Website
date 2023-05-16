@@ -19,27 +19,18 @@ if (import.meta.env.PROD) {
 			pass: env.MAIL_PASSWORD
 		}
 	});
-	testTransporter.verify((error, success) => {
+	testTransporter.verify(async (error, success) => {
 		if (!error) {
 			transporter = testTransporter
 			logger.info("Email transporter is correctly linked")
 		} else {
 			logger.error(error)
+			transporter = await generateEtheralTransporter()
 		}
 	});
 } else {
 	if (transporter == undefined) {
-		let testAccount = await createTestAccount(); //Generate email using ethereal
-		transporter = createTransport({
-			host: "smtp.ethereal.email",
-			port: 587,
-			secure: false,
-			auth: {
-				user: testAccount.user, // generated ethereal user
-				pass: testAccount.pass // generated ethereal password
-			}
-		});
-		ethereal = true
+		transporter = await generateEtheralTransporter()
 	}
 }
 
@@ -76,6 +67,21 @@ async function sendMailValidationToken(userId: Id, mail: string, origin: string)
 		sendMail(mail, "JDRPoly: Validez votre mail", html)
 	})
 	
+}
+
+async function generateEtheralTransporter(): Promise<Transporter> {
+	let testAccount = await createTestAccount(); //Generate email using ethereal
+	transporter = createTransport({
+		host: "smtp.ethereal.email",
+		port: 587,
+		secure: false,
+		auth: {
+			user: testAccount.user, // generated ethereal user
+			pass: testAccount.pass // generated ethereal password
+		}
+	});
+	ethereal = true
+	return transporter
 }
 
 export { sendMailValidationToken, sendMail }
