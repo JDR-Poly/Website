@@ -52,9 +52,10 @@ async function sendMail(to: any, subject: string, html: string): Promise<any> {
 			html: html
 		})
 		if (ethereal) logger.info(`Preview Mail: ${getTestMessageUrl(result)}`);
-		else { logger.info(`Mail sent to: ${to}`)}
+		else { logger.info(`Mail ${subject} to ${to}`)}
 		return result
-	} catch (err: any) {		
+	} catch (err: any) {
+		logger.error(err.message);
 		return Error(err.message)
 	}
 }
@@ -71,6 +72,7 @@ async function sendMailValidationToken(userId: Id, mail: string, origin: string)
 		let html = data.toString()
 		html = html.replace('%ORIGIN%', origin)
 		html = html.replace('%TOKEN%', emailValidationToken)
+		logger.info(`2: ${mail}`)
 		sendMail(mail, "JDRPoly: Validez votre mail", html)
 	})
 	

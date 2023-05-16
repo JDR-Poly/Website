@@ -30,4 +30,5 @@ const logger = createLogger({
   	]
 });
 
+logger.info(`Started at ${new Date(Date.now()).toISOString()}`)
 export {logger}
