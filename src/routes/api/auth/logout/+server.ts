@@ -4,7 +4,7 @@ export const POST = (({ cookies }) => {
 	cookies.delete("session", {
 		path: '/',
 		httpOnly: true,
-		sameSite: 'strict',
+		sameSite: 'lax',
 		secure: true
 	}
 	)

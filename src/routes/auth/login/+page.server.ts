@@ -45,7 +45,7 @@ export const actions = {
 				cookies.set('session', cookieId, {
 					path: '/',
 					httpOnly: true,
-					sameSite: 'strict',
+					sameSite: 'lax',
 					secure: true,
 					maxAge: 60 * 60 * 24 * 14
 				});		
@@ -85,7 +85,7 @@ export const actions = {
 				cookies.set('session', cookieId, {
 					path: '/',
 					httpOnly: true,
-					sameSite: 'strict',
+					sameSite: 'lax',
 					secure: true,
 					maxAge: 60 * 60 * 24 * 14
 				});		
