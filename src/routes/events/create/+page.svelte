@@ -9,7 +9,7 @@
 	import IconButton from '@smui/icon-button';
 	import { categories, returnJoinEventRoles } from '$lib/events';
 	import Compressor from 'compressorjs';
-	import { getBase64, getUTCDateStringOrNullFromString } from '$lib/utils';
+	import { getBase64, getLocalDateStringOrNullFromString } from '$lib/utils';
 
 	let title = '';
 	let description = '';
@@ -44,14 +44,14 @@
 			body: JSON.stringify({
 				title,
 				category,
-				date: getUTCDateStringOrNullFromString(date),
-				image: image ? await getBase64(image) : undefined,
+				date: getLocalDateStringOrNullFromString(date),
+				image: image ? await getBase64(image) : null,
 				description,
 				inscription,
 				inscription_group,
 				inscription_limit,
-				inscription_start: getUTCDateStringOrNullFromString(inscription_start),
-				inscription_stop: getUTCDateStringOrNullFromString(inscription_stop)
+				inscription_start: getLocalDateStringOrNullFromString(inscription_start),
+				inscription_stop: getLocalDateStringOrNullFromString(inscription_stop)
 			})
 		}).then(async (res) => {
 			const body = await res.json();
@@ -153,7 +153,7 @@
 							inscription_stop = '';
 							isInscriptionStop = false;
 						} else {
-							inscription_start = new Date(Date.now()).toUTCString();
+							inscription_start = new Date(Date.now()).toString();
 						}
 					}}
 				/>
@@ -203,7 +203,7 @@
 							if (!isInscriptionStop) {
 								inscription_stop = '';
 							} else {
-								inscription_stop = new Date(Date.now()).toUTCString();
+								inscription_stop = new Date(Date.now()).toString();
 							}
 						}}
 					/>

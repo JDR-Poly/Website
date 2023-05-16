@@ -3,6 +3,7 @@ import { fail } from '@sveltejs/kit';
 import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 import { db } from '$lib/server/postgresClient';
 import { __envDir } from '$lib/utils';
+import { logger } from '$lib/server/logger';
 
 export const actions = {
 
@@ -22,7 +23,7 @@ export const actions = {
 		const category = body.get('category')?.toString()
 		if (!category) return fail(400, {message: 'No category found'})
 		const image = body.get("image")?.valueOf() as Blob | undefined
-		const barray = image ? Buffer.from(await image.arrayBuffer()) : undefined
+		const barray = image ? Buffer.from(await image.arrayBuffer()) : null
 				
 		return db.any("SELECT item_order FROM committee_info WHERE category = $1", [category])
 			.then((res) => {
@@ -40,7 +41,7 @@ export const actions = {
 					})
 			})
 			.catch((err) => { 
-				console.error(err);
+				logger.error(err);
 				return fail(500, err.message) })
 
 	}

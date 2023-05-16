@@ -135,7 +135,6 @@
 				font-size: 27px;
 				margin-bottom: 1em;
 				letter-spacing: 0.025em;
-				font-family: 'Ubuntu';
 			}
 
 			a {

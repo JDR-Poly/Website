@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { element, text } from 'svelte/internal';
-
 	export let data: DdData;
 	export let responsive: boolean;
-
+	export let closeNavBar: () => void;
 	let open = true;
 
 	type DdData = {
@@ -46,7 +44,7 @@
 	</button>
 	<div class="drop-content" class:closed={!open}>
 		{#each data.links as element}
-			<a href={element.link} class="drop-link drop-element">
+			<a href={element.link} class="drop-link drop-element" on:click={closeNavBar}>
 				{#if element.element.prefix_icon}
 					<span class="material-symbols-outlined icon">{element.element.prefix_icon}</span>
 				{/if}
@@ -94,7 +92,6 @@
 		height: 100%;
 		border: none;
 		letter-spacing: 0.05em;
-		font-family: Open Sans, sans-serif;
 
 		&:hover {
 			background-color: $primary-light;
@@ -116,7 +113,6 @@
 			text-align: left;
 			padding-left: 30px;
 			cursor: pointer;
-			font-family: 'Open Sans', sans-serif;
 			font-size: 16px;
 
 			&:hover {
@@ -135,6 +131,9 @@
 		margin-right: 4px;
 	}
 
+	p {
+		font-size: 19px;
+	}
 	@media screen and (max-width: 1300px) {
 		.dropdown.responsive {
 			.drop-content {

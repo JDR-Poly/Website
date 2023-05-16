@@ -1,6 +1,7 @@
 import pgPromise from 'pg-promise';
 import { env } from '$env/dynamic/private';
 import { schedule } from 'node-cron'
+import { logger } from './logger';
 
 const pgp = pgPromise()
 
@@ -17,6 +18,7 @@ schedule('0 1 * * *', () => {
 	db.none(`UPDATE users SET role='USER', member_start=NULL, member_stop=NULL WHERE NOW() >= member_stop AND role='MEMBER'`)
 	db.none(`DELETE FROM email_validation e USING users u WHERE e.id = u.id AND u.is_email_validated`)
 	db.none(`DELETE FROM sessions WHERE NOW() > expiration_date`)
+	logger.info(`Cleaned database for expired data at ${new Date(Date.now()).toLocaleDateString()}`)
 });
 
 export { db }

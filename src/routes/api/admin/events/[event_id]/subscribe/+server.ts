@@ -2,6 +2,7 @@ import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { logger } from "$lib/server/logger";
 
 //This file handle admin force put/delete of users from event
 
@@ -25,7 +26,7 @@ export const DELETE = (async ({ params, request, locals }) => {
 		[user_id, event_id]
 	)
 		.then(() => {
-			console.info(`{id:${locals.user!.id},name:${locals.user!.name}} force removed user {id:${user_id}} from event {id:${event_id}}`);
+			logger.info(`{id:${locals.user!.id},name:${locals.user!.name}} force removed user {id:${user_id}} from event {id:${event_id}}`);
 			return new Response()
 		})
 		.catch((err) => {
@@ -52,7 +53,7 @@ export const POST = (async ({ params, request, locals }) => {
 		[user_id, event_id]
 	)
 		.then(() => {
-			console.info(`{id:${locals.user!.id},name:${locals.user!.name}} force subscribed user {id:${user_id}} into event {id:${event_id}}`);
+			logger.info(`{id:${locals.user!.id},name:${locals.user!.name}} force subscribed user {id:${user_id}} into event {id:${event_id}}`);
 			return new Response()
 		})
 		.catch((err) => {

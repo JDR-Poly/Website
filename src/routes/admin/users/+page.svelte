@@ -195,7 +195,6 @@
 		min-height: 70vh;
 
 		h2 {
-			font-family: 'Ubuntu';
 			margin-bottom: 0.5em;
 			width: fit-content;
 		}

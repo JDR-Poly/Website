@@ -2,6 +2,7 @@ import { db } from "$lib/server/postgresClient"
 import { error as throwError, type Handle, type HandleServerError } from "@sveltejs/kit"
 import { Roles } from "$lib/userPermissions"
 import type { User } from "$gtypes";
+import { logger } from "$lib/server/logger";
 
 export const handle: Handle = async function ({ event, resolve }) {
 	const session = event.cookies.get('session');
@@ -52,7 +53,7 @@ export const handleError: HandleServerError =  ({ error, event }) => {
 			message: event.url.href		
 		}
 	} else {
-		console.error(newError);
+		logger.error(newError);
 		return {
 			status: newError.status,
 			message: "Internal error"

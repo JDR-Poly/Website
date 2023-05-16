@@ -5,6 +5,7 @@ import { db } from "./postgresClient";
 import { readFile } from 'fs';
 import { env } from '$env/dynamic/private';
 import { __envDir } from "$lib/utils";
+import { logger } from "./logger";
 
 let transporter: Transporter | undefined
 let ethereal = false
@@ -18,27 +19,18 @@ if (import.meta.env.PROD) {
 			pass: env.MAIL_PASSWORD
 		}
 	});
-	testTransporter.verify((error, success) => {
+	testTransporter.verify(async (error, success) => {
 		if (!error) {
 			transporter = testTransporter
-			console.info("Email transporter is correctly linked")
+			logger.info("Email transporter is correctly linked")
 		} else {
-			console.error(error)
+			logger.error(error)
+			transporter = await generateEtheralTransporter()
 		}
 	});
 } else {
 	if (transporter == undefined) {
-		let testAccount = await createTestAccount(); //Generate email using ethereal
-		transporter = createTransport({
-			host: "smtp.ethereal.email",
-			port: 587,
-			secure: false,
-			auth: {
-				user: testAccount.user, // generated ethereal user
-				pass: testAccount.pass // generated ethereal password
-			}
-		});
-		ethereal = true
+		transporter = await generateEtheralTransporter()
 	}
 }
 
@@ -50,10 +42,11 @@ async function sendMail(to: any, subject: string, html: string): Promise<any> {
 			subject: subject,
 			html: html
 		})
-		if (ethereal) console.info("Preview Mail: %s", getTestMessageUrl(result));
-		else { console.info("Mail sent to: %s", to)}
+		if (ethereal) logger.info(`Preview Mail: ${getTestMessageUrl(result)}`);
+		else { logger.info(`Mail ${subject} to ${to}`)}
 		return result
-	} catch (err: any) {		
+	} catch (err: any) {
+		logger.error(err.message);
 		return Error(err.message)
 	}
 }
@@ -70,9 +63,25 @@ async function sendMailValidationToken(userId: Id, mail: string, origin: string)
 		let html = data.toString()
 		html = html.replace('%ORIGIN%', origin)
 		html = html.replace('%TOKEN%', emailValidationToken)
+		logger.info(`2: ${mail}`)
 		sendMail(mail, "JDRPoly: Validez votre mail", html)
 	})
 	
+}
+
+async function generateEtheralTransporter(): Promise<Transporter> {
+	let testAccount = await createTestAccount(); //Generate email using ethereal
+	transporter = createTransport({
+		host: "smtp.ethereal.email",
+		port: 587,
+		secure: false,
+		auth: {
+			user: testAccount.user, // generated ethereal user
+			pass: testAccount.pass // generated ethereal password
+		}
+	});
+	ethereal = true
+	return transporter
 }
 
 export { sendMailValidationToken, sendMail }

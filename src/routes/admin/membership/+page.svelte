@@ -78,7 +78,6 @@
 		margin: 8em auto;
 
 		h2 {
-			font-family: 'Ubuntu';
 			text-transform: uppercase;
 			font-weight: 600;
 			letter-spacing: 0.15em;
@@ -86,7 +85,6 @@
 		}
 
 		#error {
-			font-family: 'Ubuntu';
 			h3,p {
 				color: red;
 			}

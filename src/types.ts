@@ -5,13 +5,13 @@ type Event = {
 	author: Id,
 	title: string,
 	category: string,
-	date: UTCStringDate,
+	date: DateString,
 	description: string,
 	inscription: boolean,
 	inscription_group: string,
 	inscription_limit?: number,
-	inscription_start?: UTCStringDate,
-	inscription_stop?: UTCStringDate,
+	inscription_start?: DateString,
+	inscription_stop?: DateString,
 	imageb64?: string
 }
 
@@ -24,11 +24,11 @@ type User = {
 	name: string,
 	role: Role,
 	is_email_validated: boolean,
-	account_creation: UTCStringDate,
+	account_creation: DateString,
 	email?: string,
 	discord_id?: string,
-	member_start?: UTCStringDate,
-	member_stop?: UTCStringDate
+	member_start?: DateString,
+	member_stop?: DateString
 }
 
 /**
@@ -63,6 +63,6 @@ type Book = {
 }
 
 type Id = number
-type UTCStringDate = string
+type DateString = string
 
-export type { User, Event, Id, UTCStringDate, Committee, HonorMember, Book }
+export type { User, Event, Id, DateString, Committee, HonorMember, Book }

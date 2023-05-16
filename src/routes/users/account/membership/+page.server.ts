@@ -29,7 +29,10 @@ export const actions = {
 
 						return {
 							periodNumber: res.periods,
-							period: period
+							period: {
+								start: period.start,
+								stop: period.stop
+							}
 						}
 					})
 			})

@@ -2,6 +2,9 @@
 	margin: 0;
 	padding: 0;
 }
+:global(*) {
+	font-family: 'Ubuntu', 'Arial';
+}
 
 a {
 	color: #266691;

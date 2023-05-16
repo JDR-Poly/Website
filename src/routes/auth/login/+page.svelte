@@ -89,8 +89,8 @@
 							}
 						}
 					}}>
-						<Textfield input$name="username" type="text" bind:value={username} label="Nom Prénom" style="width: 100%" variant="outlined"/>
 						<Textfield input$name="email" type="email" bind:value={email} label="Mail" style="width: 100%" variant="outlined"/>
+						<Textfield input$name="username" type="text" bind:value={username} label="Nom Prénom" style="width: 100%" variant="outlined"/>
 						<Textfield input$name="password" type="password" bind:value={password} label="Mot de Passe" style="width: 100%" variant="outlined"/>
 		
 						{#if loading}
@@ -222,7 +222,6 @@
 				margin-top: 2em;
 				text-align: center;
 				color: #707070;
-				font-family: 'Ubuntu';
 				&::before, &::after {
 					border-bottom: 1px solid #707070;
 					content: '';

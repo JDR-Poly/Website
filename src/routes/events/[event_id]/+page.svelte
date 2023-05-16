@@ -6,7 +6,6 @@
 	import { error as messageError } from '$lib/stores';
 	import IconButton from '@smui/icon-button';
 	import Button, { Label, Icon } from '@smui/button';
-	import Textfield from '@smui/textfield';
 	import type { User } from '$gtypes';
 	import Edit from './Edit.svelte';
 	import { writable } from 'svelte/store';
@@ -79,9 +78,55 @@
 		$info = 'Les emails ont été copiés.';
 	}
 
-	let addedUser = '';
+	let searchUserToAdd = '';
+	let usersResult: User[] = [];
+	/**
+	 * Handle when the user write text in the searchBar
+	 * to add possible result as completion
+	 */
+	async function inputChange() {
+		if (searchUserToAdd.length < 3) {
+			usersResult = [];
+			return;
+		}
+		usersResult = (await search(3, 0)) || [];
+	}
+
+	/**
+	 * Fetch a certain numbers of users
+	 * (with a possible offset)
+	 * @param number how many users to search for
+	 * @param index offset of the index
+	 */
+	async function search(number: number, index: number): Promise<User[]> {
+		try {
+			let userListURL = new URL($page.url.origin + '/api/users/search');
+			userListURL.searchParams.append('number', number as any);
+			userListURL.searchParams.append('index', index as any);
+			userListURL.searchParams.append('searchText', searchUserToAdd);
+
+			return fetch(userListURL).then(async (res) => {
+				const body = await res.json();
+				if (res.ok && body.length > 0) {
+					return body;
+				} else if (!res.ok) {
+					$error = body.message;
+					return [];
+				}
+			});
+		} catch (err) {
+			console.error(err);
+			$error = 'An error occured';
+			return [];
+		}
+	}
 
 	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role);
+	const dateFormater = new Intl.DateTimeFormat('fr-Fr', {
+				dateStyle: 'medium',
+				timeStyle: 'short',
+				timeZone: 'Europe/Paris'
+			})
 </script>
 
 <svelte:head>
@@ -96,11 +141,7 @@
 		{/if}
 		<h2>{data.event.title}</h2>
 		<h3>
-			{new Intl.DateTimeFormat('fr-Fr', {
-				dateStyle: 'medium',
-				timeStyle: 'short',
-				timeZone: 'Europe/Paris'
-			}).format(Date.parse(data.event.date))}
+			{dateFormater.format(Date.parse(data.event.date))}
 		</h3>
 
 		<div id="split">
@@ -125,6 +166,9 @@
 								{/if}
 							{:else}
 								<p>Les inscriptions ne sont pas ouvertes.</p>
+								{#if data.event.inscription_start && Date.now() < Date.parse(data.event.inscription_start) }
+									<p>Ouverture des inscriptions le {dateFormater.format(Date.parse(data.event.inscription_start))}</p>
+								{/if}
 							{/if}
 						{:else}
 							<p>L'événement est complet.</p>
@@ -170,37 +214,47 @@
 						</div>
 					{/each}
 					{#if hasRolePermission(UserPermission.SUBSCRIBE_USER_TO_EVENT, $page.data.user?.role)}
-						<div id="addUser">
-							<Textfield
-								type="number"
-								bind:value={addedUser}
-								label="Id d'utilisateur"
-								style="width: 50%"
+						<div
+							id="addUser"
+							on:focusout={(event) => {
+								setTimeout(() => {
+									usersResult = [];
+								}, 100);
+							}}
+						>
+							<input
+								type="text"
+								placeholder="Utilisateur à ajouter"
+								bind:value={searchUserToAdd}
+								on:input={inputChange}
 							/>
-							<IconButton
-								class="material-icons"
-								on:click={() => {
-									fetch('/api/admin/events/' + event_id + '/subscribe', {
-										method: 'POST',
-										body: JSON.stringify({
-											user_id: parseInt(addedUser)
-										})
-									})
-										.then(async (res) => {
-											if (!res.ok) {
-												const body = await res.json();
-												$warning = body.message.includes('duplicate key value violates')
-													? 'Cette utilisateur est déjà dans la liste'
-													: body.message;
-											} else {
-												location.reload();
-											}
-										})
-										.catch((err) => {
-											$error = err.message;
-										});
-								}}>done</IconButton
-							>
+							<div class="searchBar-items">
+								{#each usersResult as result}
+									<button
+										on:click={() => {
+											fetch('/api/admin/events/' + event_id + '/subscribe', {
+												method: 'POST',
+												body: JSON.stringify({
+													user_id: result.id
+												})
+											})
+												.then(async (res) => {
+													if (!res.ok) {
+														const body = await res.json();
+														$warning = body.message.includes('duplicate key value violates')
+															? 'Cette utilisateur est déjà dans la liste'
+															: body.message;
+													} else {
+														location.reload();
+													}
+												})
+												.catch((err) => {
+													$error = err.message;
+												});
+										}}><strong>{result.name}</strong></button
+									>
+								{/each}
+							</div>
 						</div>
 					{/if}
 				{:else}
@@ -300,7 +354,6 @@
 			#description {
 				display: block;
 				width: 60%;
-				font-family: 'Ubuntu';
 				font-size: 20px;
 				letter-spacing: 1px;
 				line-height: 1.25em;
@@ -350,11 +403,40 @@
 				}
 				#addUser {
 					position: relative;
-					margin: 2em 0 0 20%;
+					margin: 2em 20% 0 20%;
 					:global(.mdc-text-field) {
 						float: left;
 					}
+
+					input {
+						width: 100%;
+						padding: 5px;
+						box-sizing: border-box;
+					}
+
+					button {
+						width: 100%;
+						border: none;
+						padding: 0.5em 0 0.5em 0;
+						background-color: $secondary;
+						text-decoration: underline;
+
+						&:hover {
+							background-color: lightgray;
+						}
+					}
 				}
+			}
+		}
+	}
+
+	@media screen and (max-width: 950px) {
+		#split {
+			flex-direction: column;
+
+			& > * {
+				width: 100% !important;
+				margin-bottom: 3em;
 			}
 		}
 	}

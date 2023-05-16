@@ -2,6 +2,7 @@ import type { RequestEvent, Actions } from "./$types";
 import { error, fail } from "@sveltejs/kit"
 import { db } from "$lib/server/postgresClient";
 import { sendMailValidationToken } from "$lib/server/mailClient";
+import { logger } from "$lib/server/logger";
 
 export const actions = {
 	/**
@@ -13,6 +14,7 @@ export const actions = {
 
 		return db.one(`SELECT email FROM users WHERE is_email_validated=FALSE AND id=$1`, [locals.user?.id], a => a.email)
 			.then((email) => {
+				logger.info(`1: ${email}`)
 				sendMailValidationToken(locals.user?.id!, email, url.origin)
 				return { success: true }
 			})

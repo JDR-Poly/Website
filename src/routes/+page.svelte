@@ -189,7 +189,6 @@
 	}
 
 	#events {
-		font-family: 'Ubuntu';
 		display: flex;
 		justify-content: space-evenly;
 		margin: 8em 0 0 0;

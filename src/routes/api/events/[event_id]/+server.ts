@@ -3,6 +3,8 @@ import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions";
 import { __envDir, getByteArrayFromBase64 } from "$lib/utils";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { logger } from "$lib/server/logger";
+import type { DateString } from "$gtypes";
 
 /** 
  * Get a specific event
@@ -69,13 +71,13 @@ export const DELETE = (async ({ params, locals }) => {
  * @param {string} title the title of the event
  * @param {string} category the category of the event
  * @param {string} description the description of the event
- * @param {string} date the UTCdate of the event
+ * @param {DateString} date the local date of the event
  * @param {string} image the base64 string of the image of the event
  * @param {string} inscription the string of a boolean, indicating if people can join the event
  * @param {string} inscription_group name of the group that are allowed to join
  * @param {number?} inscription_limit limit of people that can subscribe to this event
- * @param {string} inscription_start the UTCdate of when people can join an event
- * @param {string} inscription_stop the UTCdate of when people can no longer join an event
+ * @param {DateString?} inscription_start the local date of when people can join an event
+ * @param {DateString?} inscription_stop the local of when people can no longer join an event
  */
 export const PATCH = (async ({ params, request, locals }) => {		
 	if (!locals.authenticated) throw error(401)
@@ -85,7 +87,6 @@ export const PATCH = (async ({ params, request, locals }) => {
 	const data = await request.json()
 	if(data.image) data.image = getByteArrayFromBase64(data.image)
 	if (data.inscription_group !== Roles.USER.name && data.inscription_group !== Roles.MEMBER.name && data.inscription_group !== Roles.COMMITTEE.name) throw error(400, "inscription_group is not valid, should be either user, member or committee")
-	
 	return db.one(
 		`UPDATE events SET
 			title=$[title], category=$[category],
@@ -108,7 +109,7 @@ export const PATCH = (async ({ params, request, locals }) => {
 			return json(res)
 		})
 		.catch((err) => {
-			console.error(err.message);
+			logger.error(err.message);
 			throw error(500, err.message)
 		})
 }) satisfies RequestHandler

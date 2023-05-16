@@ -3,7 +3,7 @@
 	"version": "1.0.1",
 	"scripts": {
 		"dev": "env-cmd vite dev",
-		"start": "NODE_OPTIONS='-r dotenv/config' node server.js > latest.log 2>&1",
+		"start": "NODE_OPTIONS='-r dotenv/config' node server.js",
 		"build": "env-cmd vite build",
 		"package": "vite package",
 		"preview": "env-cmd vite preview",
@@ -65,6 +65,8 @@
 		"node-schedule": "^2.1.0",
 		"nodemailer": "^6.7.7",
 		"pg-promise": "^10.11.1",
-		"uuid": "^8.3.2"
+		"uuid": "^8.3.2",
+		"winston": "^3.8.2",
+		"winston-daily-rotate-file": "^4.7.1"
 	}
 }

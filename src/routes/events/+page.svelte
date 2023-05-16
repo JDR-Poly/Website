@@ -76,7 +76,6 @@
 	main {
 		min-height: 90vh;
 		position: relative;
-		font-family: 'Ubuntu';
 		background: rgb(0, 2, 26);
 		background: linear-gradient(
 			135deg,
@@ -113,10 +112,10 @@
 			position: relative;
 			border-radius: 8px;
 			max-width: 20vw;
-			min-width: 230px;
+			min-width: 260px;
 			margin: 2em;
 			width: 18vw;
-			height: 45vh;
+			height: 50vh;
 			min-height: 414px;
 
 			.delete-btn {
@@ -153,7 +152,7 @@
 			}
 
 			p {
-				padding: 20px 0 0 10px;
+				margin-top: 20px;
 				color: #827d7d;
 				-webkit-line-clamp: 8;
 				overflow: hidden;
