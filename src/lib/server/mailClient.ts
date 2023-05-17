@@ -9,28 +9,32 @@ import { logger } from "./logger";
 
 let transporter: Transporter | undefined
 let ethereal = false
-if (import.meta.env.PROD) {
-	const testTransporter = createTransport({
-		host: env.MAIL_HOST,
-		port: parseInt(env.MAIL_PORT || "465"),
-		secure: (env.MAIL_PORT === "465" || env.MAIL_PORT === undefined),
-		auth: {
-			user: env.MAIL_USER,
-			pass: env.MAIL_PASSWORD
-		}
-	});
-	testTransporter.verify(async (error, success) => {
-		if (!error) {
-			transporter = testTransporter
-			logger.info("Email transporter is correctly linked")
-		} else {
-			logger.error(error)
+
+async function preloadTransporter() {
+	if (import.meta.env.PROD) {
+		const testTransporter = createTransport({
+			host: env.MAIL_HOST,
+			port: parseInt(env.MAIL_PORT || "465"),
+			secure: (env.MAIL_PORT === "465" || env.MAIL_PORT === undefined),
+			auth: {
+				user: env.MAIL_USER,
+				pass: env.MAIL_PASSWORD
+			}
+		});
+		testTransporter.verify(async (error, success) => {
+			if (!error) {
+				transporter = testTransporter
+				logger.info("Email transporter is correctly linked")
+			} else {
+				logger.error(error)
+				transporter = await generateEtheralTransporter()
+			}
+		});
+	} else {
+		if (transporter == undefined) {
 			transporter = await generateEtheralTransporter()
+			logger.info("Etheral email transporter is correctly linked")
 		}
-	});
-} else {
-	if (transporter == undefined) {
-		transporter = await generateEtheralTransporter()
 	}
 }
 
@@ -46,8 +50,8 @@ async function sendMail(to: any, subject: string, html: string): Promise<any> {
 		else { logger.info(`Mail ${subject} to ${to}`)}
 		return result
 	} catch (err: any) {
-		logger.error(err.message);
-		return Error(err.message)
+		logger.error(err);
+		return new Error(err.message)
 	}
 }
 
@@ -84,7 +88,7 @@ async function generateEtheralTransporter(): Promise<Transporter> {
 	return transporter
 }
 
-export { sendMailValidationToken, sendMail }
+export { sendMailValidationToken, sendMail, preloadTransporter }
 
 const DB_EMAIL_VALIDATION_TOKEN = "INSERT INTO $[table:name](id, validation_token) VALUES($[id],$[validation_token])" +
 	"ON CONFLICT (id) DO UPDATE SET validation_token=$[validation_token]"

@@ -1,16 +1,31 @@
-<script lang="ts">
+<script type="ts">
 	import Textfield from '@smui/textfield';
+	import { applyAction, enhance } from '$app/forms';
+	import { error, info } from '$lib/stores';
+	import { Turnstile } from 'svelte-turnstile';
 
 	let isEmailInvalid = true;
 	let email = '';
 	let name = '';
 	let message = '';
+
 </script>
 
 <footer>
 	<div id="contact">
 		<div id="form">
-			<form>
+			<form method="POST" action="/contact?/sendMail" use:enhance={({ }) => {		
+				return async ({ result, update }) => {
+					if (result.type == 'success') {
+						$info = "Le mail a correctement été envoyé."
+						update()
+					} else if(result.type === 'error' && result.error.message) {
+						$error = result.error.message
+						console.error(result.error);
+					}
+					await applyAction(result);
+				}
+			}}>
 				<div id="info">
 					<Textfield
 						class="email"
@@ -20,13 +35,16 @@
 						bind:value={email}
 						label="Email"
 						input$autocomplete="email"
+						input$name = "email"
 					/>
-					<Textfield class="name" type="text" bind:value={name} label="Nom" />
+					<Textfield class="name" type="text" input$name = "name" bind:value={name} label="Nom" />
 				</div>
 				<div id="textarea">
-					<Textfield textarea bind:value={message} label="Message" />
+					<Textfield textarea input$name = "text" bind:value={message} label="Message" />
 				</div>
-
+				{#if import.meta.env.PROD}
+					<Turnstile siteKey="0x4AAAAAAAE1uyTWfzpY2dHE" />
+				{/if}
 				<button disabled={!(email && name && message && !isEmailInvalid)}>Envoyer</button>
 			</form>
 		</div>
