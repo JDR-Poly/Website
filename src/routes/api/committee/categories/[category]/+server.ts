@@ -25,7 +25,6 @@ export const GET = (async ({ params }) => {
 		})
 		.catch((err) => {
 			logger.error(err);
-
 			throw error(500, err.message)
 		})
 }) satisfies RequestHandler
