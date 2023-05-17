@@ -73,19 +73,18 @@ export const actions = {
 async function createAndSendMemberCodes(emails: string[], periodsNumber: number): Promise<string[]> {
 	const mailsError: string[] = []
 	const promises: Promise<string>[] = []
+	let mailContent = await readFile(__envDir + 'mails/memberCode.html', { encoding: 'utf8' })
 	emails.forEach((email) => {
 		try {
 			const code = uuid()
-			db.none("INSERT INTO $[table:name](validation_token, periods) VALUES($[validation_token], $[periods])", {
-				table: "members_code",
+			db.none("INSERT INTO members_code(validation_token, periods) VALUES($[validation_token], $[periods])", {
 				validation_token: code,
 				periods: periodsNumber
 			})
 
 			const promise = (async () => {
-				let content = await readFile(__envDir + 'mails/memberCode.html', { encoding: 'utf8' })
-				content = content.replace('%CODE%', code)
-				const res = await sendMail(email, "JDRPoly: Code de membre", content)
+				let userContent = mailContent.replace('%CODE%', code)
+				const res = await sendMail(email, "JDRPoly: Code de membre", userContent)
 				if (res instanceof Error) return email
 				else return ""
 			})()
