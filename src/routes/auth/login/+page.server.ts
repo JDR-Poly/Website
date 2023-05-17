@@ -58,7 +58,10 @@ export const actions = {
 	register: async ({ request, cookies, url }: RequestEvent) => {
 		const form = await request.formData();
 		const email = form.get('email')?.toString().trim();
-		const username = form.get('username')?.toString().trim();
+		const lastName = form.get('lastname')?.toString()?.trim();
+		const firstName = form.get('firstname')?.toString()?.trim();
+
+		const username = `${lastName}${lastName && firstName ? " " : ""}${firstName}`
 		const password = form.get('password')?.toString().trim();
 	
 		if (!validateEmail(email) || !validateUsername(username) || !validatePassword(password))
