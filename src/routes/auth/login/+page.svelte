@@ -5,6 +5,7 @@
 	import { warning, info } from "$lib/stores"
 	import { goto, invalidateAll } from "$app/navigation";
 	import LinearProgress from '@smui/linear-progress';
+	import { Turnstile } from 'svelte-turnstile';
 
 	let lastName = '';
 	let firstName = '';
@@ -95,6 +96,9 @@
 						<Textfield input$name="firstname" type="text" bind:value={firstName} label="Prénom" style="width: 100%" variant="outlined" required/>
 						<Textfield id="password" input$name="password" type="password" bind:value={password} label="Mot de Passe" style="width: 100%" variant="outlined" required/>
 		
+						{#if import.meta.env.PROD}
+							<Turnstile siteKey="0x4AAAAAAAE1uyTWfzpY2dHE" theme="light"/>
+						{/if}
 						{#if loading}
 							<LinearProgress indeterminate/>
 						{/if}

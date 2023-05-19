@@ -3,7 +3,7 @@ import type { Actions } from './$types';
 import { readFile } from 'fs/promises';
 import { __envDir } from '$lib/utils';
 import { sendMail } from '$lib/server/mailClient';
-import { env } from '$env/dynamic/private';
+import { validateToken } from '$lib/server/utilsServer';
 export const actions = {
 	/**
 	 * Send a mail from the contact form
@@ -22,7 +22,7 @@ export const actions = {
 
 		if (import.meta.env.PROD) {
 			const captchaToken = data.get('cf-turnstile-response')!.toString();
-			const { success, error } = await validateToken(captchaToken, env.TURNSTILE_SECRET!, fetch);
+			const { success, error } = await validateToken(captchaToken, fetch);
 
 			if (!success) return fail(400, { error: 'invalid captcha' });
 		}
@@ -45,31 +45,3 @@ export const actions = {
 	}
 } satisfies Actions;
 
-interface TokenValidateResponse {
-	'error-codes': string[];
-	success: boolean;
-	action: string;
-	cdata: string;
-}
-
-async function validateToken(token: string, secret: string, fetch: any) {
-	const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-		method: 'POST',
-		headers: {
-			'content-type': 'application/json'
-		},
-		body: JSON.stringify({
-			response: token,
-			secret: secret
-		})
-	});
-
-	const data: TokenValidateResponse = await response.json();
-
-	return {
-		success: data.success,
-
-		// Return the first error if it exists
-		error: data['error-codes']?.length ? data['error-codes'][0] : null
-	};
-}

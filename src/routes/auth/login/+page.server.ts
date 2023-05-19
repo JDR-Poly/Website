@@ -8,6 +8,7 @@ import { sendMail, sendMailValidationToken } from "$lib/server/mailClient";
 import { readFile } from "fs/promises";
 import { __envDir } from "$lib/utils";
 import type { PageServerLoad } from './$types';
+import { validateToken } from "$lib/server/utilsServer";
 
 export const load = (({locals}) => {
 	if (locals.authenticated && locals.user?.is_email_validated) {
@@ -60,12 +61,18 @@ export const actions = {
 		const email = form.get('email')?.toString().trim();
 		const lastName = form.get('lastname')?.toString()?.trim();
 		const firstName = form.get('firstname')?.toString()?.trim();
-
 		const username = `${lastName}${lastName && firstName ? " " : ""}${firstName}`
 		const password = form.get('password')?.toString().trim();
 	
 		if (!validateEmail(email) || !validateUsername(username) || !validatePassword(password))
 			return fail(406, { message: "email, username or password invalid"});
+
+		if (import.meta.env.PROD) {
+			const captchaToken = form.get('cf-turnstile-response')!.toString();
+			const { success, error } = await validateToken(captchaToken, fetch);
+
+			if (!success) return fail(400, { error: 'invalid captcha' });
+		}
 
 		const conflictUser = await db.any("SELECT email FROM users WHERE email=$1 OR name=$2", [email, username])		
 		if(conflictUser.length > 0) return fail(409, {message: "Cette utilisateur existe déjà."})
