@@ -2,7 +2,7 @@
 	export let data: DdData;
 	export let responsive: boolean;
 	export let closeNavBar: () => void;
-	let open = true;
+	let open = false;
 
 	type DdData = {
 		//DropdownData

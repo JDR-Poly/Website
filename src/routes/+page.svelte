@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ImageB64 from '$components/ImageB64.svelte';
 	import type { PageData } from './$types';
+	import { fade } from 'svelte/transition';
 
 	export let data: PageData;
 </script>
@@ -12,8 +13,8 @@
 <main>
 	<div id="banner">
 		<img src="/images/main/banner.webp" alt="banière jdrpoly" />
-		<div id="banner-text">
-			<h2>JDRPoly</h2>
+		<div id="banner-text" in:fade>
+			<h2>JDR-Poly</h2>
 			<p>Le jeu de rôle <br /> à l'<strong>EPFL</strong></p>
 			<footer>
 				<a href="#main" id="button">Découvrir</a>
@@ -83,7 +84,7 @@
 		}
 
 		#banner-text {
-			animation: fadeIn 2s;
+			//animation: fadeIn 2s;
 			position: absolute;
 			top: 50%;
 			left: 50%;

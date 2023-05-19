@@ -5,8 +5,10 @@
 	import { warning, info } from "$lib/stores"
 	import { goto, invalidateAll } from "$app/navigation";
 	import LinearProgress from '@smui/linear-progress';
+	import { Turnstile } from 'svelte-turnstile';
 
-	let username = '';
+	let lastName = '';
+	let firstName = '';
 	let email = '';
 	let password = '';
 
@@ -57,8 +59,8 @@
 								}
 							}
 					}}>
-						<Textfield input$name="email" type="email" bind:value={email} label="Mail" style="width: 100%" variant="outlined"/>
-						<Textfield input$name="password" type="password" bind:value={password} label="Mot de Passe" style="width: 100%" variant="outlined"/>
+						<Textfield id="username" input$name="email" type="email" bind:value={email} label="Mail" style="width: 100%" variant="outlined"/>
+						<Textfield id="password" input$name="password" type="password" bind:value={password} label="Mot de Passe" style="width: 100%" variant="outlined"/>
 		
 						{#if loading}
 							<LinearProgress indeterminate/>
@@ -89,16 +91,20 @@
 							}
 						}
 					}}>
-						<Textfield input$name="email" type="email" bind:value={email} label="Mail" style="width: 100%" variant="outlined"/>
-						<Textfield input$name="username" type="text" bind:value={username} label="Nom Prénom" style="width: 100%" variant="outlined"/>
-						<Textfield input$name="password" type="password" bind:value={password} label="Mot de Passe" style="width: 100%" variant="outlined"/>
+						<Textfield id="username" input$name="email" type="email" bind:value={email} label="Mail" style="width: 100%" variant="outlined" required/>
+						<Textfield input$name="lastname" type="text" bind:value={lastName} label="Nom" style="width: 100%" variant="outlined"/>
+						<Textfield input$name="firstname" type="text" bind:value={firstName} label="Prénom" style="width: 100%" variant="outlined" required/>
+						<Textfield id="password" input$name="password" type="password" bind:value={password} label="Mot de Passe" style="width: 100%" variant="outlined" required/>
 		
+						{#if import.meta.env.PROD}
+							<Turnstile siteKey="0x4AAAAAAAE1uyTWfzpY2dHE" theme="light"/>
+						{/if}
 						{#if loading}
 							<LinearProgress indeterminate/>
 						{/if}
 
 						<div class="button">
-							<Button touch variant="unelevated" disabled={!email || !password || !username || email.match(EMAIL_REGEX) == null}>
+							<Button touch variant="unelevated" disabled={!email || !password || !firstName  || email.match(EMAIL_REGEX) == null}>
 								<Label>S'inscrire</Label>
 							</Button>
 						</div>

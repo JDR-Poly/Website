@@ -1,5 +1,6 @@
 import {format, createLogger, transports} from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import { preloadTransporter } from './mailClient';
 
 const { combine, timestamp, align, colorize, printf, errors } = format;
 
@@ -12,7 +13,10 @@ const logger = createLogger({
 		  format: 'YYYY-MM-DD hh:mm:ss A',
 		}),
 		align(),
-		printf((info) => `[${info.timestamp}][${info.level}]: ${info.message}`)
+		printf((info) => {
+			const text = `[${info.timestamp}][${info.level}]: ${info.message}`
+			return info.stack ? text + '\n' + info.stack : text;
+		})
 	  ),
 	transports: [
 		new transports.Console(),
@@ -31,4 +35,6 @@ const logger = createLogger({
 });
 
 logger.info(`Started at ${new Date(Date.now()).toISOString()}`)
+preloadTransporter()
+
 export {logger}

@@ -19,7 +19,7 @@
 </script>
 
 <div class="topnav" class:responsive>
-	<a href="/">
+	<a href="/" on:click={closeNavBar}>
 		<img src="/images/logo-white.svg" alt="Logo jdrpoly" id="svg" />
 	</a>
 
@@ -32,7 +32,12 @@
 		>
 	</div>
 
-	<a href="/events" class="nav-link nav-button">
+	<a href="/" class="nav-link nav-button" on:click={closeNavBar}>
+		<span class="material-symbols-outlined link-icon">home</span>
+		<p>Accueil</p>
+	</a>
+
+	<a href="/events" class="nav-link nav-button" on:click={closeNavBar}>
 		<span class="material-symbols-outlined link-icon">event</span>
 		<p>Événements</p>
 	</a>

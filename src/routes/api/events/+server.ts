@@ -57,7 +57,7 @@ export const GET = (async ({ url }) => {
 	const noImage = url.searchParams.get("noImage") === "true" ? "" : ", image"
 
 	const nowLenient = new Date(Date.now())
-	nowLenient.setHours(nowLenient.getHours() + 3)
+	nowLenient.setHours(nowLenient.getHours() - 3)
 	const db_req = `SELECT id, title, author, category, date, inscription, inscription_group, inscription_limit, inscription_start, inscription_stop, description${noImage} FROM events
 					${excludeExpiredEventsString}
 					ORDER BY date;

@@ -109,7 +109,7 @@ export const PATCH = (async ({ params, request, locals }) => {
 			return json(res)
 		})
 		.catch((err) => {
-			logger.error(err.message);
+			logger.error(err);
 			throw error(500, err.message)
 		})
 }) satisfies RequestHandler
