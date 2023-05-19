@@ -12,14 +12,21 @@
 	import FormField from '@smui/form-field';
 	import { categories, returnJoinEventRoles } from '$lib/events';
 	import { getBase64, getLocalDateStringOrNullFromString, parseToLocalDateStringWithoutMilis } from '$lib/utils';
+	import Compressor from 'compressorjs';
 
 	export let event: Event;
 	let images: null | FileList = null;
-	let image: File;
+	let image: File | Blob;
+	let isImageProcessing = false;
 
 	export let open: Writable<boolean>;
 
-	async function editEvent() {		
+	async function editEvent() {	
+		if (isImageProcessing) {
+			$warning = "L'image est en cours de traitement. Attendez 5 secondes et recommencez.";
+			return;
+		}
+			
 		fetch(`/api/events/${event.id}`, {
 			method: 'PATCH',
 			headers: {
@@ -116,7 +123,23 @@
 								$warning = 'Image max 4MB';
 								images = null;
 							} else {
-								image = images[0];
+								isImageProcessing = true
+								console.log('Processing image');
+
+								new Compressor(images[0], {
+									quality: 0.6,
+									mimeType: 'image/webp',
+									maxWidth: 1536,
+									maxHeight: 864,
+									async success(result) {
+										console.log('Image processing finished.');
+										image = result;
+										isImageProcessing = false;
+									},
+									error(err) {
+										console.log(err.message);
+									}
+								});
 							}
 						}
 					}}

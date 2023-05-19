@@ -10,6 +10,7 @@
 	import { categories, returnJoinEventRoles } from '$lib/events';
 	import Compressor from 'compressorjs';
 	import { getBase64, getLocalDateStringOrNullFromString } from '$lib/utils';
+	import ImageB64 from '$components/ImageB64.svelte';
 
 	let title = '';
 	let description = '';
@@ -117,11 +118,11 @@
 								console.log('Processing image');
 								
 								new Compressor(images[0], {
-									quality: 0.7,
+									quality: 0.6,
 									mimeType: 'image/webp',
-									maxWidth: 1920,
-									maxHeight: 1080,
-									success(result) {
+									maxWidth: 1536,
+									maxHeight: 864,
+									async success(result) {
 										console.log('Image processing finished.');
 										image = result;
 										isImageProcessing = false;
