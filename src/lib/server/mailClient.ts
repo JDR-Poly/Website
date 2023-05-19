@@ -34,7 +34,7 @@ if (import.meta.env.PROD) {
 	}
 }
 
-async function sendMail(to: any, subject: string, html: string): Promise<any> {	
+async function sendMail(to: string, subject: string, html: string): Promise<any> {	
 	try {
 		const result = await transporter!.sendMail({
 			from: '"JDRPoly Info" <informatique@jdrpoly.ch>',
