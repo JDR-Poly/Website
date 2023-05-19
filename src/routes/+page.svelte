@@ -14,7 +14,7 @@
 	<div id="banner">
 		<img src="/images/main/banner.webp" alt="banière jdrpoly" />
 		<div id="banner-text" in:fade>
-			<h2>JDRPoly</h2>
+			<h2>JDR-Poly</h2>
 			<p>Le jeu de rôle <br /> à l'<strong>EPFL</strong></p>
 			<footer>
 				<a href="#main" id="button">Découvrir</a>
