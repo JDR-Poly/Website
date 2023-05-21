@@ -16,7 +16,13 @@ const config = {
 		alias: {
 			$components: 'src/lib/components',
 			$gtypes: 'src/types.ts'
-		}
+		},
+		csp: {
+            directives: {
+                'script-src': ['self']
+            },
+			mode: "auto"
+        }
 	}
 };
 
