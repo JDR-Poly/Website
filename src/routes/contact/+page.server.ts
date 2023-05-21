@@ -21,7 +21,8 @@ export const actions = {
 		if (!formName || !formEmail || !formText) return fail(400, { message: 'Missing parameter(s)' });
 
 		if (import.meta.env.PROD) {
-			const captchaToken = data.get('cf-turnstile-response')!.toString();
+			const captchaToken = data.get('cf-turnstile-response')?.toString();
+			if(!captchaToken) return fail(400, { error: 'no captcha' });
 			const { success, error } = await validateToken(captchaToken, fetch);
 
 			if (!success) return fail(400, { error: 'invalid captcha' });

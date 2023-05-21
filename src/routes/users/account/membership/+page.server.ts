@@ -3,8 +3,16 @@ import { error, fail } from "@sveltejs/kit"
 import { db } from "$lib/server/postgresClient";
 import { updateMemberPeriod } from "$lib/server/memberPeriod";
 import { Period } from "$lib/publicMemberPeriod";
-import { Roles } from "$lib/userPermissions";
+import { Role, Roles } from "$lib/userPermissions";
+import type { Id } from "$gtypes";
 
+type UserDb = {
+	id: Id,
+	member_start: string,
+	member_stop: string,
+	role: Role,
+	email: string
+}
 /**
  * For a user, validate a code and add the correspoding member time.
  * @param {number} request.validation_token the number of periods to add
@@ -17,9 +25,11 @@ export const actions = {
 
 		return db.one("SELECT validation_token, periods FROM members_code WHERE validation_token=$1", [form.get("validation_token")]) //Get matching token
 			.then((res) => {
-				return db.one("SELECT id, member_start, member_stop, role FROM users WHERE id=$1;", [locals.user?.id]) //get user data
-					.then((user) => {
-						user.role = Roles[user.role]
+				return db.one("SELECT id, member_start, member_stop, role, email FROM users WHERE id=$1;", [locals.user?.id]) //get user data
+					.then((dbResult) => {
+						dbResult.role = Roles[dbResult.role]
+						const user: UserDb = dbResult
+						
 						db.none("DELETE FROM members_code WHERE validation_token=$1", [res.validation_token]) //Delete now invalid token
 
 						//Calculate new member period

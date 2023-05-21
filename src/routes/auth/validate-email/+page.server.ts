@@ -12,7 +12,7 @@ export const actions = {
 		if (!locals.authenticated) throw error(401)
 		if (locals.user?.is_email_validated) { throw error(403); }
 
-		return db.one(`SELECT email FROM users WHERE is_email_validated=FALSE AND id=$1`, [locals.user?.id], a => a.email)
+		return db.one(`SELECT email FROM users WHERE is_email_validated=FALSE AND id=$1`, [locals.user!.id], a => a.email)
 			.then((email) => {
 				logger.info(`1: ${email}`)
 				sendMailValidationToken(locals.user?.id!, email, url.origin)

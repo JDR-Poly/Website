@@ -1,8 +1,14 @@
 <script lang="ts">
 	import { info, error } from '$lib/stores';
-	import { page } from '$app/stores';
 	import Button, { Label } from '@smui/button';
 	import { enhance } from '$app/forms';
+	import type { PageData } from './$types';
+	
+	function getUserEmail(): string {
+		if(data.user) return data.user.email!
+		else return ""
+	}
+	export let data: PageData;
 </script>
 
 <svelte:head>
@@ -12,7 +18,7 @@
 <main>
 	<h2>En attente de validation du mail</h2>
 	<p>
-		Vous avez dû recevoir un mail de validation à l'email: <strong>{$page.data.user.email}</strong>
+		Vous avez dû recevoir un mail de validation à l'email: <strong>{getUserEmail()}</strong>
 	</p>
 
 	<form
