@@ -19,7 +19,10 @@ const config = {
 		},
 		csp: {
             directives: {
-                'script-src': ['self']
+                'script-src': ['self', 'unsafe-inline'],
+				'object-src': ['none'],
+				'base-uri': ['self'],
+				'require-trusted-types-for': ['script']
             },
 			mode: "auto"
         }
