@@ -14,7 +14,7 @@
 	<div id="banner">
 		<img src="/images/main/banner.webp" alt="banière jdrpoly" />
 		<div id="banner-text" in:fade>
-			<h2>JDR-Poly</h2>
+			<h2>JDRPoly</h2>
 			<p>Le jeu de rôle <br /> à l'<strong>EPFL</strong></p>
 			<footer>
 				<a href="#main" id="button">Découvrir</a>
@@ -26,17 +26,20 @@
 			<div class="double-lines" />
 			<span class="material-symbols-outlined icon">polymer</span>
 			<div class="double-lines" />
-			<h2>Qu'est-ce que JDR-Poly ?</h2>
+			<h2>Qu'est-ce que JDRPoly ?</h2>
 			<p>
-				Légalement, JDR-Poly est une commission de l'AGEPoly, l'association générale des étudiants
+				JDR-Poly est une commission de l'AGEPoly, l'association générale des étudiants
 				de l'EPFL. Notre but est avant tout de promouvoir le jeu de rôle et d'organiser divers
 				événements au cours de l'année à destination de tous. Une bonne partie d'entre eux se
-				déroulent le mercredi soir dans le bâtiment <a href="/plan">INM</a>. Le plus emblématique se
+				déroulent le mercredi soir dans le bâtiment <a href="/plan">INM</a>. <br>Le plus emblématique se
 				déroule toutes les deux semaines, il s'agit des bonnes vieilles nocturnes d'initiation. Il
 				existe de nombreuses autres activités proposées, allant de la simple mais ludique soirée
 				Loup-garou ambiancée aux fameuses murders party. Que vous soyez débutant intrigué par cet
 				étrange loisir ou vétéran voulant se détendre de temps en temps, nous serons ravis de vous
-				accueillir !
+				accueillir !<br><br>
+
+				Toute personne qui le désire peut devenir membre de JDR-Poly moyennant une cotisation semestrielle de 5.-
+				Etre membre offre accès à plusieurs événements exclusifs tel que des soirées membres diverses (soirées jeux de sociétés, loups-garous ambiancés, GNs et murder parties, etc.), un Week-end rolistique par semestre, un accès au serveur Discord de JDR-Poly, etc.
 			</p>
 		</header>
 		<div id="events">
@@ -47,7 +50,7 @@
 			{#each data.events as event}
 				<div class="event">
 					<div class="img">
-						{#if event}
+						{#if event.imageb64}
 							<ImageB64
 								imageb64={event.imageb64}
 								alt={`Événement ${event.title}`}
@@ -183,9 +186,10 @@
 		}
 
 		p {
-			line-height: 25px;
-			letter-spacing: 0.025em;
-			margin: 0 10%;
+			text-align: justify;
+			white-space: normal;
+			line-height: 29px;
+			letter-spacing: 0.15em;
 		}
 	}
 
