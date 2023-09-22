@@ -75,7 +75,7 @@ export const actions = {
 		}
 
 		const conflictUser = await db.any("SELECT email FROM users WHERE email=$1 OR name=$2", [email, username])		
-		if(conflictUser.length > 0) return fail(409, {message: "Cette utilisateur existe déjà."})
+		if(conflictUser.length > 0) return fail(409, {message: "Cet utilisateur existe déjà."})
 
 		let id = await db.one(`INSERT INTO users(email, name, password, role, is_email_validated) 
 			VALUES ($1, $2, $3, 'USER', FALSE) RETURNING id`,
