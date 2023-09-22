@@ -67,7 +67,6 @@ async function sendMailValidationToken(userId: Id, mail: string, origin: string)
 		let html = data.toString()
 		html = html.replace('%ORIGIN%', origin)
 		html = html.replace('%TOKEN%', emailValidationToken)
-		logger.info(`2: ${mail}`)
 		sendMail(mail, "JDRPoly: Validez votre mail", html)
 	})
 	

@@ -5,6 +5,7 @@ import { readFile } from 'fs';
 import type { Period } from "$lib/publicMemberPeriod";
 import { __envDir } from "$lib/utils";
 import { Role, Roles } from "$lib/userPermissions";
+import { logger } from "./logger";
 
 /**
  * Update the user member period in the database
@@ -14,7 +15,10 @@ import { Role, Roles } from "$lib/userPermissions";
  * @param period for which periods the user should be a member
  */
 function updateMemberPeriod(user: { id: Id, email: string, role: Role }, period: Period) {
-	if (user.role != Roles.USER && user.role != Roles.MEMBER) return
+	if (user.role != Roles.USER && user.role != Roles.MEMBER) {
+		logger.info(`Won't add member period for role ${user.role.name} for user with email : ${user.email}`)
+		return
+	}
 
 	//Define if the member period already started
 	const now = new Date(Date.now())
