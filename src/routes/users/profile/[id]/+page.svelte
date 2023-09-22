@@ -58,6 +58,9 @@
 	{#if hasRolePermission(UserPermission.MODIFY_USERS_DATA, $page.data.user.role)}
 			<a href="/admin/profile/{id}">Modifier les données de cet utilisateur</a>
 	{/if}
+	{#if $page.data.user.id == id}
+			<a href="/users/account/settings">Modifier vos données</a>
+	{/if}
 </main>
 
 <style lang="scss">
