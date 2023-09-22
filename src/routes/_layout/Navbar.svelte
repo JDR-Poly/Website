@@ -323,7 +323,7 @@
 		margin-right: 4px;
 	}
 
-	@media screen and (max-width: 1300px) {
+	@media screen and (max-width: 1400px) {
 		.topnav:not(.responsive) :global(*:not(:first-child)) {
 			display: none;
 		}
