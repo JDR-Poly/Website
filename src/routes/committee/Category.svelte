@@ -163,7 +163,7 @@
 		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 		margin: 1em 1em;
   		transition: 0.3s;
-		width: 384px;
+		width: 328px;
 		position: relative;
 
 		:global(img) {
