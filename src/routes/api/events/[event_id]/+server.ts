@@ -5,6 +5,7 @@ import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { logger } from "$lib/server/logger";
 import type { DateString } from "$gtypes";
+import pgPromise from "pg-promise";
 
 /** 
  * Get a specific event
@@ -86,17 +87,19 @@ export const PATCH = (async ({ params, request, locals }) => {
 	const id = params.event_id
 	const data = await request.json()
 	if(data.image) data.image = getByteArrayFromBase64(data.image)
-	if (data.inscription_group !== Roles.USER.name && data.inscription_group !== Roles.MEMBER.name && data.inscription_group !== Roles.COMMITTEE.name) throw error(400, "inscription_group is not valid, should be either user, member or committee")
+	if (data.inscription == "true" && data.inscription_group !== Roles.USER.name && data.inscription_group !== Roles.MEMBER.name && data.inscription_group !== Roles.COMMITTEE.name) throw error(400, "inscription_group is not valid, should be either user, member or committee")
 	return db.one(
-		`UPDATE events SET
-			title=$[title], category=$[category],
-			description=$[description],date=$[date],
-			inscription=$[inscription], inscription_group=$[inscription_group],
-			inscription_limit=$[inscription_limit], image=COALESCE($[image], image),
-			inscription_start=$[inscription_start],inscription_stop=$[inscription_stop]
-		WHERE id=$[id]
-		RETURNING *;`,
-		{ id: id, ...data, image: data.image  }
+		SQLFormatUnexistentAsNull(
+			`UPDATE events SET
+				title=$[title], category=$[category],
+				description=$[description],date=$[date],
+				inscription=$[inscription], inscription_group=$[inscription_group],
+				inscription_limit=$[inscription_limit], image=COALESCE($[image], image),
+				inscription_start=$[inscription_start],inscription_stop=$[inscription_stop]
+			WHERE id=$[id]
+			RETURNING *;`,
+			{ id: id, ...data, image: data.image  }
+		)
 	)
 		.then(async (res) => {
 			if (!data.inscription) {
@@ -113,3 +116,7 @@ export const PATCH = (async ({ params, request, locals }) => {
 			throw error(500, err.message)
 		})
 }) satisfies RequestHandler
+
+function SQLFormatUnexistentAsNull(query: string, values: any): string {
+    return pgPromise.as.format(query, values, {def: null});
+}

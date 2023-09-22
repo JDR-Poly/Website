@@ -198,6 +198,8 @@
 						on:change={() => {
 							if (hasInscriptionLimit && !event.inscription_limit) {
 								event.inscription_limit = 16;
+							} else if(!hasInscriptionLimit) {
+								event.inscription_limit = undefined;
 							}
 						}}
 					/>
