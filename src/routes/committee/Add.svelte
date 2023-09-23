@@ -8,6 +8,7 @@
 	import { error, warning } from '$lib/stores';
 	import IconButton from '@smui/icon-button';
 	import { enhance } from '$app/forms';
+	import Compressor from 'compressorjs';
 
 	export let open: Writable<boolean>;
 	export let categories: string[];
@@ -17,6 +18,8 @@
 	let name = '';
 	let description = '';
 	let images: null | FileList = null;
+	let image: File | Blob | undefined;
+	let isImageProcessing = false;
 
 	function submit(form: any) {
 		form.click()
@@ -28,9 +31,10 @@
 	<Content id="list-selection-content">
 		<form method="POST" action="?/addCommittee" use:enhance={({ data }) => {
 			data.append("category", category)
-			if(images && images[0]) data.append("image", images[0])
+			if(image) data.append("image", image)
 			return async ({ result }) => {				
 				images = null
+				image = undefined
 				data.delete('image')
 				if(result.type == "success") {
 					location.reload()
@@ -59,9 +63,26 @@
 			<div class="hide-file-ui">
 				<Textfield bind:files={images} label="Image" type="file" on:change={async () => {				
 					if (images && images[0]) {
-						if (images[0].size > 2097152) {
-							$warning = 'Image max 2MB';
+						if (images[0].size > 4e6) {
+							$warning = 'Image max 4MB';
 							images = null;
+						} else {
+							isImageProcessing = true;
+							console.log('Processing image');
+							new Compressor(images[0], {
+								quality: 0.7,
+								mimeType: 'image/webp',
+								maxWidth: 600,
+								maxHeight: 600,
+								async success(result) {
+									console.log('Image processing finished.');
+									image = result;
+									isImageProcessing = false;
+								},
+								error(err) {
+									console.log(err.message);
+								}
+							});
 						}
 					}
 				}}/>
