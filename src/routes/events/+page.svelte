@@ -1,26 +1,11 @@
 <script lang="ts">
-	import { error } from '$lib/stores';
-	import { page } from '$app/stores';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 	import Fab, { Icon } from '@smui/fab';
 	import { goto } from '$app/navigation';
-	import IconButton from '@smui/icon-button';
 	import ImageB64 from '$components/ImageB64.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-
-	async function deleteEvent(id: number) {
-		const res = await fetch('/api/events/' + id, {
-			method: 'DELETE'
-		});
-		if (res.ok) {
-			location.reload();
-		} else {
-			const body = await res.json();
-			$error = body.message;
-		}
-	}
 </script>
 
 <svelte:head>
@@ -41,13 +26,6 @@
 	<div id="event-container">
 		{#each data.events as event}
 			<div class="event">
-				{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
-					<div class="delete-btn">
-						<IconButton class="material-icons" on:click={() => deleteEvent(event.id)}
-							>close</IconButton
-						>
-					</div>
-				{/if}
 				<div class="img">
 					{#if event.imageb64}
 						<ImageB64
@@ -117,12 +95,6 @@
 			width: 18vw;
 			height: 50vh;
 			min-height: 414px;
-
-			.delete-btn {
-				position: absolute;
-				top: -5px;
-				right: -5px;
-			}
 
 			.img {
 				width: 100%;

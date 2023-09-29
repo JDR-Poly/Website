@@ -11,9 +11,11 @@
 	import { writable } from 'svelte/store';
 	import ImageB64 from '$components/ImageB64.svelte';
 	import type { PageData } from './$types';
+	import Dialog, { Actions, Content, Title } from '@smui/dialog';
 
 	export let data: PageData;
 
+	let openDeleteConfirmDialog = false
 	const openEditDialog = writable(false);
 	const { event_id } = $page.params;
 
@@ -266,8 +268,8 @@
 		</div>
 		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
 			<div class="admin-btn" style="right: 60px;">
-				<IconButton class="material-icons" on:click={() => deleteEvent(data.event.id)}
-					>close</IconButton
+				<IconButton class="material-icons" on:click={() => (openDeleteConfirmDialog = true)}
+					>delete</IconButton
 				>
 			</div>
 			<div class="admin-btn" style="right: 120px;">
@@ -281,6 +283,22 @@
 				</div>
 			{/if}
 			<Edit event={data.event} open={openEditDialog} />
+
+			<Dialog open={openDeleteConfirmDialog}>
+				<Title id="simple-title">Supprimer ?</Title>
+				<Content id="simple-content">Êtes vous sûr de vouloir supprimer cet événement?</Content>
+				<Actions>
+					<Button on:click={() => {openDeleteConfirmDialog = false}}>
+					<Label>Non</Label>
+					</Button>
+					<Button on:click={() => {
+						openDeleteConfirmDialog = false
+						deleteEvent(data.event.id)
+						}}>
+					<Label>Oui</Label>
+					</Button>
+				</Actions>
+			</Dialog>
 		{/if}
 	</div>
 </main>
