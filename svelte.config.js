@@ -17,15 +17,14 @@ const config = {
 			$components: 'src/lib/components',
 			$gtypes: 'src/types.ts'
 		},
-		csp: {
+		/*csp: {
             directives: {
-                'script-src': ['self', 'unsafe-inline'],
-				'object-src': ['none'],
-				'base-uri': ['self'],
-				'require-trusted-types-for': ['script']
+                'script-src': ['self', 'https://challenges.cloudflare.com', 'https://ajax.cloudflare.com', 'ajax.cloudflare.com'],
+				'object-src': ['self'],
+				'frame-src' : ['self', 'https://challenges.cloudflare.com'] 
             },
 			mode: "auto"
-        }
+        }*/
 	}
 };
 
