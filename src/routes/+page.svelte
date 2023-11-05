@@ -1,5 +1,6 @@
 <script lang="ts">
-	import ImageB64 from '$components/ImageB64.svelte';
+	import EventCard from '$components/EventCard.svelte';
+import ImageB64 from '$components/ImageB64.svelte';
 	import type { PageData } from './$types';
 	import { fade } from 'svelte/transition';
 
@@ -48,27 +49,7 @@
 				<h1>Il n'y a aucun événement prévu pour le moment</h1>
 			{/if}
 			{#each data.events as event}
-				<div class="event">
-					<div class="img">
-						{#if event.imageb64}
-							<ImageB64
-								imageb64={event.imageb64}
-								alt={`Événement ${event.title}`}
-								alternativeImageSrc=""
-							/>
-						{/if}
-					</div>
-					<h3>{event.title}</h3>
-					<h5>
-						{new Intl.DateTimeFormat('fr-Fr', {
-							dateStyle: 'medium',
-							timeStyle: 'short',
-							timeZone: 'Europe/Paris'
-						}).format(new Date(event.date))}
-					</h5>
-					<p>{event.description}</p>
-					<a class="button" href={`/events/${event.id}`}>Découvrir</a>
-				</div>
+				<EventCard {event}></EventCard>
 			{/each}
 		</div>
 	</div>
@@ -235,80 +216,6 @@
 			transform: translateX(-50%);
 		}
 
-		.event {
-			background-color: $secondary;
-			padding: 2em 2em 7em 2em;
-			color: black;
-			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-			color: #353535;
-			position: relative;
-			border-radius: 8px;
-			width: 18vw;
-			height: 45vh;
-			min-height: 414px;
-
-			.img {
-				width: 100%;
-				height: 50%;
-				overflow: hidden;
-				border-radius: 8px;
-				position: relative;
-
-				:global(img) {
-					border-radius: 8px;
-					margin: auto;
-					display: block;
-					position: absolute;
-					width: 100%;
-					height: 100%;
-					object-fit: cover;
-				}
-			}
-
-			h3 {
-				margin: 15px 5px;
-				letter-spacing: 0.025em;
-			}
-
-			h5 {
-				margin: 0 0 0 5px;
-			}
-
-			p {
-				padding: 20px 0 0 10px;
-				color: #827d7d;
-				-webkit-line-clamp: 8;
-				overflow: hidden;
-				display: -webkit-box;
-				-webkit-box-orient: vertical;
-			}
-
-			.button {
-				display: block;
-				width: 12em;
-				text-decoration: none;
-				cursor: pointer;
-				font-size: 1.3em;
-				font-weight: bold;
-				letter-spacing: 2px;
-				line-height: 2.75em;
-				text-align: center;
-				color: $secondary;
-				margin: 10px 0;
-				position: absolute;
-				left: 50%;
-				bottom: 10px;
-				transform: translateX(-50%);
-				border-radius: 30px;
-				background: rgb(2, 29, 86);
-				background: linear-gradient(
-					94deg,
-					rgba(2, 29, 86, 1) 0%,
-					rgba(7, 48, 118, 1) 5%,
-					rgba(98, 182, 235, 1) 98%
-				);
-			}
-		}
 	}
 
 	//Media screen size
@@ -319,11 +226,7 @@
 		}
 	}
 
-	@media screen and (max-width: 1400) {
-		#events .event {
-			padding: 2em 1em 7em 1em;
-		}
-	}
+
 
 	@media screen and (max-width: 1100px) {
 		#banner #banner-text *:not(:first-child) {

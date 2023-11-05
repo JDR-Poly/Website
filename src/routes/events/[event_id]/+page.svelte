@@ -148,7 +148,8 @@
 
 		<div id="split">
 			<p id="description">
-				{data.event.description ? data.event.description.replace('\n', '\n\n') : ''}
+				<!-- {data.event.description ? data.event.description.replaceAll('\n', '\n\n') : ''} -->
+				{data.event.description}
 			</p>
 			<div id="inscription">
 				{#if data.event.inscription}
@@ -371,15 +372,16 @@
 			color: gray;
 			#description {
 				display: block;
-				width: 60%;
+				width: 65%;
 				font-size: 20px;
 				letter-spacing: 1px;
 				line-height: 1.25em;
 				text-align: justify;
 			}
 			#inscription {
-				width: 40%;
+				width: 35%;
 				text-align: center;
+				margin-left: 2.5em;
 				:global(.mdc-button) {
 					width: 60%;
 					margin: 1em;
