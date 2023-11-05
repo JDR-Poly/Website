@@ -78,7 +78,7 @@
 
 	<p>
 		Bienvenue sur la magnifique page de la bibliothèque de JDR-Poly. Tu as toujours voulu essayer
-		d'être MJ dans un de tes univers préférés ? Uu alors tu es un passionné des mondes de fiction et
+		d'être MJ dans un de tes univers préférés ? Tu es un passionné des mondes de fiction et
 		de leur lore ? Voici une liste de livres dont nous disposons et qui (on l'espère) feront ton
 		bonheur et celui de tes joueurs. Si tu veux réserver un livre, nous poser une question sur une
 		date de retour prévue ou nous envoyer plein de coeurs, utilise le petit formulaire juste en
