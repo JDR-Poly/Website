@@ -232,29 +232,11 @@ import ImageB64 from '$components/ImageB64.svelte';
 		#banner #banner-text *:not(:first-child) {
 			display: none;
 		}
-
-		#events {
-			flex-direction: column;
-			align-items: center;
-
-			.event {
-				margin: 2em 0;
-				padding: 6em 4em 12em 4em;
-				width: 50%;
-			}
-		}
 	}
 
 	@media screen and (max-width: 600px) {
 		header p {
 			margin: 0;
-		}
-
-		#events {
-			.event {
-				width: 80%;
-				padding: 3em 2em 6em 2em;
-			}
 		}
 	}
 
