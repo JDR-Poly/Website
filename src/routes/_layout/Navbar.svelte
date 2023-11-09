@@ -56,21 +56,21 @@
 						prefix_icon: 'location_on',
 						text: 'Accès'
 					},
-					link: '/plan'
-				},
-				{
-					element: {
-						prefix_icon: 'groups',
-						text: 'Commission'
-					},
-					link: '/committee'
+					link: '/infos/plan'
 				},
 				{
 					element: {
 						prefix_icon: 'description',
 						text: 'Documents'
 					},
-					link: '/docs'
+					link: '/infos/docs'
+				},
+				{
+					element: {
+						prefix_icon: 'meeting_room',
+						text: 'Services'
+					},
+					link: '/infos/services'
 				}
 			]
 		}}
@@ -91,6 +91,12 @@
 						text: 'Photos'
 					},
 					link: '/photos'
+				},				{
+					element: {
+						prefix_icon: 'groups',
+						text: 'Commission'
+					},
+					link: '/committee'
 				}
 			]
 		}}
