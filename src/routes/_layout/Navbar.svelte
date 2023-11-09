@@ -90,13 +90,19 @@
 						prefix_icon: 'image',
 						text: 'Photos'
 					},
-					link: '/photos'
+					link: '/community/photos'
 				},				{
 					element: {
 						prefix_icon: 'groups',
 						text: 'Commission'
 					},
-					link: '/committee'
+					link: '/community/committee'
+				},				{
+					element: {
+						prefix_icon: 'partner_exchange',
+						text: 'Partenaires/Amis'
+					},
+					link: '/community/parterns'
 				}
 			]
 		}}
