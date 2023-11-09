@@ -35,12 +35,11 @@ import ImageB64 from '$components/ImageB64.svelte';
 				déroulent le mercredi soir dans le bâtiment <a href="/plan">INM</a>. <br>Le plus emblématique se
 				déroule toutes les deux semaines, il s'agit des bonnes vieilles nocturnes d'initiation. Il
 				existe de nombreuses autres activités proposées, allant de la simple mais ludique soirée
-				Loup-garou ambiancée aux fameuses murders party. Que vous soyez débutant intrigué par cet
+				Loup-garou ambiancée aux fameuses murder parties. Que vous soyez débutant intrigué par cet
 				étrange loisir ou vétéran voulant se détendre de temps en temps, nous serons ravis de vous
 				accueillir !<br><br>
 
-				Toute personne qui le désire peut devenir membre de JDR-Poly moyennant une cotisation semestrielle de 5.-
-				Etre membre offre accès à plusieurs événements exclusifs tel que des soirées membres diverses (soirées jeux de sociétés, loups-garous ambiancés, GNs et murder parties, etc.), un Week-end rolistique par semestre, un accès au serveur Discord de JDR-Poly, etc.
+				Toute personne qui le désire peut devenir membre de JDR-Poly, moyennant une cotisation semestrielle de 5CHF. Être membre de JDR-Poly offre plusieurs avantages exclusifs tels que l'accès à nos événements et soirées réservées aux membres (soirées jeux de sociétés, loups-garous ambiancés, GNs, Murder Parties, etc.), la possibilité de consulter et d'emprunter les livres de nôtre bibliothèque, un accès à nôtre serveur Discord et plus encore !
 			</p>
 		</header>
 		<div id="events">
