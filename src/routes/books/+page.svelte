@@ -65,7 +65,7 @@
 			});
 	}
 
-	const statusList = ['Disponible', 'Indisponible', 'WANTED'];
+	const statusList = ['Disponible', 'Indisponible', 'WANTED', 'Collector'];
 	let editBook: Book | undefined = undefined;
 </script>
 
@@ -87,10 +87,14 @@
 	<ul>
 		{#each bookList as book}
 			<li class="book">
+				<p> {book.title} | </p> 
+					{#if book.status == 'Disponible' || book.status == 'Indisponible'}
+						<b>Disponible:</b> <Icon class="material-icons">{book.status == 'Disponible' ? 'done' : 'close'}</Icon>
+					{:else}
+						<b>{book.status}</b>
+					{/if}
+				<br />
 				<p>
-					{book.title} | <b>Disponible:</b>
-					<Icon class="material-icons">{book.status == 'Disponible' ? 'done' : 'close'}</Icon>
-					<br />
 					<i>Caution: {book.caution} CHF</i>
 				</p>
 				{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.role)}
