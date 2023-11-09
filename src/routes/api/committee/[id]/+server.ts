@@ -12,12 +12,13 @@ export const DELETE = (async ({ params, locals }) => {
 
 	const committee_id = params.id
 
-	return db.none(
-		`DELETE FROM committee_info WHERE id = $1`,
-		[committee_id]
+	return db.one(
+		`DELETE FROM committee_info WHERE id = $1 RETURNING category;`,
+		[committee_id],
+		a => a.category
 	)
-		.then(async () => {
-			await resortItemOrder()
+		.then(async (category) => {			
+			await resortItemOrder(category)
 			return new Response()
 		})
 		.catch((err) => {
@@ -28,8 +29,8 @@ export const DELETE = (async ({ params, locals }) => {
 /**
 * Change the database so that all the books are in the correct item_order 
 */
-async function resortItemOrder() {
-	await db.any('SELECT id, item_order FROM committee_info')
+async function resortItemOrder(category: string) {
+	await db.any('SELECT id, item_order FROM committee_info WHERE category = $1', [category])
 		.then(async (res) => {
 			res = res.sort((a: any, b: any) => (a.item_order >= b.item_order ? 1 : -1))
 			let i = 0
@@ -38,7 +39,6 @@ async function resortItemOrder() {
 				newOrder.push([value.id, i])
 				i++
 			}
-
 			await db.tx(t => { //Perform a list of SQL request
 				let queries: Promise<null>[] = []
 				for (let value of newOrder) {
