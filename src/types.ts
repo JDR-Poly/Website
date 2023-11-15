@@ -1,5 +1,9 @@
 import type { Role } from "$lib/userPermissions"
 
+/**
+ * An event is a schelduled soiree 
+ * that can optionally be joined.
+ */
 type Event = {
 	id: Id
 	author: Id,
@@ -63,6 +67,6 @@ type Book = {
 }
 
 type Id = number
-type DateString = string
+type DateString = string //A date stored as string
 
 export type { User, Event, Id, DateString, Committee, HonorMember, Book }

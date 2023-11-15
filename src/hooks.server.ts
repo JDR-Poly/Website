@@ -4,9 +4,11 @@ import { Roles } from "$lib/userPermissions"
 import type { User } from "$gtypes";
 import { logger } from "$lib/server/logger";
 
+//Handle is fired before each request, it handles authentification already connected clients.
 export const handle: Handle = async function ({ event, resolve }) {
 	const session = event.cookies.get('session');
 
+	//Default data to pass to sveltekit if no session
 	event.locals.authenticated = false
 	event.locals.user = undefined
 
@@ -28,7 +30,7 @@ export const handle: Handle = async function ({ event, resolve }) {
 		FROM users WHERE id=$1`
 		,[id]
 	).then((user) => {
-		user.role = Roles[user.role].toJSON()
+		user.role = Roles[user.role].toJSON() //From role string, get role object
 		if (!user.role) {
 			throw throwError(500, `User with email,id ${user.email},${user.id} has an invalid role ${user.role}`)
 		}
@@ -47,7 +49,7 @@ export const handle: Handle = async function ({ event, resolve }) {
 
 export const handleError: HandleServerError =  ({ error, event }) => {
 	const newError = (error as App.Error)
-	if(event.route.id === null) {
+	if(event.route.id === null) { //On route not found, redirect to page 404
 		return {
 			status: 404,
 			message: event.url.href		

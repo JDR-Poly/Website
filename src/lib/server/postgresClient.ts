@@ -14,6 +14,9 @@ const db = pgp({
 	max: 50
 });
 
+/**
+ * Regularly delete expired data from database
+ */
 schedule('0 1 * * *', () => {
 	db.none(`UPDATE users SET role='USER', member_start=NULL, member_stop=NULL WHERE NOW() >= member_stop AND role='MEMBER'`)
 	db.none(`DELETE FROM email_validation e USING users u WHERE e.id = u.id AND u.is_email_validated`)

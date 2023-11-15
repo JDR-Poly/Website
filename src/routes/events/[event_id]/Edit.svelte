@@ -10,7 +10,7 @@
 	import IconButton from '@smui/icon-button';
 	import Checkbox from '@smui/checkbox';
 	import FormField from '@smui/form-field';
-	import { categories, returnJoinEventRoles } from '$lib/events';
+	import { categories, returnJoinEventRoles } from '$lib/evenementsUtils';
 	import { getBase64, getLocalDateStringOrNullFromString, parseToLocalDateStringWithoutMilis } from '$lib/utils';
 	import Compressor from 'compressorjs';
 

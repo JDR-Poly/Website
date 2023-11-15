@@ -7,7 +7,18 @@ interface TokenValidateResponse {
 	cdata: string;
 }
 
-async function validateToken(token: string, fetch: any) {
+interface ChallengeResponse {
+	success: boolean,
+	error: string | null
+}
+
+/**
+ * Verify token of cloudflare challenge
+ * @param token cloudflare token
+ * @param fetch fetch function of sveltekit to use
+ * @returns the challenge result
+ */
+async function validateToken(token: string, fetch: any): Promise<ChallengeResponse> {
 	const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
 		method: 'POST',
 		headers: {

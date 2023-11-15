@@ -7,7 +7,7 @@
 	import Checkbox from '@smui/checkbox';
 	import FormField from '@smui/form-field';
 	import IconButton from '@smui/icon-button';
-	import { categories, returnJoinEventRoles } from '$lib/events';
+	import { categories, returnJoinEventRoles } from '$lib/evenementsUtils';
 	import Compressor from 'compressorjs';
 	import { getBase64, getLocalDateStringOrNullFromString } from '$lib/utils';
 	import ImageB64 from '$components/ImageB64.svelte';
