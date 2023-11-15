@@ -7,7 +7,7 @@ export const GET = (async ({ params, locals }) => {
 	if (!locals.authenticated) throw error(401)
 	const id = params.id
 
-	if (!hasRolePermission(UserPermission.SEE_USERS_PROFILE, locals.user?.role) || parseInt(id) != locals.user?.id) throw error(403)
+	if (parseInt(id) != locals.user?.id && !hasRolePermission(UserPermission.SEE_USERS_PROFILE, locals.user?.role)) throw error(403)
 	const mailSQLText = locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role) ? "email, " : ""
 
 	return db.one(
