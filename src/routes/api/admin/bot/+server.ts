@@ -6,7 +6,7 @@ import type { Id } from "$gtypes";
 
 
 interface UserInformationForBot {
-    user_id: Id,
+    userId: Id,
 	member: boolean,
 	email: string,
 	discordId: string,
@@ -24,7 +24,7 @@ export const GET = (async ({locals, url }) => {
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.SEE_USERS_PROFILE, locals.user?.role) || !hasRolePermission(UserPermission.MODIFY_USER_DISCORD, locals.user?.role)) throw error(403)
 	
-    const id = parseInt(url.searchParams.get("user_id") || "null") || null
+    const id = parseInt(url.searchParams.get("userId") || "null") || null
     const email = url.searchParams.get("email")
     const discordId = url.searchParams.get("discordId")
 
@@ -38,7 +38,7 @@ export const GET = (async ({locals, url }) => {
 		.then((res) => {
 			let isMember = isRoleMember(Roles[res.role])
             let data: UserInformationForBot = {
-				user_id: res.id,
+				userId: res.id,
 				member: isMember,
 				email: res.email,
 				discordId: res.discord_id,
@@ -53,7 +53,7 @@ export const GET = (async ({locals, url }) => {
 
 /**
  * Allow bot to modify the discordId of a user
- * @param {Id} request.user_id id of user to modify
+ * @param {Id} request.userId id of user to modify
  * @param {string | null} request.discordId the new discordId to set (null resets it)
  */
 export const PATCH = (async ({ locals, request }) => {
@@ -62,7 +62,7 @@ export const PATCH = (async ({ locals, request }) => {
 	const body = await request.json()
 
 	return db.none(
-		`UPDATE users SET discord_id=$1 WHERE id=$2`, [body.discordId, body.user_id]	)
+		`UPDATE users SET discord_id=$1 WHERE id=$2`, [body.discordId, body.userId]	)
 	.then(() => new Response())
 	.catch(err => {
 		throw error(500, err.message)

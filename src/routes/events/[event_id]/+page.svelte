@@ -203,7 +203,7 @@
 										fetch('/api/admin/events/' + event_id + '/subscribe', {
 											method: 'DELETE',
 											body: JSON.stringify({
-												user_id: user.id
+												userId: user.id
 											})
 										})
 											.then(() => {
@@ -239,7 +239,7 @@
 											fetch('/api/admin/events/' + event_id + '/subscribe', {
 												method: 'POST',
 												body: JSON.stringify({
-													user_id: result.id
+													userId: result.id
 												})
 											})
 												.then(async (res) => {
