@@ -87,6 +87,7 @@
 	 * to add possible result as completion
 	 */
 	async function inputChange() {
+		console.log("a");
 		if (searchUserToAdd.length < 3) {
 			usersResult = [];
 			return;
@@ -222,7 +223,7 @@
 							on:focusout={(event) => {
 								setTimeout(() => {
 									usersResult = [];
-								}, 100);
+								}, 500);
 							}}
 						>
 							<input
