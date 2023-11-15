@@ -15,7 +15,8 @@ enum UserPermission {
 	REMOVE_USER_FROM_EVENT,
 	MODIFY_COMMITTEE_PAGE,
 	MODIFY_BOOKS,
-	SEE_USERS_PROFILE
+	SEE_USERS_PROFILE,
+	MODIFY_USER_DISCORD
 }
 
 /**
@@ -82,6 +83,11 @@ function hasRolePermission(permission: UserPermission | string, role?: Role): bo
 	return permissions.has((permission as UserPermission))
 }
 
+function isRoleMember(role?: Role): boolean {
+	if (!role) return false
+	return role != Roles.USER
+}
+
 /**
  * List of all existing roles 
  */
@@ -89,6 +95,7 @@ const Roles: Record<string, Role> = {
 	USER: Role.createRole("USER", [UserPermission.JOIN_EVENT_USER]),
 	MEMBER: Role.createRole("MEMBER", [UserPermission.JOIN_EVENT_MEMBER, UserPermission.SEE_USERS_PROFILE], ["USER"]),
 	HONORARY_MEMBER: Role.createRole("HONORARY_MEMBER", [], ["MEMBER"]),
+	DISCORD_BOT: Role.createRole("BOT", [UserPermission.MODIFY_USER_DISCORD, UserPermission.SEE_USERS_PROFILE]),
 	COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER,
 	UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT, UserPermission.ADMIN_PANEL, UserPermission.JOIN_EVENT_COMMITTEE,
 	UserPermission.SUBSCRIBE_USER_TO_EVENT, UserPermission.REMOVE_USER_FROM_EVENT, UserPermission.MODIFY_BOOKS, UserPermission.SEE_MAIL], ["MEMBER"]),
@@ -97,4 +104,4 @@ const Roles: Record<string, Role> = {
 
 
 
-export { UserPermission, Role, Roles, hasRolePermission }
+export { UserPermission, Role, Roles, hasRolePermission, isRoleMember }
