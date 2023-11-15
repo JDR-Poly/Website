@@ -458,6 +458,7 @@
 			& > * {
 				width: 100% !important;
 				margin-bottom: 3em;
+				margin-left: 0 !important;
 			}
 		}
 	}

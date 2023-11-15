@@ -190,6 +190,7 @@ import ImageB64 from '$components/ImageB64.svelte';
 		);
 
 		position: relative;
+		flex-wrap: wrap;
 
 		h1 {
 			color: $secondary;
