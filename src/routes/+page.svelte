@@ -1,6 +1,7 @@
 <script lang="ts">
 	import EventCard from '$components/EventCard.svelte';
-import ImageB64 from '$components/ImageB64.svelte';
+	import Icon from '@iconify/svelte';
+
 	import type { PageData } from './$types';
 	import { fade } from 'svelte/transition';
 
@@ -25,7 +26,7 @@ import ImageB64 from '$components/ImageB64.svelte';
 	<div id="main">
 		<header>
 			<div class="double-lines" />
-			<span class="material-symbols-outlined icon">polymer</span>
+			<Icon icon="material-symbols:polymer" style="font-size: 32px;" class="icon"/>
 			<div class="double-lines" />
 			<h2>Qu'est-ce que JDRPoly ?</h2>
 			<p>
@@ -145,7 +146,7 @@ import ImageB64 from '$components/ImageB64.svelte';
 			}
 		}
 
-		.icon {
+		:global(.icon) {
 			position: absolute;
 			top: 0.4em;
 			left: 50%;

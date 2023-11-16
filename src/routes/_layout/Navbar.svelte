@@ -1,6 +1,8 @@
 <script lang="ts">
-	import IconButton from '@smui/icon-button';
+	import Icon from '@iconify/svelte';
 	import Dropdown from './Dropdown.svelte';
+	import IconButton from '$components/IconButton.svelte';
+
 	import { page } from '$app/stores';
 	import { goto, invalidateAll } from '$app/navigation';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
@@ -23,22 +25,17 @@
 		<img src="/images/logo-white.svg" alt="Logo jdrpoly" id="svg" />
 	</a>
 
-	<div id="close-icon" class="">
-		<IconButton
-			class="material-icons"
-			on:click={() => {
-				closeNavBar()
-			}}>close</IconButton
-		>
+	<div id="close-icon">
+		<IconButton icon="material-symbols:close" action={closeNavBar}/>
 	</div>
 
 	<a href="/" class="nav-link nav-button" on:click={closeNavBar}>
-		<span class="material-symbols-outlined link-icon">home</span>
+		<Icon icon="material-symbols:home-outline" style="font-size: 24px;margin-right: 2px;"></Icon>
 		<p>Accueil</p>
 	</a>
 
 	<a href="/events" class="nav-link nav-button" on:click={closeNavBar}>
-		<span class="material-symbols-outlined link-icon">event</span>
+		<Icon icon="material-symbols:event-outline-rounded" style="font-size: 24px;margin-right: 2px;"></Icon>
 		<p>Événements</p>
 	</a>
 
@@ -47,27 +44,27 @@
 		{closeNavBar}
 		data={{
 			element: {
-				prefix_icon: 'info',
+				prefix_icon: 'material-symbols:info-outline',
 				text: 'Informations'
 			},
 			links: [
 				{
 					element: {
-						prefix_icon: 'location_on',
+						prefix_icon: 'mdi:map-marker-outline',
 						text: 'Accès'
 					},
 					link: '/infos/plan'
 				},
 				{
 					element: {
-						prefix_icon: 'description',
+						prefix_icon: 'material-symbols:description-outline',
 						text: 'Documents'
 					},
 					link: '/infos/docs'
 				},
 				{
 					element: {
-						prefix_icon: 'meeting_room',
+						prefix_icon: 'material-symbols:meeting-room-outline',
 						text: 'Services'
 					},
 					link: '/infos/services'
@@ -81,35 +78,36 @@
 		{closeNavBar}
 		data={{
 			element: {
-				prefix_icon: 'group',
+				prefix_icon: 'material-symbols:groups',
 				text: 'Communauté'
 			},
 			links: [
 				{
 					element: {
-						prefix_icon: 'image',
+						prefix_icon: 'material-symbols:broken-image-outline-rounded',
 						text: 'Photos'
 					},
 					link: '/community/photos'
 				},				{
 					element: {
-						prefix_icon: 'groups',
+						prefix_icon: 'material-symbols:group-outline',
 						text: 'Commission'
 					},
 					link: '/community/committee'
-				},				{
-					element: {
-						prefix_icon: 'partner_exchange',
-						text: 'Partenaires/Amis'
-					},
-					link: '/community/parterns'
 				}
+				// ,				{
+				// 	element: {
+				// 		prefix_icon: 'partner_exchange',
+				// 		text: 'Partenaires/Amis'
+				// 	},
+				// 	link: '/community/parteners'
+				// }
 			]
 		}}
 	/>
 
 	<a href="/books" class="nav-link nav-button" on:click={closeNavBar}>
-		<span class="material-symbols-outlined link-icon">book</span>
+		<Icon icon="material-symbols:book" style="font-size: 24px;margin-right: 2px;"></Icon>
 		<p>Bibliothèque</p>
 	</a>
 
@@ -126,7 +124,7 @@
 					links: [
 						{
 							element: {
-								prefix_icon: 'outgoing_mail',
+								//prefix_icon: 'outgoing_mail',
 								text: 'Envoyer un code'
 							},
 							link: '/admin/membership'
@@ -134,13 +132,13 @@
 						{
 							element: {
 								text: 'Événements',
-								prefix_icon: 'dataset'
+								//prefix_icon: 'dataset'
 							},
 							link: '/admin/events'
 						},
 						{
 							element: {
-								prefix_icon: 'search',
+								//prefix_icon: 'search',
 								text: 'Utilisateurs'
 							},
 							link: '/admin/users'
@@ -161,21 +159,21 @@
 					links: [
 						{
 							element: {
-								prefix_icon: 'person',
+								//prefix_icon: 'person',
 								text: 'Profil'
 							},
 							link: `/users/profile/${$page.data.user?.id}`
 						},
 						{
 							element: {
-								prefix_icon: 'settings',
+								//prefix_icon: 'settings',
 								text: 'Paramètres'
 							},
 							link: '/users/account/settings'
 						},
 						{
 							element: {
-								prefix_icon: 'keyboard_double_arrow_right',
+								//prefix_icon: 'keyboard_double_arrow_right',
 								text: 'Entrer un code'
 							},
 							link: '/users/account/membership'
@@ -184,7 +182,7 @@
 					actions: [
 						{
 							element: {
-								prefix_icon: 'logout',
+								//prefix_icon: 'logout',
 								text: 'Déconnexion'
 							},
 							action: logout
@@ -195,18 +193,13 @@
 		</div>
 	{:else}
 		<a class="log-button nav-button" href="/auth/login"  on:click={closeNavBar}>
-			<span class="material-symbols-outlined link-icon">login</span>
+			<Icon icon="material-symbols:login-rounded" style="font-size: 24px;margin-right: 4px; color:white;s"></Icon>
 			<p class="">Se connecter</p>
 		</a>
 	{/if}
 
 	<div id="nav-icon" class="">
-		<IconButton
-			class="material-icons"
-			on:click={() => {
-				responsive = true;
-			}}>list</IconButton
-		>
+		<IconButton icon="material-symbols:list-rounded" action={() => {responsive = true}}/>
 	</div>
 </div>
 
@@ -329,10 +322,6 @@
 	#svg {
 		width: 150px;
 		margin-right: 2em;
-	}
-
-	.link-icon {
-		margin-right: 4px;
 	}
 
 	@media screen and (max-width: 1400px) {

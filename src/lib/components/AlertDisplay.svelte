@@ -1,18 +1,14 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
 	import { error, warning, info } from '$lib/stores';
+	import IconButton from './IconButton.svelte';
 
 	let idCounter = 0
 
-	function closeButton(event: MouseEvent) {
-		removeAlertById(parseInt((event.target as any).parentElement.id))
+	function closeButton(event: MouseEvent) {		
+		removeAlertById(parseInt((event.target as any).parentElement.parentElement.id))
 	}
 
-	function handleKeyPress(event: KeyboardEvent) {
-		if(event.key == "x") {
-			removeAlertById(parseInt((event.target as any).parentElement.id))
-		}
-	}
 
 	function removeAlertById(id: number) {
 		for(let i=0;i<alertArray.length;i++) {
@@ -64,7 +60,10 @@
 </script>
 	<div class="container">
 		{#each alertArray as alert}
-			<div class="alert {alert.type}" id="{alert.id.toString()}" in:fly={{x: 200, duration: 2000}}>{alert.text}<span class="closebtn" on:click={closeButton} on:keypress={handleKeyPress}>&times;</span></div>
+			<div class="alert {alert.type}" id="{alert.id.toString()}" in:fly={{x: 200, duration: 2000}}>
+				{alert.text}
+				<IconButton icon="material-symbols:close" action={closeButton}/>
+			</div>
 		{/each}
 	</div>
 
@@ -86,8 +85,8 @@
 		right: 35px;
 	}
 	/* The close button */
-	.closebtn {
-		margin-left: 15px;
+	.container :global(button) {
+		margin-right: 10px;
 		color: white;
 		font-weight: bold;
 		float: right;

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Icon from '@iconify/svelte';
+
 	export let data: DdData;
 	export let responsive: boolean;
 	export let closeNavBar: () => void;
@@ -37,16 +39,16 @@
 		}}
 	>
 		{#if data.element.prefix_icon}
-			<span class="material-symbols-outlined icon">{data.element.prefix_icon}</span>
+			<Icon icon={data.element.prefix_icon} style="font-size:24px; margin-right: 2px;"/>
 		{/if}
 		<p>{data.element.text}</p>
-		<span class="material-symbols-outlined icon">expand_more</span>
+		<Icon icon="material-symbols:expand-more" />
 	</button>
 	<div class="drop-content" class:closed={!open}>
 		{#each data.links as element}
 			<a href={element.link} class="drop-link drop-element" on:click={closeNavBar}>
 				{#if element.element.prefix_icon}
-					<span class="material-symbols-outlined icon">{element.element.prefix_icon}</span>
+					<Icon icon={element.element.prefix_icon} style="font-size: 24px; margin-right: 2px;"/>
 				{/if}
 				<p>{element.element.text}</p>
 			</a>
@@ -55,7 +57,7 @@
 			{#each data.actions as ddaction}
 				<button on:click={ddaction.action()} class="drop-link drop-element">
 					{#if ddaction.element.prefix_icon}
-						<span class="material-symbols-outlined icon">{ddaction.element.prefix_icon}</span>
+						<Icon icon={ddaction.element.prefix_icon} style="font-size: 24px; margin-right: 2px;"/>
 					{/if}
 					<p>{ddaction.element.text}</p>
 				</button>
@@ -125,10 +127,6 @@
 			width: 100%;
 			background-color: inherit;
 		}
-	}
-
-	.icon {
-		margin-right: 4px;
 	}
 
 	p {

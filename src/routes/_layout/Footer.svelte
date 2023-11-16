@@ -3,6 +3,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { error, info } from '$lib/stores';
 	import { Turnstile } from 'svelte-turnstile';
+	import Icon from '@iconify/svelte';
 
 	let isEmailInvalid = true;
 	let email = '';
@@ -50,7 +51,7 @@
 		</div>
 		<div id="links">
 			<section>
-				<span class="material-symbols-outlined icon">mail</span>
+				<Icon icon="material-symbols:mail-outline" class="footer-icon"/>
 				<h3>Email</h3>
 				<a href="mailto:comite@jdrpoly.ch">comite@jdrpoly.ch</a>
 			</section>
@@ -163,19 +164,22 @@
 				font-size: 18px;
 			}
 
-			span {
+			:global(.footer-icon) {
 				background-color: #ffffff;
+				font-size: 15px;
+				padding: 5px;
 				border-radius: 100%;
 				color: #242943;
 				height: 2em;
 				line-height: 2em;
 				text-align: center;
+				transform: translateY(10%);
 				width: 2em;
 			}
 
 			&:first-child {
-				padding: 4em 0 0 4.5em;
-				span {
+				padding: 4em 0 0 3em;
+				:global(.footer-icon) {
 					position: absolute;
 					left: 0;
 				}
