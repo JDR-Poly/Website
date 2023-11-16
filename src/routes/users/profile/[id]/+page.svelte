@@ -29,6 +29,9 @@
 			case Roles.USER.name:
 				return "Utilisateur"
 				break
+			case Roles.DISCORD_BOT.name:
+				return "Bot discord"
+				break
 		}
 		return "Erreur de rôle"
 	}

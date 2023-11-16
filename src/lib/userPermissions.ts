@@ -95,7 +95,7 @@ const Roles: Record<string, Role> = {
 	USER: Role.createRole("USER", [UserPermission.JOIN_EVENT_USER]),
 	MEMBER: Role.createRole("MEMBER", [UserPermission.JOIN_EVENT_MEMBER, UserPermission.SEE_USERS_PROFILE], ["USER"]),
 	HONORARY_MEMBER: Role.createRole("HONORARY_MEMBER", [], ["MEMBER"]),
-	DISCORD_BOT: Role.createRole("BOT", [UserPermission.MODIFY_USER_DISCORD, UserPermission.SEE_USERS_PROFILE]),
+	DISCORD_BOT: Role.createRole("DISCORD_BOT", [UserPermission.MODIFY_USER_DISCORD, UserPermission.SEE_USERS_PROFILE]),
 	COMMITTEE: Role.createRole("COMMITTEE", [UserPermission.GRANT_ROLE_MEMBER, UserPermission.GRANT_ROLE_USER,
 	UserPermission.MODIFY_EVENT, UserPermission.MODIFY_USERS_DATA, UserPermission.CREATE_EVENT, UserPermission.ADMIN_PANEL, UserPermission.JOIN_EVENT_COMMITTEE,
 	UserPermission.SUBSCRIBE_USER_TO_EVENT, UserPermission.REMOVE_USER_FROM_EVENT, UserPermission.MODIFY_BOOKS, UserPermission.SEE_MAIL], ["MEMBER"]),
