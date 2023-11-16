@@ -87,7 +87,6 @@
 	 * to add possible result as completion
 	 */
 	async function inputChange() {
-		console.log("a");
 		if (searchUserToAdd.length < 3) {
 			usersResult = [];
 			return;
@@ -199,11 +198,10 @@
 							{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
 								<IconButton icon="material-symbols:close"
 								action={() => {
-									fetch('/api/admin/events/' + event_id + '/subscribe', {
+									let urlForceDeleteSubscribedUser = new URL($page.url.origin + '/api/admin/events/' + event_id + '/subscribe')
+									urlForceDeleteSubscribedUser.searchParams.append("userId", user.id.toString())
+									fetch(urlForceDeleteSubscribedUser, {
 										method: 'DELETE',
-										body: JSON.stringify({
-											userId: user.id
-										})
 									})
 										.then(() => {
 											location.reload();
@@ -236,11 +234,10 @@
 								{#each usersResult as result}
 									<button
 										on:click={() => {
-											fetch('/api/admin/events/' + event_id + '/subscribe', {
+											let urlForceAddUser = new URL($page.url.origin + '/api/admin/events/' + event_id + '/subscribe')
+											urlForceAddUser.searchParams.append("userId", result.id.toString())
+											fetch(urlForceAddUser, {
 												method: 'POST',
-												body: JSON.stringify({
-													userId: result.id
-												})
 											})
 												.then(async (res) => {
 													if (!res.ok) {

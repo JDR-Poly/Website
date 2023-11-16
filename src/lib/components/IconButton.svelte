@@ -17,5 +17,9 @@
     button {
         border: none;
         background: none;
+
+        :global(svg) {
+            color: white;
+        }
     }
 </style>

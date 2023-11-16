@@ -114,7 +114,7 @@
 				setTimeout(() => {
 					selectedIndex = -1;
 					usersSearchBar = [];
-				}, 100);
+				}, 500);
 			}}
 		>
 			<input

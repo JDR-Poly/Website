@@ -30,16 +30,15 @@
 	let roleList: Role[] = [];
 
 	onMount(async () => {
-		roleList = await fetch(`/api/admin/roles/grant?id=${user.id}`).then(async (res) => {
+		roleList = await fetch(`/api/admin/roles/grant?userId=${user.id}`).then(async (res) => {
 			return res.ok ? await res.json() : [];
 		});
 	});
 
-	async function submitChange() {
-		const res = await fetch('/api/admin/roles/grant', {
-			method: 'POST',
+	async function submitChange() {		
+		const res = await fetch(`/api/admin/roles/grant?userId=${user.id}`, {
+			method: 'PATCH',
 			body: JSON.stringify({
-				id: user.id,
 				role: roleName,
 				periodsNumber: roleName == Roles.MEMBER.name ? periodsNumber : 0
 			}),

@@ -8,16 +8,15 @@ import { logger } from "$lib/server/logger";
 
 /**
  * Force remove a user from the list of subscribed 
-* @param {number} request.userId the id of the user to remove 
+* @param {number} url.userId the id of the user to remove 
  */
-export const DELETE = (async ({ params, request, locals }) => {
+export const DELETE = (async ({ params, url, locals }) => {
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, locals.user?.role)) throw error(403)
 
 	const event_id = params.event_id
-
-	const body = await request.json()
-	const userId = body.userId
+	const userId = parseInt(url.searchParams.get("userId") || "null") || null
+	if(!userId) throw error(400, `Incorrect userId: ${userId}`)
 
 	return db.none(
 		` DELETE FROM event_inscription
@@ -36,16 +35,16 @@ export const DELETE = (async ({ params, request, locals }) => {
 
 /** 
  * Force the add of an user to the list of subscribed users of the event
- * @param {number} request.userId the id of the user to add 
+ * @param {number} url.userId the id of the user to add 
  */
-export const POST = (async ({ params, request, locals }) => {
+export const POST = (async ({ params, url, locals }) => {
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.SUBSCRIBE_USER_TO_EVENT, locals.user?.role)) throw error(403)
 
 	const event_id = params.event_id
+	const userId = parseInt(url.searchParams.get("userId") || "null") || null
+	if(!userId) throw error(400, `Incorrect userId: ${userId}`)
 
-	const body = await request.json()
-	const userId = body.userId
 	return db.none(
 		`INSERT into event_inscription(user_id, event_id)
 		VALUES ($1,$2)
