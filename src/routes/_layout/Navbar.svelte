@@ -118,13 +118,13 @@
 				{closeNavBar}
 				data={{
 					element: {
-						prefix_icon: 'admin_panel_settings',
+						prefix_icon: 'material-symbols:admin-panel-settings-outline',
 						text: 'Admin'
 					},
 					links: [
 						{
 							element: {
-								//prefix_icon: 'outgoing_mail',
+								prefix_icon: 'material-symbols:outgoing-mail-outline',
 								text: 'Envoyer un code'
 							},
 							link: '/admin/membership'
@@ -132,13 +132,13 @@
 						{
 							element: {
 								text: 'Événements',
-								//prefix_icon: 'dataset'
+								prefix_icon: 'material-symbols:dataset-linked-outline'
 							},
 							link: '/admin/events'
 						},
 						{
 							element: {
-								//prefix_icon: 'search',
+								prefix_icon: 'material-symbols:search',
 								text: 'Utilisateurs'
 							},
 							link: '/admin/users'
@@ -153,27 +153,27 @@
 				{closeNavBar}
 				data={{
 					element: {
-						prefix_icon: 'person',
+						prefix_icon: 'material-symbols:person	',
 						text: $page.data.user?.name ? $page.data.user?.name : 'Utilisateur'
 					},
 					links: [
 						{
 							element: {
-								//prefix_icon: 'person',
+								prefix_icon: 'material-symbols:person',
 								text: 'Profil'
 							},
 							link: `/users/profile/${$page.data.user?.id}`
 						},
 						{
 							element: {
-								//prefix_icon: 'settings',
+								prefix_icon: 'material-symbols:settings-account-box-outline',
 								text: 'Paramètres'
 							},
 							link: '/users/account/settings'
 						},
 						{
 							element: {
-								//prefix_icon: 'keyboard_double_arrow_right',
+								prefix_icon: 'material-symbols:keyboard-double-arrow-right',
 								text: 'Entrer un code'
 							},
 							link: '/users/account/membership'
@@ -182,7 +182,7 @@
 					actions: [
 						{
 							element: {
-								//prefix_icon: 'logout',
+								prefix_icon: 'material-symbols:logout-rounded',
 								text: 'Déconnexion'
 							},
 							action: logout
