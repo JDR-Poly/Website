@@ -2,10 +2,23 @@
 	import EventCard from '$components/EventCard.svelte';
 	import Icon from '@iconify/svelte';
 
-	import type { PageData } from './$types';
 	import { fade } from 'svelte/transition';
+	import type { Event } from '$gtypes';
 
-	export let data: PageData;
+	async function loadEvents() {
+		return fetch('/api/events?limit=3')
+			.then(async (res) => {
+				return (res.ok ? await res.json() : []) as Event[];
+			})
+			.then((res) => {
+				if(res.length > 3) res.splice(3, res.length - 3)
+				return res
+			})
+			.catch((err) => {
+				return [] as Event[];
+			})
+	}
+
 </script>
 
 <svelte:head>
@@ -45,12 +58,17 @@
 		</header>
 		<div id="events">
 			<div id="title">Événements</div>
-			{#if data.events.length == 0}
-				<h1>Il n'y a aucun événement prévu pour le moment</h1>
-			{/if}
-			{#each data.events as event}
-				<EventCard {event}></EventCard>
-			{/each}
+			{#await loadEvents()}
+				<h1>Chargement...</h1>
+			{:then events} 
+				{#if events.length == 0}
+					<h1>Il n'y a aucun événement prévu pour le moment</h1>
+				{/if}
+				{#each events as event}
+					<EventCard {event}></EventCard>
+				{/each}
+			{/await}
+			
 		</div>
 	</div>
 </main>
