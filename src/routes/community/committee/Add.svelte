@@ -39,7 +39,8 @@
 				if(result.type == "success") {
 					location.reload()
 				} else if(result.type == "failure") {
-					$error = result.data?.message
+					let message = result.data?.message
+					if(message) $error = message
 				}
 			}
 		  }}>
