@@ -16,8 +16,8 @@ interface UserInformationForBot {
 /**
  * Allow bot user to get user data for discord
  * @param {Id} request.id id of the user to looks for
- * @param {string} request.email email of the user to looks for
- * @param {string} request.discordId discord id of the user to looks for
+ * @param {string} url.email email of the user to looks for
+ * @param {string} url.discordId discord id of the user to looks for
  * @returns {UserInformationForBot} all information needed for the discord bot
  */
 export const GET = (async ({locals, url }) => {
@@ -53,16 +53,19 @@ export const GET = (async ({locals, url }) => {
 
 /**
  * Allow bot to modify the discordId of a user
- * @param {Id} request.userId id of user to modify
+ * @param {Id} url.userId id of user to modify
  * @param {string | null} request.discordId the new discordId to set (null resets it)
  */
-export const PATCH = (async ({ locals, request }) => {
+export const PATCH = (async ({ locals, request, url }) => {
 	if (!locals.authenticated) throw error(401)
 	if (!hasRolePermission(UserPermission.SEE_USERS_PROFILE, locals.user?.role) || !hasRolePermission(UserPermission.MODIFY_USER_DISCORD, locals.user?.role)) throw error(403)
 	const body = await request.json()
+    const userId = parseInt(url.searchParams.get("userId") || "null") || null
+
+	if(!userId) throw error(400, {message: `userId ${userId} is not a valid userId`})
 
 	return db.none(
-		`UPDATE users SET discord_id=$1 WHERE id=$2`, [body.discordId, body.userId]	)
+		`UPDATE users SET discord_id=$1 WHERE id=$2`, [body.discordId, userId]	)
 	.then(() => new Response())
 	.catch(err => {
 		throw error(500, err.message)
