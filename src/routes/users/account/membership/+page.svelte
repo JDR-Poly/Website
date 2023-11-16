@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { error, info } from '$lib/stores';
 	import Textfield from '@smui/textfield';
-	import Fab from '@smui/fab';
-	import { Icon } from '@smui/common';
 	import { applyAction, enhance } from '$app/forms';
+	import IconButton from '$components/IconButton.svelte';
 
 	let memberCode = '';
+
+	function validateForm(event: MouseEvent) {
+		(event.target as any).parentElement.parentElement.submit();
+	}
 </script>
 
 <svelte:head>
@@ -26,9 +29,7 @@
 		}
 	}}>
 		<Textfield type="text" input$name="validation_token" bind:value={memberCode} label="Code membre" class="solo-input" variant="outlined"/>
-		<Fab disabled={memberCode === ''} color="primary" mini class="solo-fab">
-			<Icon class="material-icons">done</Icon>
-		</Fab>
+		<IconButton action={validateForm} icon="material-symbols:done" disabled={memberCode === ''} inline={true}/> <!-- Validate form -->
 	</form>
 </main>
 
@@ -49,5 +50,22 @@
 		width: 50vw;
 		max-width: 700px;
 		min-width: 200px;
+	}
+
+	form {
+		:global(svg) {
+			color: black;
+			font-size: 36px;
+		}
+		:global(button) {
+			margin-left: 10px;
+			transform: translateY(20%);
+			padding: 5px;
+			border-radius: 200px;
+
+			&:hover {
+				background-color: lightgray;
+			}
+		}
 	}
 </style>

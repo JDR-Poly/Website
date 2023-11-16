@@ -3,13 +3,12 @@
 	import { page } from '$app/stores';
 	import Add from './Add.svelte';
 	import { writable } from 'svelte/store';
-	import Fab, { Label, Icon } from '@smui/fab';
 	import type { HonorMember } from '$gtypes';
 	import { error, warning } from '$lib/stores';
-	import IconButton from '@smui/icon-button';
 	import type { PageData } from './$types';
 	import { __sortByItemOrder } from './+page';
 	import Edit from './Edit.svelte';
+	import IconButton from '$components/IconButton.svelte';
 
 	export let data: PageData;
 	const openAddDialog = writable(false);
@@ -89,40 +88,20 @@
 
 				{#if hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, data.user?.role)}
 					<div class="admin-buttons">
-						<IconButton
-							class="material-icons"
-							on:click={() => {
-								if (isAChange) {
-									$warning = "Vous devez d'abord sauvegarder l'ordre";
-									return;
-								}
-								editedHonorMember = honorMember;
-								$openEditDialog = true;
-							}}
-						>
-							edit
-						</IconButton>
-						<IconButton
-							class="material-icons"
-							on:click={() =>
-								fetch('/api/honormembers/' + honorMember.id, {
-									method: 'DELETE'
-								}).then(() => location.reload())}
-						>
-							delete
-						</IconButton>
-						<IconButton
-							class="material-icons"
-							on:click={() => removeOneToOrder(data.honormembers, honorMember)}
-						>
-							remove
-						</IconButton>
-						<IconButton
-							class="material-icons"
-							on:click={() => addOneToOrder(data.honormembers, honorMember)}
-						>
-							add
-						</IconButton>
+						<IconButton icon="material-symbols:edit" action={() => {
+							if (isAChange) {
+								$warning = "Vous devez d'abord sauvegarder l'ordre";
+								return;
+							}
+							editedHonorMember = honorMember;
+							$openEditDialog = true;
+						}}/>
+						<IconButton icon="material-symbols:delete" action={() =>
+							fetch('/api/honormembers/' + honorMember.id, {
+								method: 'DELETE'
+							}).then(() => location.reload())} />
+						<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(data.honormembers, honorMember)}/>
+						<IconButton icon="material-symbols:add" action={() => addOneToOrder(data.honormembers, honorMember)}/>
 					</div>
 				{/if}
 			</div>
@@ -130,15 +109,9 @@
 	{/each}
 
 	{#if isAChange && hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
-		<Fab
-			id="fab-container"
-			color="secondary"
-			on:click={() => updateOrders(data.honormembers)}
-			extended
-		>
-			<Icon class="material-icons">done</Icon>
-			<Label>Sauvegarder</Label>
-		</Fab>
+		<div id="save-container">
+			<IconButton action={() => updateOrders(data.honormembers)} text="Sauvegarder" icon="material-symbols:done" inline={true}/>
+		</div>
 	{/if}
 </main>
 
@@ -148,9 +121,7 @@
 		<Edit open={openEditDialog} honorMember={editedHonorMember}/>
 	{/if}
 	<div class="add-button-container">
-		<Fab style="width:80px;height:80px;" on:click={() => ($openAddDialog = true)}>
-			<Icon class="material-icons" style="font-size:40px;">add</Icon>
-		</Fab>
+		<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true}/>
 	</div>
 {/if}
 
@@ -179,6 +150,7 @@
 			margin: 2em 0;
 			border-bottom: solid 2px gray;
 			padding-bottom: 1em;
+			position: relative;
 
 			h3 {
 				margin-bottom: 0.5em;
@@ -186,8 +158,20 @@
 			}
 
 			.admin-buttons {
-				margin-left: auto;
-				width: fit-content;
+				position: absolute;
+				right: 40px;
+				top: 0;
+
+				:global(svg) {
+					color: black;
+					padding: 5px;
+					font-size: 25px;
+					border-radius: 25px;
+					
+					&:hover {
+						background-color: lightgray;
+					}
+				}
 			}
 		}
 	}
@@ -196,23 +180,27 @@
 		position: fixed;
 		bottom: 40px;
 		right: 40px;
-
-		:global(.mdc-fab) {
-			--mdc-theme-secondary: limegreen;
+		:global(button) {
+			background-color: limegreen;
+			border-radius: 200px;
 		}
-		:global(.mdc-fab__icon) {
-			color: $secondary;
+
+		:global(svg) {
+			font-size: 60px;
 		}
 	}
 
-	:global(#fab-container) {
+	#save-container {
 		position: fixed;
 		bottom: 40px;
 		left: 40px;
-		background-color: limegreen;
-	}
 
-	:global(#fab-container .mdc-fab__label, #fab-container .mdc-fab__icon) {
-		color: $secondary;
+		:global(button) {
+			background-color: limegreen;
+			font-size: 20px;
+			padding: 10px 15px;
+			border-radius: 20px;
+			color: white;
+		}
 	}
 </style>

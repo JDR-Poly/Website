@@ -4,8 +4,8 @@
 	import { writable } from 'svelte/store';
 	import Accordion from '@smui-extra/accordion';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import Fab, { Icon } from '@smui/fab';
 	import type { PageData } from './$types';
+	import IconButton from '$components/IconButton.svelte';
 
 	export let data: PageData;
 
@@ -28,9 +28,9 @@
 {#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, data.user?.role)}
 	<Add open={openAddDialog} categories={data.categories} />
 	<div class="add-button-container">
-		<Fab style="width:80px;height:80px;" on:click={() => ($openAddDialog = true)}>
-			<Icon class="material-icons" style="font-size:40px;">add</Icon>
-		</Fab>
+		<div class="add-button-container">
+			<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true}/>
+		</div>
 	</div>
 {/if}
 
@@ -46,13 +46,13 @@
 		position: fixed;
 		bottom: 40px;
 		right: 40px;
-
-		:global(.mdc-fab > i) {
-			color: $secondary;
+		:global(button) {
+			background-color: limegreen;
+			border-radius: 200px;
 		}
 
-		:global(.mdc-fab) {
-			background-color: limegreen;
+		:global(svg) {
+			font-size: 60px;
 		}
 	}
 </style>

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import Fab, { Icon } from '@smui/fab';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import EventCard from '$components/EventCard.svelte';
+	import IconButton from '$components/IconButton.svelte';
 
 	export let data: PageData;
 </script>
@@ -15,9 +15,7 @@
 <main>
 	{#if hasRolePermission(UserPermission.CREATE_EVENT, data.user?.role)}
 		<div class="add-button-container">
-			<Fab style="width:80px;height:80px;" on:click={() => goto('/events/create')}>
-				<Icon class="material-icons" style="font-size:40px;">add</Icon>
-			</Fab>
+			<IconButton action={() => goto('/events/create')} icon="material-symbols:add" inline={true}/>
 		</div>
 	{/if}
 	{#if data.events.length == 0}
@@ -64,17 +62,16 @@
 	}
 
 	.add-button-container {
-		position: absolute;
+		position: fixed;
 		bottom: 40px;
 		right: 40px;
-		z-index: 1;
-
-		:global(.mdc-fab__icon) {
-			color: $secondary;
+		:global(button) {
+			background-color: limegreen;
+			border-radius: 200px;
 		}
 
-		:global(*) {
-			--mdc-theme-secondary: limegreen;
+		:global(svg) {
+			font-size: 60px;
 		}
 	}
 </style>

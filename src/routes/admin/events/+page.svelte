@@ -2,12 +2,11 @@
 	import type { PageData } from './$types';
 	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from '@smui/data-table';
 	import type { Event } from '$gtypes';
-	import IconButton from '@smui/icon-button';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
 	import { page } from '$app/stores';
-	import Fab, { Icon } from '@smui/fab';
 	import { goto } from '$app/navigation';
-
+	import IconButton from '$components/IconButton.svelte';
+	import IB from '@smui/icon-button';
 	export let data: PageData;
 
 	let events: Event[] = data.events;
@@ -50,14 +49,14 @@
 		<Head>
 			<Row>
 				<Cell numeric columnId="id">
-					<IconButton class="material-icons">arrow_upward</IconButton>
+					<IB class="material-icons">arrow_upward</IB>
 					<Label>Id</Label>
 				</Cell>
 				<Cell sortable={false}>Titre</Cell>
 				<Cell sortable={false}>Catégorie</Cell>
 				<Cell columnId="date">
 					<Label>Date</Label>
-					<IconButton class="material-icons">arrow_upward</IconButton>
+					<IB class="material-icons">arrow_upward</IB>
 				</Cell>
 			</Row>
 		</Head>
@@ -86,9 +85,9 @@
 
 	{#if hasRolePermission(UserPermission.CREATE_EVENT, $page.data.user?.role)}
 		<div class="add-button-container">
-			<Fab style="width:80px;height:80px;" on:click={() => goto('/events/create')}>
-				<Icon class="material-icons" style="font-size:40px;">add</Icon>
-			</Fab>
+			<div class="add-button-container">
+				<IconButton action={() => goto('/events/create')} icon="material-symbols:add" inline={true}/>
+			</div>
 		</div>
 	{/if}
 </main>
@@ -106,17 +105,16 @@
 	}
 
 	.add-button-container {
-		position: absolute;
+		position: fixed;
 		bottom: 40px;
 		right: 40px;
-		z-index: 1;
-
-		:global(.mdc-fab__icon) {
-			color: white;
+		:global(button) {
+			background-color: limegreen;
+			border-radius: 200px;
 		}
 
-		:global(*) {
-			--mdc-theme-secondary: limegreen;
+		:global(svg) {
+			font-size: 60px;
 		}
 	}
 </style>

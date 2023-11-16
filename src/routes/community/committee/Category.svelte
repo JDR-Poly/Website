@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { Panel, Header, Content } from '@smui-extra/accordion';
-	import Fab, { Label, Icon } from '@smui/fab';
 	import { error } from '$lib/stores';
 	import type { Committee } from '$gtypes';
 	import { page } from '$app/stores';
 	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import IconButton from '@smui/icon-button';
 	import { onMount } from 'svelte';
 	import ImageB64 from '$components/ImageB64.svelte';
+	import IconButton from '$components/IconButton.svelte';
 
 	export let category: string;
 	export let defaultOpen: boolean;
@@ -111,27 +110,12 @@
 			</div>
 			{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
 				<div class="itemorder">
-					<IconButton
-						class="material-icons"
-						on:click={() =>
-							fetch('/api/committee/' + committee.id, {
-								method: 'DELETE'
-							}).then(() => location.reload())}
-					>
-						delete
-					</IconButton>
-					<IconButton
-						class="material-icons"
-						on:click={() => removeOneToOrder(committees, committee)}
-					>
-						remove
-					</IconButton>
-					<IconButton
-						class="material-icons"
-						on:click={() => addOneToOrder(committees, committee)}
-					>
-						add
-					</IconButton>
+					<IconButton icon="material-symbols:delete" action={() =>
+						fetch('/api/committee/' + committee.id, {
+							method: 'DELETE'
+						}).then(() => location.reload())} />
+					<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(committees, committee)}/>
+					<IconButton icon="material-symbols:add" action={() => addOneToOrder(committees, committee)}/>
 				</div>
 			{/if}
 		</div>
@@ -139,15 +123,10 @@
 </div>
 		
 {#if isAChange && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
-	<Fab
-		id="fab-container"
-		color="secondary"
-		on:click={() => updateOrders(committees)}
-		extended
-	>
-		<Icon class="material-icons">done</Icon>
-		<Label>Sauvegarder</Label>
-	</Fab>
+	<div id="save-container">
+		<IconButton action={() => updateOrders(committees)} text="Sauvegarder" icon="material-symbols:done" inline={true}/>
+	</div>
+
 {/if}
 </Content>
 </Panel>
@@ -188,6 +167,19 @@
 			bottom: 10px;
 			right: 10px;
 			display: block;
+
+
+			:global(svg) {
+				color: black;
+				padding: 5px;
+				font-size: 25px;
+				border-radius: 25px;
+				transition: .5s ease;
+
+				&:hover {
+					background-color: lightgray;
+				}
+			}
 		}
 
 		.overlay {
@@ -217,23 +209,33 @@
 				bottom: 0;
 				height: 100%;
 			}
-			:global(.mdc-icon-button) {
-				color: white;
-				transition: .5s ease;
+			:global(svg) {
+				color: white !important;
+
+				&:hover {
+					background-color: black !important;
+				}
 			}
 		}
-	}
-
-	:global(#fab-container > *) {
-		color: $secondary;
-	}
-	:global(#fab-container ) {
-		background-color: limegreen;
 	}
 
 	@media only screen and (max-width: 600px) {
 		.itemorder {
 			top: 10px;
+		}
+	}
+
+	#save-container {
+		position: fixed;
+		bottom: 40px;
+		left: 40px;
+
+		:global(button) {
+			background-color: limegreen;
+			font-size: 20px;
+			padding: 10px 15px;
+			border-radius: 20px;
+			color: white;
 		}
 	}
 </style>
