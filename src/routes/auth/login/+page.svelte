@@ -30,7 +30,7 @@
 </svelte:head>
 
 <main>
-	<img src="/images/events/banner.webp" alt="banner">
+	<img src="/images/events/banner.webp" alt="banner" width="1920" height="300">
 	<div id="form-wrapper">
 		<div id="logo">
 			<object type="image/svg+xml" data="/images/logo-black.svg" title="Logo jdrpoly">

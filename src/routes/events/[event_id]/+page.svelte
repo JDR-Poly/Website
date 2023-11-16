@@ -4,7 +4,6 @@
 	import { hasRolePermission, Role, Roles, UserPermission } from '$lib/userPermissions';
 	import { goto } from '$app/navigation';
 	import { error as messageError } from '$lib/stores';
-	import IconButton from '@smui/icon-button';
 	import Button, { Label, Icon } from '@smui/button';
 	import type { User } from '$gtypes';
 	import Edit from './Edit.svelte';
@@ -12,6 +11,7 @@
 	import ImageB64 from '$components/ImageB64.svelte';
 	import type { PageData } from './$types';
 	import Dialog, { Actions, Content, Title } from '@smui/dialog';
+	import IconButton from '$components/IconButton.svelte';
 
 	export let data: PageData;
 
@@ -197,23 +197,23 @@
 							{/if}
 
 							{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
-								<IconButton
-									class="material-icons"
-									on:click={() => {
-										fetch('/api/admin/events/' + event_id + '/subscribe', {
-											method: 'DELETE',
-											body: JSON.stringify({
-												userId: user.id
-											})
+								<IconButton icon="material-symbols:close"
+								action={() => {
+									fetch('/api/admin/events/' + event_id + '/subscribe', {
+										method: 'DELETE',
+										body: JSON.stringify({
+											userId: user.id
 										})
-											.then(() => {
-												location.reload();
-											})
-											.catch((err) => {
-												$messageError = err.message;
-											});
-									}}>close</IconButton
-								>
+									})
+										.then(() => {
+											location.reload();
+										})
+										.catch((err) => {
+											$messageError = err.message;
+										});
+								}}
+								label={`Remove user ${user.name} from event`}
+								/>
 							{/if}
 						</div>
 					{/each}
@@ -270,18 +270,14 @@
 		</div>
 		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
 			<div class="admin-btn" style="right: 60px;">
-				<IconButton class="material-icons" on:click={() => (openDeleteConfirmDialog = true)}
-					>delete</IconButton
-				>
+				<IconButton icon="material-symbols:delete-outline" action={() => (openDeleteConfirmDialog = true)} label={`Delete event ${data.event.title}`}/>
 			</div>
 			<div class="admin-btn" style="right: 120px;">
-				<IconButton class="material-icons" on:click={() => openEditDialog.set(true)}>
-					edit
-				</IconButton>
+				<IconButton icon="material-symbols:edit" action={() => openEditDialog.set(true)} label="Edit event" />
 			</div>
 			{#if hasRolePermission(UserPermission.SEE_MAIL, $page.data.user?.role)}
 				<div class="admin-btn" style="right: 180px;">
-					<IconButton class="material-icons" on:click={copyMails}>mark_email_read</IconButton>
+					<IconButton icon="material-symbols:mark-email-read" action={copyMails} label="Copy mails of players"/>
 				</div>
 			{/if}
 			<Edit event={data.event} open={openEditDialog} />

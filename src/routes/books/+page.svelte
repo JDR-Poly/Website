@@ -108,7 +108,9 @@
 							}
 							editBook = book;
 							$openEditDialog = true;
-						}}/>
+						}}
+						label="Edit book"
+						/>
 						<IconButton icon="material-symbols:delete" action={() =>
 							fetch('/api/books/' + book.id, {
 								method: 'DELETE'
@@ -118,9 +120,10 @@
 								})
 								.catch((err) => {
 									$error = err.message;
-								})} />
-						<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(bookList, book)}/>
-						<IconButton icon="material-symbols:add" action={() => addOneToOrder(bookList, book)}/>
+								})} 
+								label="Delete book"/>
+						<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(bookList, book)} label="Decrease order of book"/>
+						<IconButton icon="material-symbols:add" action={() => addOneToOrder(bookList, book)} label="Increase order of book"/>
 					</div>
 				{/if}
 			</li>
@@ -135,11 +138,11 @@
 	{/if}
 	{#if isAChange}
 		<div id="save-container">
-			<IconButton action={() => updateOrders(bookList)} text="Sauvegarder" icon="material-symbols:done" inline={true}/>
+			<IconButton action={() => updateOrders(bookList)} text="Sauvegarder" icon="material-symbols:done" inline={true} label="Save book order"/>
 		</div>
 	{/if}
 	<div class="add-button-container">
-		<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true}/>
+		<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true} label="Add book"/>
 	</div>
 {/if}
 

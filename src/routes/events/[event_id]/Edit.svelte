@@ -7,7 +7,7 @@
 	import Button, { Label } from '@smui/button';
 	import { error, warning } from '$lib/stores';
 	import type { Event } from '$gtypes';
-	import IconButton from '@smui/icon-button';
+	import IB from '@smui/icon-button';
 	import Checkbox from '@smui/checkbox';
 	import FormField from '@smui/form-field';
 	import { categories, returnJoinEventRoles } from '$lib/evenementsUtils';
@@ -144,11 +144,11 @@
 						}
 					}}
 				/>
-				<IconButton
+				<IB
 					class="material-icons"
 					on:click={() => {
 						images = null;
-					}}>delete</IconButton
+					}}>delete</IB
 				>
 			</div>
 

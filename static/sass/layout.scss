@@ -32,12 +32,14 @@ html {
 @font-face {
     font-family: 'Playfair Display';
     font-style: normal;
+	font-display: swap;
     font-weight: 500;
     src: url('/fonts/PlayfairDisplay.ttf'); 
 }
 @font-face {
     font-family: 'Ubuntu';
     font-style: normal;
+	font-display: swap;
     font-weight: 500;
     src: url('/fonts/Ubuntu.ttf'); 
 }

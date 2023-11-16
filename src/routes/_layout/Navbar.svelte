@@ -22,11 +22,11 @@
 
 <div class="topnav" class:responsive>
 	<a href="/" on:click={closeNavBar}>
-		<img src="/images/logo-white.svg" alt="Logo jdrpoly" id="svg" />
+		<img src="/images/logo-white.svg" alt="Logo jdrpoly" id="svg" width="150" height="64"/>
 	</a>
 
 	<div id="close-icon">
-		<IconButton icon="material-symbols:close" action={closeNavBar}/>
+		<IconButton icon="material-symbols:close" action={closeNavBar} label="Close navbar"/>
 	</div>
 
 	<a href="/" class="nav-link nav-button" on:click={closeNavBar}>
@@ -199,7 +199,7 @@
 	{/if}
 
 	<div id="nav-icon" class="">
-		<IconButton icon="material-symbols:list-rounded" action={() => {responsive = true}}/>
+		<IconButton icon="material-symbols:list-rounded" action={() => {responsive = true}} label="Open navbar"/>
 	</div>
 </div>
 

@@ -113,9 +113,10 @@
 					<IconButton icon="material-symbols:delete" action={() =>
 						fetch('/api/committee/' + committee.id, {
 							method: 'DELETE'
-						}).then(() => location.reload())} />
-					<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(committees, committee)}/>
-					<IconButton icon="material-symbols:add" action={() => addOneToOrder(committees, committee)}/>
+						}).then(() => location.reload())} 
+						label="Delete committee"/>
+					<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(committees, committee)} label="Decrease order of committee"/>
+					<IconButton icon="material-symbols:add" action={() => addOneToOrder(committees, committee)} label="Increase order of committee"/>
 				</div>
 			{/if}
 		</div>
@@ -124,7 +125,7 @@
 		
 {#if isAChange && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
 	<div id="save-container">
-		<IconButton action={() => updateOrders(committees)} text="Sauvegarder" icon="material-symbols:done" inline={true}/>
+		<IconButton action={() => updateOrders(committees)} text="Sauvegarder" icon="material-symbols:done" inline={true} label="Save ordre of committees"/>
 	</div>
 
 {/if}

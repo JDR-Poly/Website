@@ -95,13 +95,13 @@
 							}
 							editedHonorMember = honorMember;
 							$openEditDialog = true;
-						}}/>
+						}} label={`Edit honorary member ${honorMember.name}`}/>
 						<IconButton icon="material-symbols:delete" action={() =>
 							fetch('/api/honormembers/' + honorMember.id, {
 								method: 'DELETE'
-							}).then(() => location.reload())} />
-						<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(data.honormembers, honorMember)}/>
-						<IconButton icon="material-symbols:add" action={() => addOneToOrder(data.honormembers, honorMember)}/>
+							}).then(() => location.reload())} label={`Delete honorary member ${honorMember.name}`}/>
+						<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(data.honormembers, honorMember)} label="Decrease order of honorary member"/>
+						<IconButton icon="material-symbols:add" action={() => addOneToOrder(data.honormembers, honorMember)} label="Increase order of honorary member"/>
 					</div>
 				{/if}
 			</div>
@@ -110,7 +110,7 @@
 
 	{#if isAChange && hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
 		<div id="save-container">
-			<IconButton action={() => updateOrders(data.honormembers)} text="Sauvegarder" icon="material-symbols:done" inline={true}/>
+			<IconButton action={() => updateOrders(data.honormembers)} text="Sauvegarder" icon="material-symbols:done" inline={true} label="Save honorary members order"/>
 		</div>
 	{/if}
 </main>
@@ -121,7 +121,7 @@
 		<Edit open={openEditDialog} honorMember={editedHonorMember}/>
 	{/if}
 	<div class="add-button-container">
-		<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true}/>
+		<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true} label="Add honorary member"/>
 	</div>
 {/if}
 

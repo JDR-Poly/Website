@@ -6,9 +6,10 @@
 	import Textfield from '@smui/textfield';
 	import type { Writable } from 'svelte/store';
 	import { error, warning } from '$lib/stores';
-	import IconButton from '@smui/icon-button';
+	import IB from '@smui/icon-button';
 	import { enhance } from '$app/forms';
 	import Compressor from 'compressorjs';
+	import type { ActionResult } from '@sveltejs/kit';
 
 	export let open: Writable<boolean>;
 	export let categories: string[];
@@ -24,26 +25,28 @@
 	function submit(form: any) {
 		form.click()
 	}
+
+	function postData(data: {formData: FormData}) {
+		data.formData.append("category", category)
+			if(image) data.formData.append("image", image)
+			return async (res: { result: ActionResult }) => {				
+				images = null
+				image = undefined
+				data.formData.delete('image')
+				if(res.result.type == "success") {
+					location.reload()
+				} else if(res.result.type == "failure") {
+					let message = res.result.data?.message
+					if(message) $error = message
+				}
+			}
+	}
 </script>
 
 <Dialog bind:open={$open}>
 	<Title id="simple-title">Ajouter un comité</Title>
 	<Content id="list-selection-content">
-		<form method="POST" action="?/addCommittee" use:enhance={({ data }) => {
-			data.append("category", category)
-			if(image) data.append("image", image)
-			return async ({ result }) => {				
-				images = null
-				image = undefined
-				data.delete('image')
-				if(result.type == "success") {
-					location.reload()
-				} else if(result.type == "failure") {
-					let message = result.data?.message
-					if(message) $error = message
-				}
-			}
-		  }}>
+		<form method="POST" action="?/addCommittee" use:enhance={postData}>
 			<Select bind:value={category} label="Catégorie">
 				<Icon class="material-icons" slot="leadingIcon">event</Icon>
 				{#each categories as category}
@@ -87,7 +90,7 @@
 						}
 					}
 				}}/>
-				<IconButton class="material-icons" on:click={() => {images = null;}}>delete</IconButton>
+				<IB class="material-icons" on:click={() => {images = null;}}>delete</IB>
 				<button type="submit" id="addFormButton"></button>
 			</div>
 		</form>

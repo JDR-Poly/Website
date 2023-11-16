@@ -6,7 +6,7 @@
 	import { goto } from '$app/navigation';
 	import Checkbox from '@smui/checkbox';
 	import FormField from '@smui/form-field';
-	import IconButton from '@smui/icon-button';
+	import IB from '@smui/icon-button';
 	import { categories, returnJoinEventRoles } from '$lib/evenementsUtils';
 	import Compressor from 'compressorjs';
 	import { getBase64, getLocalDateStringOrNullFromString } from '$lib/utils';
@@ -135,11 +135,11 @@
 						}
 					}}
 				/>
-				<IconButton
+				<IB
 					class="material-icons"
 					on:click={() => {
 						images = null;
-					}}>delete</IconButton
+					}}>delete</IB
 				>
 			</div>
 

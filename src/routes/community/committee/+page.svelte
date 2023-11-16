@@ -29,7 +29,7 @@
 	<Add open={openAddDialog} categories={data.categories} />
 	<div class="add-button-container">
 		<div class="add-button-container">
-			<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true}/>
+			<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true} label="Add committee"/>
 		</div>
 	</div>
 {/if}

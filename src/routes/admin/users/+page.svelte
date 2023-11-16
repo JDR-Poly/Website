@@ -6,7 +6,7 @@
 	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from '@smui/data-table';
 	import LinearProgress from '@smui/linear-progress';
 	import type { PageData } from './$types';
-	import IconButton from '@smui/icon-button';
+	import IB from '@smui/icon-button';
 
 	export let data: PageData;
 
@@ -150,7 +150,7 @@
 				<Head>
 					<Row>
 						<Cell numeric columnId="id">
-							<IconButton class="material-icons">arrow_upward</IconButton>
+							<IB class="material-icons">arrow_upward</IB>
 							<Label>Id</Label>
 						</Cell>
 						<Cell style="width: 100%;" sortable={false}>Nom</Cell>

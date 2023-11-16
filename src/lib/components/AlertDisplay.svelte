@@ -62,7 +62,7 @@
 		{#each alertArray as alert}
 			<div class="alert {alert.type}" id="{alert.id.toString()}" in:fly={{x: 200, duration: 2000}}>
 				{alert.text}
-				<IconButton icon="material-symbols:close" action={closeButton}/>
+				<IconButton icon="material-symbols:close" action={closeButton} label="Close alert"/>
 			</div>
 		{/each}
 	</div>

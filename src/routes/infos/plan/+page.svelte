@@ -14,7 +14,7 @@
 	</ul>
 	<p>Lien de Plan EPFL de l'entrée du bâtiment: <a href="https://plan.epfl.ch//?room==INM%20194.0">Plan EPFL</a></p>
 
-	<img src="/images/plan/plan.webp" alt="plan accès INM">
+	<img src="/images/plan/plan.webp" alt="plan accès INM" width="1200" height="1700">
 </main>
 
 

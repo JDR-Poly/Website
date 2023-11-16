@@ -29,7 +29,7 @@
 		}
 	}}>
 		<Textfield type="text" input$name="validation_token" bind:value={memberCode} label="Code membre" class="solo-input" variant="outlined"/>
-		<IconButton action={validateForm} icon="material-symbols:done" disabled={memberCode === ''} inline={true}/> <!-- Validate form -->
+		<IconButton action={validateForm} icon="material-symbols:done" disabled={memberCode === ''} inline={true} label="Submit"/> <!-- Validate form -->
 	</form>
 </main>
 
