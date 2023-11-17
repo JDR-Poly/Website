@@ -133,6 +133,7 @@
 
 <svelte:head>
 	<title>{data.event.title} | JDRPoly</title>
+	<meta name="description" content={`Événement JDRPoly, ${data.event.title}, category: ${data.event.category}, date: ${data.event.date}`}>
 </svelte:head>
 
 <main>

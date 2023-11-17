@@ -1,5 +1,6 @@
 <svelte:head>
 	<title>Services | JDRPoly</title> 
+	<meta name="description" content={`Services proposées, salles à disposition`}>
 </svelte:head>
 
 <main>

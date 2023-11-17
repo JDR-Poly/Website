@@ -14,6 +14,7 @@
 
 <svelte:head>
 	<title>Comité | JDRPoly</title>
+	<meta name="description" content="Comité de JDR-Poly, comission de l'Agepoly">
 </svelte:head>
 
 <main>

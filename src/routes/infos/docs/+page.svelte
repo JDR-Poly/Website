@@ -68,6 +68,7 @@
 
 <svelte:head>
 	<title>Documents officiels | JDRPoly</title>
+	<meta name="description" content={`Règlement JDRPoly, liste des membres d'honneur, organigrame`}>
 </svelte:head>
 
 <main>

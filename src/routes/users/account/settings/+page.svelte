@@ -21,6 +21,7 @@
 
 <svelte:head>
 	<title>Paramètres | JDRPoly</title>
+	<meta name="description" content={`Changer ses paramètres`}>
 </svelte:head>
 
 <main>

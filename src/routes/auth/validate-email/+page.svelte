@@ -13,6 +13,7 @@
 
 <svelte:head>
 	<title>Valider email | JDRPoly</title>
+	<meta name="description" content="Valider mail d'utilisateur">
 </svelte:head>
 
 <main>

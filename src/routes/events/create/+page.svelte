@@ -66,6 +66,11 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Créer un événement | JDRPoly</title>
+	<meta name="description" content={`Créer un événement`}>
+</svelte:head>
+
 <main>
 	<div id="img" />
 	<div id="wrapper">

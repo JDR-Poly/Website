@@ -23,6 +23,7 @@
 
 <svelte:head>
 	<title>Accueil | JDRPoly</title>
+	<meta name="description" content="JDRPoly, jeux de rôle, lausanne, gratuit, EPFL, étudiants, agepoly, comission">
 </svelte:head>
 
 <main>

@@ -13,6 +13,7 @@
 
 <svelte:head>
 	<title>Entrer un code | JDRPoly</title> 
+	<meta name="description" content={`Activer son code pour devenir membre`}>
 </svelte:head>
 
 <main>

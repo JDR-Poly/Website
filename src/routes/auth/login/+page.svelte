@@ -27,6 +27,7 @@
 
 <svelte:head>
 	<title>{formType} | JDRPoly</title> 
+	<meta name="description" content="{formType}">
 </svelte:head>
 
 <main>

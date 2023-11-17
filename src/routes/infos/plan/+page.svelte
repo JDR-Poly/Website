@@ -1,5 +1,6 @@
 <svelte:head>
-	<title>Accès | JDRPoly</title> 
+	<title>Accès | JDRPoly</title>
+	<meta name="description" content={`Instruction accèder aux salles des événéments`}>
 </svelte:head>
 
 <main>

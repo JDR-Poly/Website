@@ -19,6 +19,7 @@
 
 <svelte:head>
 	<title>Vérification mail | JDRPoly</title> 
+	<meta name="description" content="Mail validé">
 </svelte:head>
 
 <main>

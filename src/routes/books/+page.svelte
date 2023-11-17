@@ -73,6 +73,7 @@
 
 <svelte:head>
 	<title>Livres | JDRPoly</title>
+	<meta name="description" content="Livres de jeux de rôle empruntable.">
 </svelte:head>
 
 <main>

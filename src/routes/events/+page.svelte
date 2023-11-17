@@ -4,12 +4,14 @@
 	import type { PageData } from './$types';
 	import EventCard from '$components/EventCard.svelte';
 	import IconButton from '$components/IconButton.svelte';
+	import { categories } from '$lib/evenementsUtils';
 
 	export let data: PageData;
 </script>
 
 <svelte:head>
 	<title>Événements | JDRPoly</title>
+	<meta name="description" content={`Liste d'événement JDRPoly, Catégories: ${categories}, Pays: Suisse `}>
 </svelte:head>
 
 <main>
