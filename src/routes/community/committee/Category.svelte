@@ -230,6 +230,7 @@
 		position: fixed;
 		bottom: 40px;
 		left: 40px;
+		z-index: 3;
 
 		:global(button) {
 			background-color: limegreen;

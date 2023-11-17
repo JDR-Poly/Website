@@ -67,6 +67,7 @@
 		position: fixed;
 		bottom: 40px;
 		right: 40px;
+		z-index: 3;
 		:global(button) {
 			background-color: limegreen;
 			border-radius: 200px;
