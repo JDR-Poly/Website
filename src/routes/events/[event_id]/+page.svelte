@@ -157,17 +157,14 @@
 					{#if $page.data.authenticated && hasRolePermission('JOIN_EVENT_' + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)}
 						{#if !data.event.inscription_limit || data.subscribed.length < data.event.inscription_limit}
 							{#if (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start)) && (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))}
-								{#if eventHasUser()}
-									<Button on:click={() => unsubscribe()} variant="raised">
-										<Icon class="material-icons">person_remove</Icon>
-										<Label>Se désinscrire</Label>
-									</Button>
-								{:else}
-									<Button on:click={() => subscribe()} variant="raised">
-										<Icon class="material-icons">person_add</Icon>
-										<Label>M'inscrire</Label>
-									</Button>
-								{/if}
+								<div id="subscribe">
+									{#if eventHasUser()}
+										<IconButton icon="material-symbols:person-remove" label={`Se désinscrire de ${data.event.title}`} action={() => unsubscribe()} text="Se désinscrire" inline={true}/>
+									{:else}
+										<IconButton icon="material-symbols:person-add" label={`S'inscrire à ${data.event.title}`} action={() => subscribe()} text="S'inscrire" inline={true}/>
+									{/if}
+								</div>
+								
 							{:else}
 								<p>Les inscriptions ne sont pas ouvertes.</p>
 								{#if data.event.inscription_start && Date.now() < Date.parse(data.event.inscription_start) }
@@ -212,6 +209,7 @@
 										});
 								}}
 								label={`Supprimer l'utilisateur ${user.name} de l'événement`}
+								inline={true}
 								/>
 							{/if}
 						</div>
@@ -268,14 +266,14 @@
 		</div>
 		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
 			<div class="admin-btn" style="right: 60px;">
-				<IconButton icon="material-symbols:delete-outline" action={() => (openDeleteConfirmDialog = true)} label={`Supprimer l'événement ${data.event.title}`}/>
+				<IconButton icon="material-symbols:delete-outline" action={() => (openDeleteConfirmDialog = true)} label={`Supprimer l'événement ${data.event.title}`} inline={true}/>
 			</div>
 			<div class="admin-btn" style="right: 120px;">
-				<IconButton icon="material-symbols:edit" action={() => openEditDialog.set(true)} label="Supprimer l'événement" />
+				<IconButton icon="material-symbols:edit" action={() => openEditDialog.set(true)} label="Supprimer l'événement" inline={true}/>
 			</div>
 			{#if hasRolePermission(UserPermission.SEE_MAIL, $page.data.user?.role)}
 				<div class="admin-btn" style="right: 180px;">
-					<IconButton icon="material-symbols:mark-email-read" action={copyMails} label="Copier le mail des participants"/>
+					<IconButton icon="material-symbols:mark-email-read" action={copyMails} label="Copier le mail des participants" inline={true}/>
 				</div>
 			{/if}
 			<Edit event={data.event} open={openEditDialog} />
@@ -323,6 +321,25 @@
 			position: absolute;
 			top: 20px;
 			right: 60px;
+
+			:global(button) {
+				padding: 10px;
+				border-radius: 200px;
+
+				&:hover {
+					background-color: lightgray;
+					transition: 0.5s;
+				}
+
+				&:active {
+					background-color: white;
+				}
+			}
+
+			:global(svg) {
+				font-size: 24px;
+				color: black;
+			}
 		}
 	}
 
@@ -377,9 +394,23 @@
 				width: 35%;
 				text-align: center;
 				margin-left: 2.5em;
-				:global(.mdc-button) {
-					width: 60%;
-					margin: 1em;
+
+				#subscribe {
+					:global(button) {
+						width: 60%;
+						padding: 0.5em 0;
+						background-color: $primary;
+						color: white;
+						font-family: 'Ubuntu', 'Arial';
+						font-size: 1em;
+						border-radius: 7px;
+						text-transform: uppercase;
+					}
+
+					:global(svg) {
+						font-size: 1.3em;
+						margin-left: 5px;
+					}
 				}
 				.inscriptionInfo {
 					border-bottom: 2px solid lightgrey;
@@ -410,10 +441,25 @@
 					position: relative;
 					margin: 10px 0;
 
-					:global(.mdc-icon-button) {
+					:global(button) {
 						position: absolute;
 						right: 10%;
-						transform: translateY(-25%);
+						font-size: 24px;
+						border-radius: 200px;
+						padding: 5px;
+						transform: translateY(-20%);
+						
+						&:hover {
+							background-color: lightgray;
+						}
+
+						&:active {
+							background-color: white;
+						}
+					}
+					
+					:global(svg) {
+						color: black;
 					}
 				}
 				#addUser {
