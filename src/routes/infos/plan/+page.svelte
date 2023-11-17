@@ -4,7 +4,7 @@
 </svelte:head>
 
 <main>
-	<h2>PLan d'accès :</h2>
+	<h2>Plan d'accès :</h2>
 	<p>La majorité de nos événements ont lieu sur le campus de l'EPFL dans les salles du bâtiment INM. Voici quelques instructions sur comment t'y rendre ainsi qu'une carte. La salle appropriée pour l'événement sera toujours indiquée sur l'affiche ou sur notre site web.</p>
 
 	<ul>
