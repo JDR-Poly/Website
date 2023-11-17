@@ -210,7 +210,7 @@
 											$messageError = err.message;
 										});
 								}}
-								label={`Remove user ${user.name} from event`}
+								label={`Supprimer l'utilisateur ${user.name} de l'événement`}
 								/>
 							{/if}
 						</div>
@@ -267,14 +267,14 @@
 		</div>
 		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
 			<div class="admin-btn" style="right: 60px;">
-				<IconButton icon="material-symbols:delete-outline" action={() => (openDeleteConfirmDialog = true)} label={`Delete event ${data.event.title}`}/>
+				<IconButton icon="material-symbols:delete-outline" action={() => (openDeleteConfirmDialog = true)} label={`Supprimer l'événement ${data.event.title}`}/>
 			</div>
 			<div class="admin-btn" style="right: 120px;">
-				<IconButton icon="material-symbols:edit" action={() => openEditDialog.set(true)} label="Edit event" />
+				<IconButton icon="material-symbols:edit" action={() => openEditDialog.set(true)} label="Supprimer l'événement" />
 			</div>
 			{#if hasRolePermission(UserPermission.SEE_MAIL, $page.data.user?.role)}
 				<div class="admin-btn" style="right: 180px;">
-					<IconButton icon="material-symbols:mark-email-read" action={copyMails} label="Copy mails of players"/>
+					<IconButton icon="material-symbols:mark-email-read" action={copyMails} label="Copier le mail des participants"/>
 				</div>
 			{/if}
 			<Edit event={data.event} open={openEditDialog} />

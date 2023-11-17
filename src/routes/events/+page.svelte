@@ -15,7 +15,7 @@
 <main>
 	{#if hasRolePermission(UserPermission.CREATE_EVENT, data.user?.role)}
 		<div class="add-button-container">
-			<IconButton action={() => goto('/events/create')} icon="material-symbols:add" inline={true} label="Create event"/>
+			<IconButton action={() => goto('/events/create')} icon="material-symbols:add" inline={true} label="Créer un événement"/>
 		</div>
 	{/if}
 	{#if data.events.length == 0}

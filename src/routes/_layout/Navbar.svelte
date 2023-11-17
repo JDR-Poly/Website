@@ -26,7 +26,7 @@
 	</a>
 
 	<div id="close-icon">
-		<IconButton icon="material-symbols:close" action={closeNavBar} label="Close navbar"/>
+		<IconButton icon="material-symbols:close" action={closeNavBar} label="Fermer la barre de navigation"/>
 	</div>
 
 	<a href="/" class="nav-link nav-button" on:click={closeNavBar}>
@@ -199,7 +199,7 @@
 	{/if}
 
 	<div id="nav-icon" class="">
-		<IconButton icon="material-symbols:list-rounded" action={() => {responsive = true}} label="Open navbar"/>
+		<IconButton icon="material-symbols:list-rounded" action={() => {responsive = true}} label="Ouvrir la barre de navigation"/>
 	</div>
 </div>
 
