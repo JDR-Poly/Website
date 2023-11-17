@@ -89,7 +89,7 @@
 	let loaded = true;
 
 	let sort = 'id';
-	let sortDirection: Lowercase<keyof typeof SortValue> = 'ascending';
+	let sortDirection: Lowercase<keyof typeof SortValue> = 'descending';
 </script>
 
 <svelte:head>
@@ -150,7 +150,7 @@
 				<Head>
 					<Row>
 						<Cell numeric columnId="id">
-							<IB class="material-icons">arrow_upward</IB>
+							<IB class="material-icons">^</IB>
 							<Label>Id</Label>
 						</Cell>
 						<Cell style="width: 100%;" sortable={false}>Nom</Cell>
