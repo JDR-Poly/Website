@@ -23,7 +23,7 @@
 
 <svelte:head>
 	<title>Accueil | JDRPoly</title>
-	<meta name="description" content="JDRPoly, jeux de rôle, lausanne, gratuit, EPFL, étudiants, agepoly, comission">
+	<meta name="description" content="JDRPoly est la commission de jeux de rôle de l'AGEPoly. Elle promeut les jeux de rôle à l'EPFL.">
 </svelte:head>
 
 <main>
