@@ -1,17 +1,18 @@
+<!-- @format -->
 <script lang="ts">
-	import Icon from '@iconify/svelte';
-	import Dropdown from './Dropdown.svelte';
-	import IconButton from '$components/IconButton.svelte';
+	import Icon from "@iconify/svelte";
+	import Dropdown from "./Dropdown.svelte";
+	import IconButton from "$components/IconButton.svelte";
 
-	import { page } from '$app/stores';
-	import { goto, invalidateAll } from '$app/navigation';
-	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
+	import { page } from "$app/stores";
+	import { goto, invalidateAll } from "$app/navigation";
+	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 
 	let responsive = false;
 
 	async function logout() {
-		await fetch('/api/auth/logout', { method: 'POST' });
-		await goto('/');
+		await fetch("/api/auth/logout", { method: "POST" });
+		await goto("/");
 		invalidateAll();
 	}
 
@@ -22,20 +23,24 @@
 
 <div class="topnav" class:responsive>
 	<a href="/" on:click={closeNavBar}>
-		<img src="/images/logo-white.svg" alt="Logo jdrpoly" id="svg" width="150" height="64"/>
+		<img src="/images/logo-white.svg" alt="Logo jdrpoly" id="svg" width="150" height="64" />
 	</a>
 
 	<div id="close-icon">
-		<IconButton icon="material-symbols:close" action={closeNavBar} label="Fermer la barre de navigation"/>
+		<IconButton
+			icon="material-symbols:close"
+			action={closeNavBar}
+			label="Fermer la barre de navigation"
+		/>
 	</div>
 
 	<a href="/" class="nav-link nav-button" on:click={closeNavBar}>
-		<Icon icon="material-symbols:home-outline" style="font-size: 24px;margin-right: 2px;"></Icon>
+		<Icon icon="material-symbols:home-outline" style="font-size: 24px;margin-right: 2px;" />
 		<p>Accueil</p>
 	</a>
 
 	<a href="/events" class="nav-link nav-button" on:click={closeNavBar}>
-		<Icon icon="material-symbols:event-outline-rounded" style="font-size: 24px;margin-right: 2px;"></Icon>
+		<Icon icon="material-symbols:event-outline-rounded" style="font-size: 24px;margin-right: 2px;" />
 		<p>Événements</p>
 	</a>
 
@@ -44,32 +49,32 @@
 		{closeNavBar}
 		data={{
 			element: {
-				prefix_icon: 'material-symbols:info-outline',
-				text: 'Informations'
+				prefix_icon: "material-symbols:info-outline",
+				text: "Informations",
 			},
 			links: [
 				{
 					element: {
-						prefix_icon: 'mdi:map-marker-outline',
-						text: 'Accès'
+						prefix_icon: "mdi:map-marker-outline",
+						text: "Accès",
 					},
-					link: '/infos/plan'
+					link: "/infos/plan",
 				},
 				{
 					element: {
-						prefix_icon: 'material-symbols:description-outline',
-						text: 'Documents'
+						prefix_icon: "material-symbols:description-outline",
+						text: "Documents",
 					},
-					link: '/infos/docs'
+					link: "/infos/docs",
 				},
 				{
 					element: {
-						prefix_icon: 'material-symbols:meeting-room-outline',
-						text: 'Services'
+						prefix_icon: "material-symbols:meeting-room-outline",
+						text: "Services",
 					},
-					link: '/infos/services'
-				}
-			]
+					link: "/infos/services",
+				},
+			],
 		}}
 	/>
 
@@ -78,23 +83,24 @@
 		{closeNavBar}
 		data={{
 			element: {
-				prefix_icon: 'material-symbols:groups',
-				text: 'Communauté'
+				prefix_icon: "material-symbols:groups",
+				text: "Communauté",
 			},
 			links: [
 				{
 					element: {
-						prefix_icon: 'material-symbols:broken-image-outline-rounded',
-						text: 'Photos'
+						prefix_icon: "material-symbols:broken-image-outline-rounded",
+						text: "Photos",
 					},
-					link: '/community/photos'
-				},				{
+					link: "/community/photos",
+				},
+				{
 					element: {
-						prefix_icon: 'material-symbols:group-outline',
-						text: 'Commission'
+						prefix_icon: "material-symbols:group-outline",
+						text: "Commission",
 					},
-					link: '/community/committee'
-				}
+					link: "/community/committee",
+				},
 				// ,				{
 				// 	element: {
 				// 		prefix_icon: 'partner_exchange',
@@ -102,12 +108,12 @@
 				// 	},
 				// 	link: '/community/parteners'
 				// }
-			]
+			],
 		}}
 	/>
 
 	<a href="/books" class="nav-link nav-button" on:click={closeNavBar}>
-		<Icon icon="material-symbols:book" style="font-size: 24px;margin-right: 2px;"></Icon>
+		<Icon icon="material-symbols:book" style="font-size: 24px;margin-right: 2px;" />
 		<p>Bibliothèque</p>
 	</a>
 
@@ -118,32 +124,32 @@
 				{closeNavBar}
 				data={{
 					element: {
-						prefix_icon: 'material-symbols:admin-panel-settings-outline',
-						text: 'Admin'
+						prefix_icon: "material-symbols:admin-panel-settings-outline",
+						text: "Admin",
 					},
 					links: [
 						{
 							element: {
-								prefix_icon: 'material-symbols:outgoing-mail-outline',
-								text: 'Envoyer un code'
+								prefix_icon: "material-symbols:outgoing-mail-outline",
+								text: "Envoyer un code",
 							},
-							link: '/admin/membership'
+							link: "/admin/membership",
 						},
 						{
 							element: {
-								text: 'Événements',
-								prefix_icon: 'material-symbols:dataset-linked-outline'
+								text: "Événements",
+								prefix_icon: "material-symbols:dataset-linked-outline",
 							},
-							link: '/admin/events'
+							link: "/admin/events",
 						},
 						{
 							element: {
-								prefix_icon: 'material-symbols:search',
-								text: 'Utilisateurs'
+								prefix_icon: "material-symbols:search",
+								text: "Utilisateurs",
 							},
-							link: '/admin/users'
-						}
-					]
+							link: "/admin/users",
+						},
+					],
 				}}
 			/>
 		{/if}
@@ -153,53 +159,62 @@
 				{closeNavBar}
 				data={{
 					element: {
-						prefix_icon: 'material-symbols:person	',
-						text: $page.data.user?.name ? $page.data.user?.name : 'Utilisateur'
+						prefix_icon: "material-symbols:person	",
+						text: $page.data.user?.name ? $page.data.user?.name : "Utilisateur",
 					},
 					links: [
 						{
 							element: {
-								prefix_icon: 'material-symbols:person',
-								text: 'Profil'
+								prefix_icon: "material-symbols:person",
+								text: "Profil",
 							},
-							link: `/users/profile/${$page.data.user?.id}`
+							link: `/users/profile/${$page.data.user?.id}`,
 						},
 						{
 							element: {
-								prefix_icon: 'material-symbols:settings-account-box-outline',
-								text: 'Paramètres'
+								prefix_icon: "material-symbols:settings-account-box-outline",
+								text: "Paramètres",
 							},
-							link: '/users/account/settings'
+							link: "/users/account/settings",
 						},
 						{
 							element: {
-								prefix_icon: 'material-symbols:keyboard-double-arrow-right',
-								text: 'Entrer un code'
+								prefix_icon: "material-symbols:keyboard-double-arrow-right",
+								text: "Entrer un code",
 							},
-							link: '/users/account/membership'
-						}
+							link: "/users/account/membership",
+						},
 					],
 					actions: [
 						{
 							element: {
-								prefix_icon: 'material-symbols:logout-rounded',
-								text: 'Déconnexion'
+								prefix_icon: "material-symbols:logout-rounded",
+								text: "Déconnexion",
 							},
-							action: logout
-						}
-					]
+							action: logout,
+						},
+					],
 				}}
 			/>
 		</div>
 	{:else}
-		<a class="log-button nav-button" href="/auth/login"  on:click={closeNavBar}>
-			<Icon icon="material-symbols:login-rounded" style="font-size: 24px;margin-right: 4px; color:white;s"></Icon>
+		<a class="log-button nav-button" href="/auth/login" on:click={closeNavBar}>
+			<Icon
+				icon="material-symbols:login-rounded"
+				style="font-size: 24px;margin-right: 4px; color:white;s"
+			/>
 			<p class="">Se connecter</p>
 		</a>
 	{/if}
 
 	<div id="nav-icon" class="">
-		<IconButton icon="material-symbols:list-rounded" action={() => {responsive = true}} label="Ouvrir la barre de navigation"/>
+		<IconButton
+			icon="material-symbols:list-rounded"
+			action={() => {
+				responsive = true;
+			}}
+			label="Ouvrir la barre de navigation"
+		/>
 	</div>
 </div>
 

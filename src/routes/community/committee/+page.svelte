@@ -1,11 +1,12 @@
+<!-- @format -->
 <script lang="ts">
-	import Category from './Category.svelte';
-	import Add from './Add.svelte';
-	import { writable } from 'svelte/store';
-	import Accordion from '@smui-extra/accordion';
-	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import type { PageData } from './$types';
-	import IconButton from '$components/IconButton.svelte';
+	import Category from "./Category.svelte";
+	import Add from "./Add.svelte";
+	import { writable } from "svelte/store";
+	import Accordion from "@smui-extra/accordion";
+	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+	import type { PageData } from "./$types";
+	import IconButton from "$components/IconButton.svelte";
 
 	export let data: PageData;
 
@@ -14,7 +15,7 @@
 
 <svelte:head>
 	<title>Comité | JDRPoly</title>
-	<meta name="description" content="Comité de JDR-Poly, comission de l'Agepoly">
+	<meta name="description" content="Comité de JDR-Poly, comission de l'Agepoly" />
 </svelte:head>
 
 <main>
@@ -30,7 +31,12 @@
 	<Add open={openAddDialog} categories={data.categories} />
 	<div class="add-button-container">
 		<div class="add-button-container">
-			<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true} label="Ajouer un comité"/>
+			<IconButton
+				action={() => ($openAddDialog = true)}
+				icon="material-symbols:add"
+				inline={true}
+				label="Ajouer un comité"
+			/>
 		</div>
 	</div>
 {/if}

@@ -1,12 +1,13 @@
+<!-- @format -->
 <script lang="ts">
-	import { error } from '$lib/stores';
-	import { Role, Roles } from '$lib/userPermissions';
-	import type { User } from '$gtypes';
-	import { onMount } from 'svelte';
-	import FormField from '@smui/form-field';
-	import Radio from '@smui/radio';
-	import Button, { Label } from '@smui/button';
-	import { Period } from '$lib/publicMemberPeriod';
+	import { error } from "$lib/stores";
+	import { Role, Roles } from "$lib/userPermissions";
+	import type { User } from "$gtypes";
+	import { onMount } from "svelte";
+	import FormField from "@smui/form-field";
+	import Radio from "@smui/radio";
+	import Button, { Label } from "@smui/button";
+	import { Period } from "$lib/publicMemberPeriod";
 
 	export let user: User;
 
@@ -14,13 +15,13 @@
 
 	let userPeriod = new Period(user.member_start, user.member_stop);
 
-	let period = userPeriod.clone()
+	let period = userPeriod.clone();
 
 	let periodsNumber = 1;
 	updatePeriod(periodsNumber);
 
 	function updatePeriod(periodsNumber: number) {
-		period = userPeriod.clone()	
+		period = userPeriod.clone();
 		period.addSemesters(periodsNumber);
 		if (roleName == Roles.MEMBER.name) {
 			period.start = new Date(Date.now());
@@ -35,14 +36,14 @@
 		});
 	});
 
-	async function submitChange() {		
+	async function submitChange() {
 		const res = await fetch(`/api/admin/roles/grant?userId=${user.id}`, {
-			method: 'PATCH',
+			method: "PATCH",
 			body: JSON.stringify({
 				role: roleName,
-				periodsNumber: roleName == Roles.MEMBER.name ? periodsNumber : 0
+				periodsNumber: roleName == Roles.MEMBER.name ? periodsNumber : 0,
 			}),
-			headers: { 'Content-Type': 'application/json' }
+			headers: { "Content-Type": "application/json" },
 		});
 		if (res.ok) {
 			location.reload();
@@ -52,18 +53,14 @@
 		}
 	}
 
-	const dateFormater = new Intl.DateTimeFormat('fr-Fr', {
-		dateStyle: 'long',
-		timeZone: 'Europe/Paris'
+	const dateFormater = new Intl.DateTimeFormat("fr-Fr", {
+		dateStyle: "long",
+		timeZone: "Europe/Paris",
 	});
 </script>
 
 <!-- Role change -->
-<select
-	bind:value={roleName}
-	disabled={roleList.length <= 1}
-	on:change={() => updatePeriod(periodsNumber)}
->
+<select bind:value={roleName} disabled={roleList.length <= 1} on:change={() => updatePeriod(periodsNumber)}>
 	{#if roleList.length === 0}
 		<option value={roleName}>{roleName}</option>
 	{:else}
@@ -83,9 +80,9 @@
 		<p>Fin de membre: <strong>{dateFormater.format(period.stop)}</strong></p>
 	{/if}
 	<br />
-	Ajouter : 
-	{#each ['1 semestre', '2 semestres'] as option, i}
-	<FormField>
+	Ajouter :
+	{#each ["1 semestre", "2 semestres"] as option, i}
+		<FormField>
 			<Radio
 				bind:group={periodsNumber}
 				value={i + 1}

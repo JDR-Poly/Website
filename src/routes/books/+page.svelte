@@ -1,15 +1,16 @@
+<!-- @format -->
 <script lang="ts">
-	import Add from './Add.svelte';
-	import { writable } from 'svelte/store';
-	import { error, warning } from '$lib/stores';
-	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import Edit from './Edit.svelte';
-	import { __sortByItemOrder } from './+page';
-	import type { Book } from '$gtypes';
-	import type { PageData } from './$types';
-	import IconButton from '$components/IconButton.svelte';
-	import Icon, { iconExists } from '@iconify/svelte';
-	import { text } from '@sveltejs/kit';
+	import Add from "./Add.svelte";
+	import { writable } from "svelte/store";
+	import { error, warning } from "$lib/stores";
+	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+	import Edit from "./Edit.svelte";
+	import { __sortByItemOrder } from "./+page";
+	import type { Book } from "$gtypes";
+	import type { PageData } from "./$types";
+	import IconButton from "$components/IconButton.svelte";
+	import Icon, { iconExists } from "@iconify/svelte";
+	import { text } from "@sveltejs/kit";
 
 	const openAddDialog = writable(false);
 	const openEditDialog = writable(false);
@@ -55,9 +56,9 @@
 	}
 
 	async function updateOrders(books: Book[]) {
-		fetch('/api/books/', {
-			method: 'PATCH',
-			body: JSON.stringify(books)
+		fetch("/api/books/", {
+			method: "PATCH",
+			body: JSON.stringify(books),
 		})
 			.then(() => {
 				location.reload();
@@ -67,64 +68,83 @@
 			});
 	}
 
-	const statusList = ['Disponible', 'Indisponible', 'WANTED', 'Collector'];
+	const statusList = ["Disponible", "Indisponible", "WANTED", "Collector"];
 	let editBook: Book | undefined = undefined;
 </script>
 
 <svelte:head>
 	<title>Livres | JDRPoly</title>
-	<meta name="description" content="Livres de jeux de rôle empruntable.">
+	<meta name="description" content="Livres de jeux de rôle empruntable." />
 </svelte:head>
 
 <main>
 	<h2>Livres :</h2>
 
 	<p>
-		Bienvenue sur la magnifique page de la bibliothèque de JDR-Poly. Tu as toujours voulu essayer
-		d'être MJ dans un de tes univers préférés ? Tu es un passionné des mondes de fiction et
-		de leur lore ? Voici une liste de livres dont nous disposons et qui (on l'espère) feront ton
-		bonheur et celui de tes joueurs. Si tu veux réserver un livre, nous poser une question sur une
-		date de retour prévue ou nous envoyer plein de coeurs, utilise le petit formulaire juste en
-		dessous.
+		Bienvenue sur la magnifique page de la bibliothèque de JDR-Poly. Tu as toujours voulu essayer d'être
+		MJ dans un de tes univers préférés ? Tu es un passionné des mondes de fiction et de leur lore ? Voici
+		une liste de livres dont nous disposons et qui (on l'espère) feront ton bonheur et celui de tes
+		joueurs. Si tu veux réserver un livre, nous poser une question sur une date de retour prévue ou nous
+		envoyer plein de coeurs, utilise le petit formulaire juste en dessous.
 	</p>
 	<ul>
 		{#each bookList as book}
 			<li class="book">
-				<p> {book.title} | </p> 
-					{#if book.status == 'Disponible' || book.status == 'Indisponible'}
-						<b>Disponible:</b> <Icon icon={book.status == 'Disponible' ? 'material-symbols:done' : 'material-symbols:close'} style="font-size:22px; color:black;" inline={true}/>
-					{:else}
-						<b>{book.status}</b>
-					{/if}
+				<p>{book.title} |</p>
+				{#if book.status == "Disponible" || book.status == "Indisponible"}
+					<b>Disponible:</b>
+					<Icon
+						icon={book.status == "Disponible"
+							? "material-symbols:done"
+							: "material-symbols:close"}
+						style="font-size:22px; color:black;"
+						inline={true}
+					/>
+				{:else}
+					<b>{book.status}</b>
+				{/if}
 				<br />
 				<p>
 					<i>Caution: {book.caution} CHF</i>
 				</p>
 				{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.role)}
 					<div class="admin-buttons">
-						<IconButton icon="material-symbols:edit" action={() => {
-							if (isAChange) {
-								$warning = "Vous devez d'abord sauvegarder l'ordre";
-								return;
-							}
-							editBook = book;
-							$openEditDialog = true;
-						}}
-						label={`Éditer le livre ${book.title}`}
+						<IconButton
+							icon="material-symbols:edit"
+							action={() => {
+								if (isAChange) {
+									$warning = "Vous devez d'abord sauvegarder l'ordre";
+									return;
+								}
+								editBook = book;
+								$openEditDialog = true;
+							}}
+							label={`Éditer le livre ${book.title}`}
 						/>
-						<IconButton icon="material-symbols:delete" action={() =>
-							fetch('/api/books/' + book.id, {
-								method: 'DELETE'
-							})
-								.then(() => {
-									location.reload();
+						<IconButton
+							icon="material-symbols:delete"
+							action={() =>
+								fetch("/api/books/" + book.id, {
+									method: "DELETE",
 								})
-								.catch((err) => {
-									$error = err.message;
-								})} 
-								label={`Supprimer le livre ${book.title}`}/>
-						<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(bookList, book)} label="Descendre l'ordre du le livre"/>
-						<IconButton icon="material-symbols:add" action={() => addOneToOrder(bookList, book)} label="Monter l'ordre du livre"/>
+									.then(() => {
+										location.reload();
+									})
+									.catch((err) => {
+										$error = err.message;
+									})}
+							label={`Supprimer le livre ${book.title}`}
+						/>
+						<IconButton
+							icon="material-symbols:remove"
+							action={() => removeOneToOrder(bookList, book)}
+							label="Descendre l'ordre du le livre"
+						/>
+						<IconButton
+							icon="material-symbols:add"
+							action={() => addOneToOrder(bookList, book)}
+							label="Monter l'ordre du livre"
+						/>
 					</div>
 				{/if}
 			</li>
@@ -139,11 +159,22 @@
 	{/if}
 	{#if isAChange}
 		<div id="save-container">
-			<IconButton action={() => updateOrders(bookList)} text="Sauvegarder" icon="material-symbols:done" inline={true} label="Enregistrer l'ordre des livres"/>
+			<IconButton
+				action={() => updateOrders(bookList)}
+				text="Sauvegarder"
+				icon="material-symbols:done"
+				inline={true}
+				label="Enregistrer l'ordre des livres"
+			/>
 		</div>
 	{/if}
 	<div class="add-button-container">
-		<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true} label="Ajouter un livre"/>
+		<IconButton
+			action={() => ($openAddDialog = true)}
+			icon="material-symbols:add"
+			inline={true}
+			label="Ajouter un livre"
+		/>
 	</div>
 {/if}
 
@@ -204,7 +235,7 @@
 			padding: 5px;
 			font-size: 25px;
 			border-radius: 25px;
-			
+
 			&:hover {
 				background-color: lightgray;
 			}

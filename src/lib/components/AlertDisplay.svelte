@@ -1,71 +1,72 @@
+<!-- @format -->
 <script lang="ts">
-	import { fade, fly } from 'svelte/transition';
-	import { error, warning, info } from '$lib/stores';
-	import IconButton from './IconButton.svelte';
+	import { fade, fly } from "svelte/transition";
+	import { error, warning, info } from "$lib/stores";
+	import IconButton from "./IconButton.svelte";
 
-	let idCounter = 0
+	let idCounter = 0;
 
-	function closeButton(event: MouseEvent) {		
-		removeAlertById(parseInt((event.target as any).parentElement.parentElement.id))
+	function closeButton(event: MouseEvent) {
+		removeAlertById(parseInt((event.target as any).parentElement.parentElement.id));
 	}
 
-
 	function removeAlertById(id: number) {
-		for(let i=0;i<alertArray.length;i++) {
-			if(alertArray[i].id === id) {
-				alertArray.splice(i, 1)
-				break
+		for (let i = 0; i < alertArray.length; i++) {
+			if (alertArray[i].id === id) {
+				alertArray.splice(i, 1);
+				break;
 			}
 		}
-		alertArray = alertArray
+		alertArray = alertArray;
 	}
 
 	type Alert = {
-		id: number,
-		type: string,
-		text: string
-	}
+		id: number;
+		type: string;
+		text: string;
+	};
 
-	let alertArray: Alert[] = []
+	let alertArray: Alert[] = [];
 
 	function createAlert(text: string, type: string) {
 		let alert: Alert = {
 			id: idCounter++,
 			text: text,
-			type: type
-		}
-		alertArray = [...alertArray, alert]
+			type: type,
+		};
+		alertArray = [...alertArray, alert];
 		setTimeout(() => {
-			removeAlertById(alert.id)
-		}, 6000)
+			removeAlertById(alert.id);
+		}, 6000);
 	}
 
-	error.subscribe(text => {
-		if(!text) return
-		createAlert(text, "error")
-		$error = undefined
-	})
+	error.subscribe((text) => {
+		if (!text) return;
+		createAlert(text, "error");
+		$error = undefined;
+	});
 
-	warning.subscribe(text => {
-		if(!text) return
-		createAlert(text, "warning")
-		$warning = undefined
-	})
+	warning.subscribe((text) => {
+		if (!text) return;
+		createAlert(text, "warning");
+		$warning = undefined;
+	});
 
-	info.subscribe(text => {
-		if(!text) return
-		createAlert(text, "info")
-		$info = undefined
-	})
+	info.subscribe((text) => {
+		if (!text) return;
+		createAlert(text, "info");
+		$info = undefined;
+	});
 </script>
-	<div class="container">
-		{#each alertArray as alert}
-			<div class="alert {alert.type}" id="{alert.id.toString()}" in:fly={{x: 200, duration: 2000}}>
-				{alert.text}
-				<IconButton icon="material-symbols:close" action={closeButton} label="Fermer l'alert"/>
-			</div>
-		{/each}
-	</div>
+
+<div class="container">
+	{#each alertArray as alert}
+		<div class="alert {alert.type}" id={alert.id.toString()} in:fly={{ x: 200, duration: 2000 }}>
+			{alert.text}
+			<IconButton icon="material-symbols:close" action={closeButton} label="Fermer l'alert" />
+		</div>
+	{/each}
+</div>
 
 <style>
 	.container {
@@ -97,18 +98,17 @@
 	}
 
 	.error {
-		background-color: #f44336; 
+		background-color: #f44336;
 		border-left: 6px solid #ce261a;
 	}
 
 	.warning {
 		background-color: #ff9800;
 		border-left: 6px solid #d4840b;
-
 	}
 
 	.info {
-		background-color: #04AA6D;
+		background-color: #04aa6d;
 		border-left: 6px solid #0f8b5e;
 	}
 </style>

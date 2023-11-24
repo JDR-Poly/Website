@@ -1,10 +1,11 @@
+<!-- @format -->
 <script lang="ts">
-	import Icon from '@smui/select/icon';
-	import Dialog, { Content, Title, Actions } from '@smui/dialog';
-	import Button, { Label } from '@smui/button';
-	import Textfield from '@smui/textfield';
-	import type { Writable } from 'svelte/store';
-	import { error } from '$lib/stores';
+	import Icon from "@smui/select/icon";
+	import Dialog, { Content, Title, Actions } from "@smui/dialog";
+	import Button, { Label } from "@smui/button";
+	import Textfield from "@smui/textfield";
+	import type { Writable } from "svelte/store";
+	import { error } from "$lib/stores";
 
 	export let open: Writable<boolean>;
 
@@ -12,20 +13,24 @@
 	async function uploadHonorMember() {
 		const data = {
 			name: name,
-			description: description
-		}
+			description: description,
+		};
 
-		fetch('/api/honormembers', {
-			method: 'POST',
+		fetch("/api/honormembers", {
+			method: "POST",
 			body: JSON.stringify(data),
-			headers: { 'Content-Type': 'application/json' }
+			headers: { "Content-Type": "application/json" },
 		})
-			.then((res) => {location.reload()})
-			.catch((err) => {$error = err.message})
+			.then((res) => {
+				location.reload();
+			})
+			.catch((err) => {
+				$error = err.message;
+			});
 	}
 
-	let name = '';
-	let description = '';
+	let name = "";
+	let description = "";
 </script>
 
 <Dialog bind:open={$open}>
@@ -50,4 +55,3 @@
 		</Button>
 	</Actions>
 </Dialog>
-

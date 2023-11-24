@@ -1,9 +1,11 @@
+/** @format */
+
 * {
 	margin: 0;
 	padding: 0;
 }
 :global(*) {
-	font-family: 'Ubuntu', 'Arial';
+	font-family: "Ubuntu", "Arial";
 }
 
 a {
@@ -14,11 +16,7 @@ img {
 }
 
 .material-symbols-outlined {
-	font-variation-settings:
-	'FILL' 0,
-	'wght' 400,
-	'GRAD' 0,
-	'opsz' 48
+	font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
 }
 
 p {
@@ -27,19 +25,19 @@ p {
 
 html {
 	scroll-behavior: smooth;
-  }
+}
 
 @font-face {
-    font-family: 'Playfair Display';
-    font-style: normal;
+	font-family: "Playfair Display";
+	font-style: normal;
 	font-display: swap;
-    font-weight: 500;
-    src: url('/fonts/PlayfairDisplay.ttf'); 
+	font-weight: 500;
+	src: url("/fonts/PlayfairDisplay.ttf");
 }
 @font-face {
-    font-family: 'Ubuntu';
-    font-style: normal;
+	font-family: "Ubuntu";
+	font-style: normal;
 	font-display: swap;
-    font-weight: 500;
-    src: url('/fonts/Ubuntu.ttf'); 
+	font-weight: 500;
+	src: url("/fonts/Ubuntu.ttf");
 }

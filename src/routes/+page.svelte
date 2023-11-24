@@ -1,29 +1,32 @@
+<!-- @format -->
 <script lang="ts">
-	import EventCard from '$components/EventCard.svelte';
-	import Icon from '@iconify/svelte';
+	import EventCard from "$components/EventCard.svelte";
+	import Icon from "@iconify/svelte";
 
-	import { fade } from 'svelte/transition';
-	import type { Event } from '$gtypes';
+	import { fade } from "svelte/transition";
+	import type { Event } from "$gtypes";
 
 	async function loadEvents() {
-		return fetch('/api/events?limit=3')
+		return fetch("/api/events?limit=3")
 			.then(async (res) => {
 				return (res.ok ? await res.json() : []) as Event[];
 			})
 			.then((res) => {
-				if(res.length > 3) res.splice(3, res.length - 3)
-				return res
+				if (res.length > 3) res.splice(3, res.length - 3);
+				return res;
 			})
 			.catch((err) => {
 				return [] as Event[];
-			})
+			});
 	}
-
 </script>
 
 <svelte:head>
 	<title>Accueil | JDRPoly</title>
-	<meta name="description" content="JDRPoly est la commission de jeux de rôle de l'AGEPoly. Elle promeut les jeux de rôle à l'EPFL.">
+	<meta
+		name="description"
+		content="JDRPoly est la commission de jeux de rôle de l'AGEPoly. Elle promeut les jeux de rôle à l'EPFL."
+	/>
 </svelte:head>
 
 <main>
@@ -40,36 +43,39 @@
 	<div id="main">
 		<header>
 			<div class="double-lines" />
-			<Icon icon="material-symbols:polymer" style="font-size: 32px;" class="icon"/>
+			<Icon icon="material-symbols:polymer" style="font-size: 32px;" class="icon" />
 			<div class="double-lines" />
 			<h2>Qu'est-ce que JDRPoly ?</h2>
 			<p>
-				JDR-Poly est une commission de l'AGEPoly, l'association générale des étudiants
-				de l'EPFL. Notre but est avant tout de promouvoir le jeu de rôle et d'organiser divers
-				événements au cours de l'année à destination de tous. Une bonne partie d'entre eux se
-				déroulent le mercredi soir dans le bâtiment <a href="/infos/plan">INM</a>. <br>Le plus emblématique se
-				déroule toutes les deux semaines, il s'agit des bonnes vieilles nocturnes d'initiation. Il
-				existe de nombreuses autres activités proposées, allant de la simple mais ludique soirée
-				Loup-garou ambiancée aux fameuses murder parties. Que vous soyez débutant intrigué par cet
-				étrange loisir ou vétéran voulant se détendre de temps en temps, nous serons ravis de vous
-				accueillir !<br><br>
+				JDR-Poly est une commission de l'AGEPoly, l'association générale des étudiants de l'EPFL.
+				Notre but est avant tout de promouvoir le jeu de rôle et d'organiser divers événements au
+				cours de l'année à destination de tous. Une bonne partie d'entre eux se déroulent le mercredi
+				soir dans le bâtiment <a href="/infos/plan">INM</a>. <br />Le plus emblématique se déroule
+				toutes les deux semaines, il s'agit des bonnes vieilles nocturnes d'initiation. Il existe de
+				nombreuses autres activités proposées, allant de la simple mais ludique soirée Loup-garou
+				ambiancée aux fameuses murder parties. Que vous soyez débutant intrigué par cet étrange loisir
+				ou vétéran voulant se détendre de temps en temps, nous serons ravis de vous accueillir !<br
+				/><br />
 
-				Toute personne qui le désire peut devenir membre de JDR-Poly, moyennant une cotisation semestrielle de 5CHF. Être membre de JDR-Poly offre plusieurs avantages exclusifs tels que l'accès à nos événements et soirées réservées aux membres (soirées jeux de sociétés, loups-garous ambiancés, GNs, Murder Parties, etc.), la possibilité de consulter et d'emprunter les livres de nôtre bibliothèque, un accès à nôtre serveur Discord et plus encore !
+				Toute personne qui le désire peut devenir membre de JDR-Poly, moyennant une cotisation
+				semestrielle de 5CHF. Être membre de JDR-Poly offre plusieurs avantages exclusifs tels que
+				l'accès à nos événements et soirées réservées aux membres (soirées jeux de sociétés,
+				loups-garous ambiancés, GNs, Murder Parties, etc.), la possibilité de consulter et d'emprunter
+				les livres de nôtre bibliothèque, un accès à nôtre serveur Discord et plus encore !
 			</p>
 		</header>
 		<div id="events">
 			<div id="title">Événements</div>
 			{#await loadEvents()}
 				<h1>Chargement...</h1>
-			{:then events} 
+			{:then events}
 				{#if events.length == 0}
 					<h1>Il n'y a aucun événement prévu pour le moment</h1>
 				{/if}
 				{#each events as event}
-					<EventCard {event}></EventCard>
+					<EventCard {event} />
 				{/each}
 			{/await}
-			
 		</div>
 	</div>
 </main>
@@ -103,7 +109,7 @@
 				border-bottom: solid 2px $secondary;
 				padding: 0.4em;
 				font-size: 43px;
-				font-family: 'Playfair Display';
+				font-family: "Playfair Display";
 			}
 
 			p {
@@ -137,8 +143,8 @@
 	}
 
 	#main {
-		background-image: url('/images/main/dark-tl.svg'), url('/images/main/dark-tr.svg'),
-			url('/images/main/dark-bl.svg'), url('/images/main/dark-br.svg');
+		background-image: url("/images/main/dark-tl.svg"), url("/images/main/dark-tr.svg"),
+			url("/images/main/dark-bl.svg"), url("/images/main/dark-br.svg");
 		background-position: top left, top right, bottom left, bottom right;
 		background-repeat: no-repeat;
 		background-size: 25em;
@@ -235,7 +241,6 @@
 			background-color: #000c37;
 			transform: translateX(-50%);
 		}
-
 	}
 
 	//Media screen size
@@ -245,8 +250,6 @@
 			padding: 8em 2%;
 		}
 	}
-
-
 
 	@media screen and (max-width: 1100px) {
 		#banner #banner-text *:not(:first-child) {

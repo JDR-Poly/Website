@@ -1,1 +1,3 @@
-<slot></slot> <!-- this only layout is only for redirection-->
+<!-- @format -->
+<slot />
+<!-- this only layout is only for redirection-->

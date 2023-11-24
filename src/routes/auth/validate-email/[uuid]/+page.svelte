@@ -1,25 +1,26 @@
+<!-- @format -->
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation';
-	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
-	import type { PageData } from './$types';
+	import { invalidateAll } from "$app/navigation";
+	import { page } from "$app/stores";
+	import { onMount } from "svelte";
+	import type { PageData } from "./$types";
 
 	const { uuid } = $page.params;
 
-	export let data: PageData;	
+	export let data: PageData;
 
 	onMount(() => {
-		if(data.success) {
+		if (data.success) {
 			setTimeout(() => {
 				invalidateAll();
 			}, 3000);
 		}
-	})
+	});
 </script>
 
 <svelte:head>
-	<title>Vérification mail | JDRPoly</title> 
-	<meta name="description" content="Mail validé">
+	<title>Vérification mail | JDRPoly</title>
+	<meta name="description" content="Mail validé" />
 </svelte:head>
 
 <main>

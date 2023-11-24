@@ -1,25 +1,27 @@
-import type { DateString } from "$gtypes"
+/** @format */
+
+import type { DateString } from "$gtypes";
 
 /**
- * A period represent the time between which 
+ * A period represent the time between which
  * a user is a member.
  */
 class Period {
-	start: Date
-	stop: Date
+	start: Date;
+	stop: Date;
 	/**
 	 * Create a period from dates or Local Date string
 	 * or undefined
-	 * @param start when the period start 
+	 * @param start when the period start
 	 * @param stop when the period end
 	 */
 	constructor(start?: Date | DateString, stop?: Date | DateString) {
-		const now = Date.now()
-		if(start && typeof start == 'string') start = new Date(Date.parse(start))
-		if(stop && typeof stop == 'string') stop = new Date(Date.parse(stop))
+		const now = Date.now();
+		if (start && typeof start == "string") start = new Date(Date.parse(start));
+		if (stop && typeof stop == "string") stop = new Date(Date.parse(stop));
 
-		this.start = start ? start as Date : new Date(now)
-		this.stop = stop ? stop as Date : new Date(now)
+		this.start = start ? (start as Date) : new Date(now);
+		this.stop = stop ? (stop as Date) : new Date(now);
 	}
 
 	/**
@@ -31,23 +33,23 @@ class Period {
 	addSemesters(semesters: number): Period {
 		for (let i = 0; i < semesters; i++) {
 			if (this.stop.getMonth() <= 6) {
-				this.stop.setMonth(8)
-				this.stop.setDate(0)
+				this.stop.setMonth(8);
+				this.stop.setDate(0);
 			} else {
-				this.stop.setMonth(0)
-				this.stop.setDate(30)
-				this.stop.setFullYear(this.stop.getFullYear() + 1)
+				this.stop.setMonth(0);
+				this.stop.setDate(30);
+				this.stop.setFullYear(this.stop.getFullYear() + 1);
 			}
 		}
-		return this
+		return this;
 	}
 
 	/**
 	 * Do a deep clone of the object
 	 */
 	clone(): Period {
-		return new Period(new Date(this.start.getTime()), new Date(this.stop.getTime()));	
+		return new Period(new Date(this.start.getTime()), new Date(this.stop.getTime()));
 	}
 }
 
-export { Period }
+export { Period };

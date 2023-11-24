@@ -1,6 +1,7 @@
+<!-- @format -->
 <svelte:head>
 	<title>Photos | JDRPoly</title>
-	<meta name="description" content="Accès photos des événements de JDR-Poly">
+	<meta name="description" content="Accès photos des événements de JDR-Poly" />
 </svelte:head>
 
 <main>

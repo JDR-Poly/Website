@@ -1,3 +1,5 @@
+/** @format */
+
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions";
 import { __envDir, getByteArrayFromBase64 } from "$lib/utils";
@@ -7,68 +9,80 @@ import { logger } from "$lib/server/logger";
 import type { DateString } from "$gtypes";
 import pgPromise from "pg-promise";
 
-/** 
+/**
  * Get a specific event
  */
 export const GET = (async ({ params }) => {
-	const id = params.event_id
-	return db.one(
-		` SELECT * FROM events
+	const id = params.event_id;
+	return db
+		.one(
+			` SELECT * FROM events
             WHERE id = $1
         `,
-		[id]
-	).then((res) => {
-		if (res.image) res.imageb64 = Buffer.from(res.image).toString("base64") //Convert to b64
-		res.image = undefined
-		return res
-	})
+			[id],
+		)
 		.then((res) => {
-			return json(res)
-		}).catch((err) => {
-			throw error(500, err.message)
+			if (res.image) res.imageb64 = Buffer.from(res.image).toString("base64"); //Convert to b64
+			res.image = undefined;
+			return res;
 		})
-}) satisfies RequestHandler
+		.then((res) => {
+			return json(res);
+		})
+		.catch((err) => {
+			throw error(500, err.message);
+		});
+}) satisfies RequestHandler;
 
-/** 
+/**
  * Delete an event
  */
 export const DELETE = (async ({ params, locals }) => {
-	if (!locals.authenticated) throw error(401)
+	if (!locals.authenticated) throw error(401);
 
-	const id = params.event_id
-	const canDelete = db.one(
-		` SELECT author FROM events
+	const id = params.event_id;
+	const canDelete = db
+		.one(
+			` SELECT author FROM events
             WHERE id = $1
         `,
-		[id],
-		a => a.author
-	).then((author) => {
-		if (!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role) && locals.user?.id?.toString() !== author) return false
-	}).catch((err) => {
-		throw error(500, err.message)
-	})
-
-	if (!canDelete) throw error(403)
-
-	return db.none(
-		` DELETE FROM events
-            WHERE id = $1
-        `,
-		[id]
-	).then(() => {
-		db.none(
-			` DELETE FROM event_inscription
-				WHERE event_id = $1`
-			, [id]
+			[id],
+			(a) => a.author,
 		)
-		return new Response
-	}).catch((err) => {
-		throw error(500, err.message)
-	})
-}) satisfies RequestHandler
+		.then((author) => {
+			if (
+				!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role) &&
+				locals.user?.id?.toString() !== author
+			)
+				return false;
+		})
+		.catch((err) => {
+			throw error(500, err.message);
+		});
 
+	if (!canDelete) throw error(403);
 
-/** 
+	return db
+		.none(
+			` DELETE FROM events
+            WHERE id = $1
+        `,
+			[id],
+		)
+		.then(() => {
+			db.none(
+				` DELETE FROM event_inscription
+				WHERE event_id = $1`,
+				[id],
+			);
+			return new Response();
+		})
+		.catch((err) => {
+			throw error(500, err.message);
+		});
+}) satisfies RequestHandler;
+
+/**
  * @param {string} title the title of the event
  * @param {string} category the category of the event
  * @param {string} description the description of the event
@@ -80,17 +94,24 @@ export const DELETE = (async ({ params, locals }) => {
  * @param {DateString?} inscription_start the local date of when people can join an event
  * @param {DateString?} inscription_stop the local of when people can no longer join an event
  */
-export const PATCH = (async ({ params, request, locals }) => {		
-	if (!locals.authenticated) throw error(401)
-	if (!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role)) throw error(403)
+export const PATCH = (async ({ params, request, locals }) => {
+	if (!locals.authenticated) throw error(401);
+	if (!hasRolePermission(UserPermission.MODIFY_EVENT, locals.user?.role)) throw error(403);
 
-	const id = params.event_id
-	const data = await request.json()
-	if(data.image) data.image = getByteArrayFromBase64(data.image)
-	if (data.inscription == "true" && data.inscription_group !== Roles.USER.name && data.inscription_group !== Roles.MEMBER.name && data.inscription_group !== Roles.COMMITTEE.name) throw error(400, "inscription_group is not valid, should be either user, member or committee")
-	return db.one(
-		SQLFormatUnexistentAsNull(
-			`UPDATE events SET
+	const id = params.event_id;
+	const data = await request.json();
+	if (data.image) data.image = getByteArrayFromBase64(data.image);
+	if (
+		data.inscription == "true" &&
+		data.inscription_group !== Roles.USER.name &&
+		data.inscription_group !== Roles.MEMBER.name &&
+		data.inscription_group !== Roles.COMMITTEE.name
+	)
+		throw error(400, "inscription_group is not valid, should be either user, member or committee");
+	return db
+		.one(
+			SQLFormatUnexistentAsNull(
+				`UPDATE events SET
 				title=$[title], category=$[category],
 				description=$[description],date=$[date],
 				inscription=$[inscription], inscription_group=$[inscription_group],
@@ -98,25 +119,25 @@ export const PATCH = (async ({ params, request, locals }) => {
 				inscription_start=$[inscription_start],inscription_stop=$[inscription_stop]
 			WHERE id=$[id]
 			RETURNING *;`,
-			{ id: id, ...data, image: data.image  }
+				{ id: id, ...data, image: data.image },
+			),
 		)
-	)
 		.then(async (res) => {
 			if (!data.inscription) {
 				db.none(
 					` DELETE FROM event_inscription
-						WHERE event_id = $1`
-					, [id]
-				)
+						WHERE event_id = $1`,
+					[id],
+				);
 			}
-			return json(res)
+			return json(res);
 		})
 		.catch((err) => {
 			logger.error(err);
-			throw error(500, err.message)
-		})
-}) satisfies RequestHandler
+			throw error(500, err.message);
+		});
+}) satisfies RequestHandler;
 
 function SQLFormatUnexistentAsNull(query: string, values: any): string {
-    return pgPromise.as.format(query, values, {def: null});
+	return pgPromise.as.format(query, values, { def: null });
 }

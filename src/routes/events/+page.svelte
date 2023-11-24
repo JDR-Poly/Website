@@ -1,23 +1,32 @@
+<!-- @format -->
 <script lang="ts">
-	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import { goto } from '$app/navigation';
-	import type { PageData } from './$types';
-	import EventCard from '$components/EventCard.svelte';
-	import IconButton from '$components/IconButton.svelte';
-	import { categories } from '$lib/evenementsUtils';
+	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+	import { goto } from "$app/navigation";
+	import type { PageData } from "./$types";
+	import EventCard from "$components/EventCard.svelte";
+	import IconButton from "$components/IconButton.svelte";
+	import { categories } from "$lib/evenementsUtils";
 
 	export let data: PageData;
 </script>
 
 <svelte:head>
 	<title>Événements | JDRPoly</title>
-	<meta name="description" content={`Liste d'événement JDRPoly, Catégories: ${categories}, Pays: Suisse `}>
+	<meta
+		name="description"
+		content={`Liste d'événement JDRPoly, Catégories: ${categories}, Pays: Suisse `}
+	/>
 </svelte:head>
 
 <main>
 	{#if hasRolePermission(UserPermission.CREATE_EVENT, data.user?.role)}
 		<div class="add-button-container">
-			<IconButton action={() => goto('/events/create')} icon="material-symbols:add" inline={true} label="Créer un événement"/>
+			<IconButton
+				action={() => goto("/events/create")}
+				icon="material-symbols:add"
+				inline={true}
+				label="Créer un événement"
+			/>
 		</div>
 	{/if}
 	{#if data.events.length == 0}
@@ -25,7 +34,7 @@
 	{/if}
 	<div id="event-container">
 		{#each data.events as event}
-			<EventCard {event}></EventCard>
+			<EventCard {event} />
 		{/each}
 	</div>
 </main>
@@ -60,7 +69,6 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		padding: 4em 0;
-
 	}
 
 	.add-button-container {

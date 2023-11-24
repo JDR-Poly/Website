@@ -1,10 +1,10 @@
+<!-- @format -->
 <script lang="ts">
-	import type { PageData } from './$types';
-	import ModifyRole from './ModifyRole.svelte';
+	import type { PageData } from "./$types";
+	import ModifyRole from "./ModifyRole.svelte";
 
 	export let data: PageData;
 </script>
-
 
 <main>
 	<h2>Modifier les données de {data.profileUser.name}</h2>

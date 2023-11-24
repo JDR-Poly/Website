@@ -1,19 +1,20 @@
+<!-- @format -->
 <script lang="ts">
-	import { info, error } from '$lib/stores';
-	import Button, { Label } from '@smui/button';
-	import { enhance } from '$app/forms';
-	import type { PageData } from './$types';
-	
+	import { info, error } from "$lib/stores";
+	import Button, { Label } from "@smui/button";
+	import { enhance } from "$app/forms";
+	import type { PageData } from "./$types";
+
 	function getUserEmail(): string {
-		if(data.user) return data.user.email!
-		else return ""
+		if (data.user) return data.user.email!;
+		else return "";
 	}
 	export let data: PageData;
 </script>
 
 <svelte:head>
 	<title>Valider email | JDRPoly</title>
-	<meta name="description" content="Valider mail d'utilisateur">
+	<meta name="description" content="Valider mail d'utilisateur" />
 </svelte:head>
 
 <main>
@@ -26,9 +27,9 @@
 		method="POST"
 		use:enhance={({}) => {
 			return async ({ result }) => {
-				if (result.type == 'success') {
+				if (result.type == "success") {
 					$info = "Le mail vient d'être envoyé";
-				} else if (result.type == 'failure') {
+				} else if (result.type == "failure") {
 					$error = result?.data?.message;
 				}
 			};

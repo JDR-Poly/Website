@@ -1,14 +1,15 @@
+<!-- @format -->
 <script lang="ts">
-	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import { page } from '$app/stores';
-	import Add from './Add.svelte';
-	import { writable } from 'svelte/store';
-	import type { HonorMember } from '$gtypes';
-	import { error, warning } from '$lib/stores';
-	import type { PageData } from './$types';
-	import { __sortByItemOrder } from './+page';
-	import Edit from './Edit.svelte';
-	import IconButton from '$components/IconButton.svelte';
+	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+	import { page } from "$app/stores";
+	import Add from "./Add.svelte";
+	import { writable } from "svelte/store";
+	import type { HonorMember } from "$gtypes";
+	import { error, warning } from "$lib/stores";
+	import type { PageData } from "./$types";
+	import { __sortByItemOrder } from "./+page";
+	import Edit from "./Edit.svelte";
+	import IconButton from "$components/IconButton.svelte";
 
 	export let data: PageData;
 	const openAddDialog = writable(false);
@@ -53,9 +54,9 @@
 	}
 
 	async function updateOrders(honorMembers: HonorMember[]) {
-		fetch('/api/honormembers', {
-			method: 'PATCH',
-			body: JSON.stringify(honorMembers)
+		fetch("/api/honormembers", {
+			method: "PATCH",
+			body: JSON.stringify(honorMembers),
 		})
 			.then(() => {
 				location.reload();
@@ -68,7 +69,7 @@
 
 <svelte:head>
 	<title>Documents officiels | JDRPoly</title>
-	<meta name="description" content={`Règlement JDRPoly, liste des membres d'honneur, organigrame`}>
+	<meta name="description" content={`Règlement JDRPoly, liste des membres d'honneur, organigrame`} />
 </svelte:head>
 
 <main>
@@ -89,20 +90,36 @@
 
 				{#if hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, data.user?.role)}
 					<div class="admin-buttons">
-						<IconButton icon="material-symbols:edit" action={() => {
-							if (isAChange) {
-								$warning = "Vous devez d'abord sauvegarder l'ordre";
-								return;
-							}
-							editedHonorMember = honorMember;
-							$openEditDialog = true;
-						}} label={`Éditer le membre d'honneur: ${honorMember.name}`}/>
-						<IconButton icon="material-symbols:delete" action={() =>
-							fetch('/api/honormembers/' + honorMember.id, {
-								method: 'DELETE'
-							}).then(() => location.reload())} label={`Supprimer le membre d'honneur ${honorMember.name}`}/>
-						<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(data.honormembers, honorMember)} label="Baisser l'ordre de ce membre d'honneur"/>
-						<IconButton icon="material-symbols:add" action={() => addOneToOrder(data.honormembers, honorMember)} label="Augmenter l'ordre de ce membre d'honneur"/>
+						<IconButton
+							icon="material-symbols:edit"
+							action={() => {
+								if (isAChange) {
+									$warning = "Vous devez d'abord sauvegarder l'ordre";
+									return;
+								}
+								editedHonorMember = honorMember;
+								$openEditDialog = true;
+							}}
+							label={`Éditer le membre d'honneur: ${honorMember.name}`}
+						/>
+						<IconButton
+							icon="material-symbols:delete"
+							action={() =>
+								fetch("/api/honormembers/" + honorMember.id, {
+									method: "DELETE",
+								}).then(() => location.reload())}
+							label={`Supprimer le membre d'honneur ${honorMember.name}`}
+						/>
+						<IconButton
+							icon="material-symbols:remove"
+							action={() => removeOneToOrder(data.honormembers, honorMember)}
+							label="Baisser l'ordre de ce membre d'honneur"
+						/>
+						<IconButton
+							icon="material-symbols:add"
+							action={() => addOneToOrder(data.honormembers, honorMember)}
+							label="Augmenter l'ordre de ce membre d'honneur"
+						/>
 					</div>
 				{/if}
 			</div>
@@ -111,7 +128,13 @@
 
 	{#if isAChange && hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
 		<div id="save-container">
-			<IconButton action={() => updateOrders(data.honormembers)} text="Sauvegarder" icon="material-symbols:done" inline={true} label="Enregistrer l'ordre des membres d'honneur"/>
+			<IconButton
+				action={() => updateOrders(data.honormembers)}
+				text="Sauvegarder"
+				icon="material-symbols:done"
+				inline={true}
+				label="Enregistrer l'ordre des membres d'honneur"
+			/>
 		</div>
 	{/if}
 </main>
@@ -119,10 +142,15 @@
 {#if hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
 	<Add open={openAddDialog} />
 	{#if editedHonorMember}
-		<Edit open={openEditDialog} honorMember={editedHonorMember}/>
+		<Edit open={openEditDialog} honorMember={editedHonorMember} />
 	{/if}
 	<div class="add-button-container">
-		<IconButton action={() => ($openAddDialog = true)} icon="material-symbols:add" inline={true} label="Ajouter un membre d'honneur"/>
+		<IconButton
+			action={() => ($openAddDialog = true)}
+			icon="material-symbols:add"
+			inline={true}
+			label="Ajouter un membre d'honneur"
+		/>
 	</div>
 {/if}
 
@@ -168,7 +196,7 @@
 					padding: 5px;
 					font-size: 25px;
 					border-radius: 25px;
-					
+
 					&:hover {
 						background-color: lightgray;
 					}

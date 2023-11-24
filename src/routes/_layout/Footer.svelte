@@ -1,32 +1,36 @@
+<!-- @format -->
 <script type="ts">
-	import Textfield from '@smui/textfield';
-	import { applyAction, enhance } from '$app/forms';
-	import { error, info } from '$lib/stores';
-	import { Turnstile } from 'svelte-turnstile';
-	import Icon from '@iconify/svelte';
+	import Textfield from "@smui/textfield";
+	import { applyAction, enhance } from "$app/forms";
+	import { error, info } from "$lib/stores";
+	import { Turnstile } from "svelte-turnstile";
+	import Icon from "@iconify/svelte";
 
 	let isEmailInvalid = true;
-	let email = '';
-	let name = '';
-	let message = '';
-
+	let email = "";
+	let name = "";
+	let message = "";
 </script>
 
 <footer>
 	<div id="contact">
 		<div id="form">
-			<form method="POST" action="/contact?/sendMail" use:enhance={({ }) => {		
-				return async ({ result, update }) => {
-					if (result.type == 'success') {
-						$info = "Le mail a correctement été envoyé."
-						update()
-					} else if(result.type === 'error' && result.error.message) {
-						$error = result.error.message
-						console.error(result.error);
-					}
-					await applyAction(result);
-				}
-			}}>
+			<form
+				method="POST"
+				action="/contact?/sendMail"
+				use:enhance={({}) => {
+					return async ({ result, update }) => {
+						if (result.type == "success") {
+							$info = "Le mail a correctement été envoyé.";
+							update();
+						} else if (result.type === "error" && result.error.message) {
+							$error = result.error.message;
+							console.error(result.error);
+						}
+						await applyAction(result);
+					};
+				}}
+			>
 				<div id="info">
 					<Textfield
 						class="email"
@@ -36,12 +40,12 @@
 						bind:value={email}
 						label="Email"
 						input$autocomplete="email"
-						input$name = "email"
+						input$name="email"
 					/>
-					<Textfield class="name" type="text" input$name = "name" bind:value={name} label="Nom" />
+					<Textfield class="name" type="text" input$name="name" bind:value={name} label="Nom" />
 				</div>
 				<div id="textarea">
-					<Textfield textarea input$name = "text" bind:value={message} label="Message" />
+					<Textfield textarea input$name="text" bind:value={message} label="Message" />
 				</div>
 				{#if import.meta.env.PROD}
 					<Turnstile siteKey="0x4AAAAAAAE1uyTWfzpY2dHE" />
@@ -51,7 +55,7 @@
 		</div>
 		<div id="links">
 			<section>
-				<Icon icon="material-symbols:mail-outline" class="footer-icon"/>
+				<Icon icon="material-symbols:mail-outline" class="footer-icon" />
 				<h3>Email</h3>
 				<a href="mailto:comite@jdrpoly.ch">comite@jdrpoly.ch</a>
 			</section>

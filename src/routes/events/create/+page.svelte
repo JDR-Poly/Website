@@ -1,26 +1,27 @@
+<!-- @format -->
 <script lang="ts">
-	import { error, info, warning } from '$lib/stores';
-	import Icon from '@smui/select/icon';
-	import Select, { Option } from '@smui/select';
-	import Textfield from '@smui/textfield';
-	import { goto } from '$app/navigation';
-	import Checkbox from '@smui/checkbox';
-	import FormField from '@smui/form-field';
-	import IB from '@smui/icon-button';
-	import { categories, returnJoinEventRoles } from '$lib/evenementsUtils';
-	import Compressor from 'compressorjs';
-	import { getBase64, getLocalDateStringOrNullFromString } from '$lib/utils';
-	import ImageB64 from '$components/ImageB64.svelte';
+	import { error, info, warning } from "$lib/stores";
+	import Icon from "@smui/select/icon";
+	import Select, { Option } from "@smui/select";
+	import Textfield from "@smui/textfield";
+	import { goto } from "$app/navigation";
+	import Checkbox from "@smui/checkbox";
+	import FormField from "@smui/form-field";
+	import IB from "@smui/icon-button";
+	import { categories, returnJoinEventRoles } from "$lib/evenementsUtils";
+	import Compressor from "compressorjs";
+	import { getBase64, getLocalDateStringOrNullFromString } from "$lib/utils";
+	import ImageB64 from "$components/ImageB64.svelte";
 
-	let title = '';
-	let description = '';
-	let date: string = '';
+	let title = "";
+	let description = "";
+	let date: string = "";
 	let category = categories[0];
 	let inscription = false;
-	let inscription_group = 'MEMBER';
+	let inscription_group = "MEMBER";
 	let inscription_limit: number = 16;
-	let inscription_start: string = '';
-	let inscription_stop: string = '';
+	let inscription_start: string = "";
+	let inscription_stop: string = "";
 
 	let images: null | FileList = null;
 	let image: File | Blob;
@@ -36,11 +37,11 @@
 			$warning = "L'image est en cours de traitement. Attendez 5 secondes et recommencez.";
 			return;
 		}
-		
-		fetch('/api/events', {
-			method: 'POST',
+
+		fetch("/api/events", {
+			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				title,
@@ -52,12 +53,12 @@
 				inscription_group,
 				inscription_limit,
 				inscription_start: getLocalDateStringOrNullFromString(inscription_start),
-				inscription_stop: getLocalDateStringOrNullFromString(inscription_stop)
-			})
+				inscription_stop: getLocalDateStringOrNullFromString(inscription_stop),
+			}),
 		}).then(async (res) => {
 			const body = await res.json();
 			if (res.ok) {
-				goto('/events/' + body.id);
+				goto("/events/" + body.id);
 				$info = "L'évènement a bien été créé";
 			} else {
 				$error = body.message;
@@ -68,7 +69,7 @@
 
 <svelte:head>
 	<title>Créer un événement | JDRPoly</title>
-	<meta name="description" content={`Créer un événement`}>
+	<meta name="description" content={`Créer un événement`} />
 </svelte:head>
 
 <main>
@@ -116,25 +117,25 @@
 					on:change={async () => {
 						if (images && images[0]) {
 							if (images[0].size > 4e6) {
-								$warning = 'Image max 4MB';
+								$warning = "Image max 4MB";
 								images = null;
 							} else {
 								isImageProcessing = true;
-								console.log('Processing image');
-								
+								console.log("Processing image");
+
 								new Compressor(images[0], {
 									quality: 0.6,
-									mimeType: 'image/webp',
+									mimeType: "image/webp",
 									maxWidth: 1536,
 									maxHeight: 864,
 									async success(result) {
-										console.log('Image processing finished.');
+										console.log("Image processing finished.");
 										image = result;
 										isImageProcessing = false;
 									},
 									error(err) {
 										console.log(err.message);
-									}
+									},
 								});
 							}
 						}
@@ -154,9 +155,9 @@
 					touch
 					on:change={() => {
 						if (!inscription) {
-							inscription_group = 'MEMBER';
-							inscription_start = '';
-							inscription_stop = '';
+							inscription_group = "MEMBER";
+							inscription_start = "";
+							inscription_stop = "";
 							isInscriptionStop = false;
 						} else {
 							inscription_start = new Date(Date.now()).toString();
@@ -207,7 +208,7 @@
 						touch
 						on:change={() => {
 							if (!isInscriptionStop) {
-								inscription_stop = '';
+								inscription_stop = "";
 							} else {
 								inscription_stop = new Date(Date.now()).toString();
 							}
@@ -246,7 +247,7 @@
 
 		#img {
 			filter: blur(3px);
-			background: url('/images/events/banner.webp') center/cover;
+			background: url("/images/events/banner.webp") center/cover;
 			position: absolute;
 			height: 100%;
 			width: 100%;
@@ -277,11 +278,11 @@
 		}
 	}
 
-	.hide-file-ui :global(input[type='file']::file-selector-button) {
+	.hide-file-ui :global(input[type="file"]::file-selector-button) {
 		display: none;
 	}
 
-	.hide-file-ui :global(:not(.mdc-text-field--label-floating) input[type='file']) {
+	.hide-file-ui :global(:not(.mdc-text-field--label-floating) input[type="file"]) {
 		color: transparent;
 	}
 </style>

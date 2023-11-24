@@ -1,49 +1,56 @@
+/** @format */
+
 import { error, json } from "@sveltejs/kit";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import type { RequestHandler } from "./$types";
 import { db } from "$lib/server/postgresClient";
 import type { HonorMember } from "$gtypes";
 
-
 /**
  * Get all the members of honor for /docs/
-*/
-export const GET = (async ({ }) => {
-	return db.any("SELECT * FROM honor_members")
+ */
+export const GET = (async ({}) => {
+	return db
+		.any("SELECT * FROM honor_members")
 		.then((res) => {
-			return json(res)
+			return json(res);
 		})
-		.catch((err) => { throw error(500, err.message) })
-}) satisfies RequestHandler
+		.catch((err) => {
+			throw error(500, err.message);
+		});
+}) satisfies RequestHandler;
 
 /**
  * Add a member of honor for /docs/
  * @param {RequestEvent} request
  * @param {string} request.name the name of the member ("Scrooge Mcduck")
  * @param {string} request.description the description of the member (ex: "Never gave any penny")
-*/
+ */
 export const POST = (async ({ request, locals }) => {
-	if (!locals.authenticated) throw error(401)
+	if (!locals.authenticated) throw error(401);
 
-	const body = await request.json()
-	if (!hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, locals.user?.role)) throw error(403, "User doesn't have the permission to do that")
+	const body = await request.json();
+	if (!hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, locals.user?.role))
+		throw error(403, "User doesn't have the permission to do that");
 
-	return db.any("SELECT item_order FROM honor_members")
+	return db
+		.any("SELECT item_order FROM honor_members")
 		.then((res) => {
-			res.push({ item_order: -1 }) //If the array is empty, set the max to -1 so that the new order will be 0
-			const maxOrder = Math.max(...res.map((v) => v.item_order))
+			res.push({ item_order: -1 }); //If the array is empty, set the max to -1 so that the new order will be 0
+			const maxOrder = Math.max(...res.map((v) => v.item_order));
 
 			db.none(
 				`INSERT INTO honor_members
 				(name,description,item_order)
-				VALUES ($1,$2,$3)`
-				, [body.name, body.description, maxOrder + 1]
-			)
-			return new Response()
+				VALUES ($1,$2,$3)`,
+				[body.name, body.description, maxOrder + 1],
+			);
+			return new Response();
 		})
-		.catch((err) => { throw error(500, err.message) })
-
-}) satisfies RequestHandler
+		.catch((err) => {
+			throw error(500, err.message);
+		});
+}) satisfies RequestHandler;
 
 /**
  * Update one or a list of members of honor
@@ -51,28 +58,35 @@ export const POST = (async ({ request, locals }) => {
  * @param {HonorMember | HonorMember[]} request.body the member(s) to update
  */
 export const PATCH = (async ({ request, locals }) => {
-	if (!locals.authenticated) throw error(401)
+	if (!locals.authenticated) throw error(401);
 
-	let body = await request.json()
-	if (!hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, locals.user?.role)) throw error(403, "User doesn't have the permission to do that")
-	if (!Array.isArray(body)) body = [body]
+	let body = await request.json();
+	if (!hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, locals.user?.role))
+		throw error(403, "User doesn't have the permission to do that");
+	if (!Array.isArray(body)) body = [body];
 
-	return db.tx(t => { //Perform a list of SQL request
+	return db
+		.tx((t) => {
+			//Perform a list of SQL request
 
-		let queries: Promise<null>[] = []
-		for (let member of (body as HonorMember[])) {
-			queries.push(t.none(`UPDATE honor_members SET
+			let queries: Promise<null>[] = [];
+			for (let member of body as HonorMember[]) {
+				queries.push(
+					t.none(
+						`UPDATE honor_members SET
 				name = $[name], description = $[description],
 				item_order = $[item_order]
-				WHERE id = $[id]`
-				, member))
-		}
-		return t.batch(queries); //Execute all the queries
-	})
-		.then(() => {
-			return new Response()
+				WHERE id = $[id]`,
+						member,
+					),
+				);
+			}
+			return t.batch(queries); //Execute all the queries
 		})
-		.catch(err => {
-			throw error(500, err.message)
+		.then(() => {
+			return new Response();
+		})
+		.catch((err) => {
+			throw error(500, err.message);
 		});
-}) satisfies RequestHandler
+}) satisfies RequestHandler;

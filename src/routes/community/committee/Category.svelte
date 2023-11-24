@@ -1,40 +1,41 @@
+<!-- @format -->
 <script lang="ts">
-	import { Panel, Header, Content } from '@smui-extra/accordion';
-	import { error } from '$lib/stores';
-	import type { Committee } from '$gtypes';
-	import { page } from '$app/stores';
-	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import { onMount } from 'svelte';
-	import ImageB64 from '$components/ImageB64.svelte';
-	import IconButton from '$components/IconButton.svelte';
+	import { Panel, Header, Content } from "@smui-extra/accordion";
+	import { error } from "$lib/stores";
+	import type { Committee } from "$gtypes";
+	import { page } from "$app/stores";
+	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+	import { onMount } from "svelte";
+	import ImageB64 from "$components/ImageB64.svelte";
+	import IconButton from "$components/IconButton.svelte";
 
 	export let category: string;
 	export let defaultOpen: boolean;
 
-	let open = defaultOpen
+	let open = defaultOpen;
 	let isAChange = false;
-	let hasFetched = false //Prevent fetching every time the category is opened
-	let hasBeenMounted = false
+	let hasFetched = false; //Prevent fetching every time the category is opened
+	let hasBeenMounted = false;
 
-	let committees: Committee[] = []
+	let committees: Committee[] = [];
 
 	onMount(() => {
-		hasBeenMounted = true
-	})
+		hasBeenMounted = true;
+	});
 
 	async function fetchCommittees() {
-		if(hasFetched) return		
-		const res = await fetch('/api/committee/categories/' + category);
+		if (hasFetched) return;
+		const res = await fetch("/api/committee/categories/" + category);
 		const body = await res.json();
-		hasFetched = true
-		if(res.ok) committees = [...sortByItemOrder(body)]
+		hasFetched = true;
+		if (res.ok) committees = [...sortByItemOrder(body)];
 		else {
-			$error = body.message
+			$error = body.message;
 		}
-	} 
+	}
 
 	$: {
-		if(hasBeenMounted && open) fetchCommittees() 
+		if (hasBeenMounted && open) fetchCommittees();
 	}
 
 	function sortByItemOrder(committees: Committee[]) {
@@ -55,7 +56,7 @@
 
 		current_committee.item_order++;
 		isAChange = true;
-		committees = [...sortByItemOrder(committeesParam)]
+		committees = [...sortByItemOrder(committeesParam)];
 	}
 
 	function removeOneToOrder(committeesParam: Committee[], current_committee: Committee) {
@@ -72,77 +73,104 @@
 
 		current_committee.item_order--;
 		isAChange = true;
-		committees = [...sortByItemOrder(committeesParam)]
+		committees = [...sortByItemOrder(committeesParam)];
 	}
 
 	async function updateOrders(committees: Committee[]) {
-		const committesWithoutImages = committees
-		committesWithoutImages.forEach(committee => {
-			committee.imageb64 = undefined
+		const committesWithoutImages = committees;
+		committesWithoutImages.forEach((committee) => {
+			committee.imageb64 = undefined;
 		});
-		fetch('/api/committee', {
-			method: 'PATCH',
-			body: JSON.stringify(committesWithoutImages)
+		fetch("/api/committee", {
+			method: "PATCH",
+			body: JSON.stringify(committesWithoutImages),
 		})
 			.then(() => {
 				location.reload();
 			})
-			.catch((err) => {				
+			.catch((err) => {
 				$error = err.message;
 			});
 	}
 </script>
-<Panel {open} on:SMUIAccordionPanel:opening={() => {open = true}} on:SMUIAccordionPanel:closing={() => {open = false}}>
-<Header>{category}</Header>
 
-<Content>
+<Panel
+	{open}
+	on:SMUIAccordionPanel:opening={() => {
+		open = true;
+	}}
+	on:SMUIAccordionPanel:closing={() => {
+		open = false;
+	}}
+>
+	<Header>{category}</Header>
 
-<div class="grid">
-	{#each committees as committee, i}
-		<div class="card">
-			<ImageB64 imageb64={committee.imageb64} alt={committee.name ? committee.name : ""} alternativeImageSrc="/images/default/committee.png" />
-			<div class="text-container">
-				<h4><b>{committee.name}</b></h4>
-				<p>{committee.title}</p>
-			</div>
-			<div class="overlay">
-				<div class="text">{committee.description}</div>
-			</div>
-			{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
-				<div class="itemorder">
-					<IconButton icon="material-symbols:delete" action={() =>
-						fetch('/api/committee/' + committee.id, {
-							method: 'DELETE'
-						}).then(() => location.reload())} 
-						label={`Supprimer le comité ${committee.name} de l'année ${committee.category}`}/>
-					<IconButton icon="material-symbols:remove" action={() => removeOneToOrder(committees, committee)} label="Augmenter l'ordre de ce comité"/>
-					<IconButton icon="material-symbols:add" action={() => addOneToOrder(committees, committee)} label="Baisser l'ordre de ce comité"/>
+	<Content>
+		<div class="grid">
+			{#each committees as committee, i}
+				<div class="card">
+					<ImageB64
+						imageb64={committee.imageb64}
+						alt={committee.name ? committee.name : ""}
+						alternativeImageSrc="/images/default/committee.png"
+					/>
+					<div class="text-container">
+						<h4><b>{committee.name}</b></h4>
+						<p>{committee.title}</p>
+					</div>
+					<div class="overlay">
+						<div class="text">{committee.description}</div>
+					</div>
+					{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
+						<div class="itemorder">
+							<IconButton
+								icon="material-symbols:delete"
+								action={() =>
+									fetch("/api/committee/" + committee.id, {
+										method: "DELETE",
+									}).then(() => location.reload())}
+								label={`Supprimer le comité ${committee.name} de l'année ${committee.category}`}
+							/>
+							<IconButton
+								icon="material-symbols:remove"
+								action={() => removeOneToOrder(committees, committee)}
+								label="Augmenter l'ordre de ce comité"
+							/>
+							<IconButton
+								icon="material-symbols:add"
+								action={() => addOneToOrder(committees, committee)}
+								label="Baisser l'ordre de ce comité"
+							/>
+						</div>
+					{/if}
 				</div>
-			{/if}
+			{/each}
 		</div>
-	{/each}
-</div>
-		
-{#if isAChange && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
-	<div id="save-container">
-		<IconButton action={() => updateOrders(committees)} text="Sauvegarder" icon="material-symbols:done" inline={true} label="Enregistré l'ordre du comité"/>
-	</div>
 
-{/if}
-</Content>
+		{#if isAChange && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
+			<div id="save-container">
+				<IconButton
+					action={() => updateOrders(committees)}
+					text="Sauvegarder"
+					icon="material-symbols:done"
+					inline={true}
+					label="Enregistré l'ordre du comité"
+				/>
+			</div>
+		{/if}
+	</Content>
 </Panel>
 
 <style lang="scss">
-
 	.grid {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
 	}
 	.card {
-		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 		margin: 1em 1em;
-  		transition: 0.3s;
+		transition: 0.3s;
 		width: 328px;
 		position: relative;
 
@@ -169,13 +197,12 @@
 			right: 10px;
 			display: block;
 
-
 			:global(svg) {
 				color: black;
 				padding: 5px;
 				font-size: 25px;
 				border-radius: 25px;
-				transition: .5s ease;
+				transition: 0.5s ease;
 
 				&:hover {
 					background-color: lightgray;
@@ -191,8 +218,8 @@
 			background-color: #03245f;
 			overflow: hidden;
 			width: 100%;
-			height:0;
-			transition: .5s ease;
+			height: 0;
+			transition: 0.5s ease;
 
 			.text {
 				color: white;

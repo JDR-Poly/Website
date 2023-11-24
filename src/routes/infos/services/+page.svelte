@@ -1,16 +1,17 @@
+<!-- @format -->
 <svelte:head>
-	<title>Services | JDRPoly</title> 
-	<meta name="description" content={`Services proposées, salles à disposition`}>
+	<title>Services | JDRPoly</title>
+	<meta name="description" content={`Services proposées, salles à disposition`} />
 </svelte:head>
 
 <main>
 	<h2>Salles :</h2>
 	<p>
-        En alternance avec nos nocturnes d'initiation aux jeux de rôle, lors des soirées membres (les mercredis), vous pouvez réserver une salle auprès de JDR-Poly pour vos campagnes ou oneshots.
-        Pour cela, il suffit d'envoyer un mail à comite@jdrpoly.ch ou contacter un comité sur telegram/discord quelques jours en avance.
-        
-        Les salles sont disponibles pour utilisation de 19h à 22h.
-    </p>
+		En alternance avec nos nocturnes d'initiation aux jeux de rôle, lors des soirées membres (les
+		mercredis), vous pouvez réserver une salle auprès de JDR-Poly pour vos campagnes ou oneshots. Pour
+		cela, il suffit d'envoyer un mail à comite@jdrpoly.ch ou contacter un comité sur telegram/discord
+		quelques jours en avance. Les salles sont disponibles pour utilisation de 19h à 22h.
+	</p>
 </main>
 
 <style lang="scss">

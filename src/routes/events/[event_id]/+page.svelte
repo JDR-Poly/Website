@@ -1,44 +1,45 @@
+<!-- @format -->
 <script lang="ts">
-	import { error, warning, info } from '$lib/stores';
-	import { page } from '$app/stores';
-	import { hasRolePermission, Role, Roles, UserPermission } from '$lib/userPermissions';
-	import { goto } from '$app/navigation';
-	import { error as messageError } from '$lib/stores';
-	import Button, { Label, Icon } from '@smui/button';
-	import type { User } from '$gtypes';
-	import Edit from './Edit.svelte';
-	import { writable } from 'svelte/store';
-	import ImageB64 from '$components/ImageB64.svelte';
-	import type { PageData } from './$types';
-	import Dialog, { Actions, Content, Title } from '@smui/dialog';
-	import IconButton from '$components/IconButton.svelte';
+	import { error, warning, info } from "$lib/stores";
+	import { page } from "$app/stores";
+	import { hasRolePermission, Role, Roles, UserPermission } from "$lib/userPermissions";
+	import { goto } from "$app/navigation";
+	import { error as messageError } from "$lib/stores";
+	import Button, { Label, Icon } from "@smui/button";
+	import type { User } from "$gtypes";
+	import Edit from "./Edit.svelte";
+	import { writable } from "svelte/store";
+	import ImageB64 from "$components/ImageB64.svelte";
+	import type { PageData } from "./$types";
+	import Dialog, { Actions, Content, Title } from "@smui/dialog";
+	import IconButton from "$components/IconButton.svelte";
 
 	export let data: PageData;
 
-	let openDeleteConfirmDialog = false
+	let openDeleteConfirmDialog = false;
 	const openEditDialog = writable(false);
 	const { event_id } = $page.params;
 
 	function translateRole(role?: Role) {
-		if (!role?.name) return 'ERROR';
+		if (!role?.name) return "ERROR";
 		switch (role.name) {
 			case Roles.USER.name:
-				return 'un utilisateur';
+				return "un utilisateur";
 			case Roles.MEMBER.name:
-				return 'un membre';
+				return "un membre";
 			case Roles.COMMITTEE.name:
-				return 'un membre du comité';
+				return "un membre du comité";
 			default:
-				return 'ERROR';
+				return "ERROR";
 		}
 	}
 
 	async function deleteEvent(id: number) {
-		const res = await fetch('/api/events/' + id, {
-			method: 'DELETE'
+		const res = await fetch("/api/events/" + id, {
+			method: "DELETE",
 		});
 		if (res.ok) {
-			goto('/events');
+			goto("/events");
 		} else {
 			const body = await res.json();
 			$error = body.message;
@@ -46,8 +47,8 @@
 	}
 
 	async function subscribe() {
-		fetch('/api/events/' + event_id + '/subscribe', {
-			method: 'POST'
+		fetch("/api/events/" + event_id + "/subscribe", {
+			method: "POST",
 		})
 			.then(() => {
 				location.reload();
@@ -58,8 +59,8 @@
 	}
 
 	async function unsubscribe() {
-		fetch('/api/events/' + event_id + '/subscribe', {
-			method: 'DELETE'
+		fetch("/api/events/" + event_id + "/subscribe", {
+			method: "DELETE",
 		})
 			.then(() => {
 				location.reload();
@@ -75,12 +76,12 @@
 
 	function copyMails() {
 		const mails = data.subscribed.flatMap((v) => `${v.email}, `);
-		const text = ''.concat(...mails).slice(0, -2);
+		const text = "".concat(...mails).slice(0, -2);
 		navigator.clipboard.writeText(text);
-		$info = 'Les emails ont été copiés.';
+		$info = "Les emails ont été copiés.";
 	}
 
-	let searchUserToAdd = '';
+	let searchUserToAdd = "";
 	let usersResult: User[] = [];
 	/**
 	 * Handle when the user write text in the searchBar
@@ -102,10 +103,10 @@
 	 */
 	async function search(number: number, index: number): Promise<User[]> {
 		try {
-			let userListURL = new URL($page.url.origin + '/api/users/search');
-			userListURL.searchParams.append('number', number as any);
-			userListURL.searchParams.append('index', index as any);
-			userListURL.searchParams.append('searchText', searchUserToAdd);
+			let userListURL = new URL($page.url.origin + "/api/users/search");
+			userListURL.searchParams.append("number", number as any);
+			userListURL.searchParams.append("index", index as any);
+			userListURL.searchParams.append("searchText", searchUserToAdd);
 
 			return fetch(userListURL).then(async (res) => {
 				const body = await res.json();
@@ -118,22 +119,25 @@
 			});
 		} catch (err) {
 			console.error(err);
-			$error = 'An error occured';
+			$error = "An error occured";
 			return [];
 		}
 	}
 
 	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role);
-	const dateFormater = new Intl.DateTimeFormat('fr-Fr', {
-				dateStyle: 'medium',
-				timeStyle: 'short',
-				timeZone: 'Europe/Paris'
-			})
+	const dateFormater = new Intl.DateTimeFormat("fr-Fr", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: "Europe/Paris",
+	});
 </script>
 
 <svelte:head>
 	<title>{data.event.title} | JDRPoly</title>
-	<meta name="description" content={`Événement JDRPoly, ${data.event.title}, category: ${data.event.category}, date: ${data.event.date}`}>
+	<meta
+		name="description"
+		content={`Événement JDRPoly, ${data.event.title}, category: ${data.event.category}, date: ${data.event.date}`}
+	/>
 </svelte:head>
 
 <main>
@@ -154,21 +158,36 @@
 			</p>
 			<div id="inscription">
 				{#if data.event.inscription}
-					{#if $page.data.authenticated && hasRolePermission('JOIN_EVENT_' + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)}
+					{#if $page.data.authenticated && hasRolePermission("JOIN_EVENT_" + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)}
 						{#if !data.event.inscription_limit || data.subscribed.length < data.event.inscription_limit}
 							{#if (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start)) && (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))}
 								<div id="subscribe">
 									{#if eventHasUser()}
-										<IconButton icon="material-symbols:person-remove" label={`Se désinscrire de ${data.event.title}`} action={() => unsubscribe()} text="Se désinscrire" inline={true}/>
+										<IconButton
+											icon="material-symbols:person-remove"
+											label={`Se désinscrire de ${data.event.title}`}
+											action={() => unsubscribe()}
+											text="Se désinscrire"
+											inline={true}
+										/>
 									{:else}
-										<IconButton icon="material-symbols:person-add" label={`S'inscrire à ${data.event.title}`} action={() => subscribe()} text="S'inscrire" inline={true}/>
+										<IconButton
+											icon="material-symbols:person-add"
+											label={`S'inscrire à ${data.event.title}`}
+											action={() => subscribe()}
+											text="S'inscrire"
+											inline={true}
+										/>
 									{/if}
 								</div>
-								
 							{:else}
 								<p>Les inscriptions ne sont pas ouvertes.</p>
-								{#if data.event.inscription_start && Date.now() < Date.parse(data.event.inscription_start) }
-									<p>Ouverture des inscriptions le {dateFormater.format(Date.parse(data.event.inscription_start))}</p>
+								{#if data.event.inscription_start && Date.now() < Date.parse(data.event.inscription_start)}
+									<p>
+										Ouverture des inscriptions le {dateFormater.format(
+											Date.parse(data.event.inscription_start),
+										)}
+									</p>
 								{/if}
 							{/if}
 						{:else}
@@ -183,7 +202,7 @@
 					<h5>
 						Joueurs participants ({data.subscribed.length}{data.event.inscription_limit
 							? `/${data.event.inscription_limit}`
-							: ''}) :
+							: ""}) :
 					</h5>
 					{#each data.subscribed as user}
 						<div class="positioner">
@@ -194,22 +213,28 @@
 							{/if}
 
 							{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
-								<IconButton icon="material-symbols:close"
-								action={() => {
-									let urlForceDeleteSubscribedUser = new URL($page.url.origin + '/api/admin/events/' + event_id + '/subscribe')
-									urlForceDeleteSubscribedUser.searchParams.append("userId", user.id.toString())
-									fetch(urlForceDeleteSubscribedUser, {
-										method: 'DELETE',
-									})
-										.then(() => {
-											location.reload();
+								<IconButton
+									icon="material-symbols:close"
+									action={() => {
+										let urlForceDeleteSubscribedUser = new URL(
+											$page.url.origin + "/api/admin/events/" + event_id + "/subscribe",
+										);
+										urlForceDeleteSubscribedUser.searchParams.append(
+											"userId",
+											user.id.toString(),
+										);
+										fetch(urlForceDeleteSubscribedUser, {
+											method: "DELETE",
 										})
-										.catch((err) => {
-											$messageError = err.message;
-										});
-								}}
-								label={`Supprimer l'utilisateur ${user.name} de l'événement`}
-								inline={true}
+											.then(() => {
+												location.reload();
+											})
+											.catch((err) => {
+												$messageError = err.message;
+											});
+									}}
+									label={`Supprimer l'utilisateur ${user.name} de l'événement`}
+									inline={true}
 								/>
 							{/if}
 						</div>
@@ -233,16 +258,26 @@
 								{#each usersResult as result}
 									<button
 										on:click={() => {
-											let urlForceAddUser = new URL($page.url.origin + '/api/admin/events/' + event_id + '/subscribe')
-											urlForceAddUser.searchParams.append("userId", result.id.toString())
+											let urlForceAddUser = new URL(
+												$page.url.origin +
+													"/api/admin/events/" +
+													event_id +
+													"/subscribe",
+											);
+											urlForceAddUser.searchParams.append(
+												"userId",
+												result.id.toString(),
+											);
 											fetch(urlForceAddUser, {
-												method: 'POST',
+												method: "POST",
 											})
 												.then(async (res) => {
 													if (!res.ok) {
 														const body = await res.json();
-														$warning = body.message.includes('duplicate key value violates')
-															? 'Cette utilisateur est déjà dans la liste'
+														$warning = body.message.includes(
+															"duplicate key value violates",
+														)
+															? "Cette utilisateur est déjà dans la liste"
 															: body.message;
 													} else {
 														location.reload();
@@ -266,14 +301,29 @@
 		</div>
 		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
 			<div class="admin-btn" style="right: 60px;">
-				<IconButton icon="material-symbols:delete-outline" action={() => (openDeleteConfirmDialog = true)} label={`Supprimer l'événement ${data.event.title}`} inline={true}/>
+				<IconButton
+					icon="material-symbols:delete-outline"
+					action={() => (openDeleteConfirmDialog = true)}
+					label={`Supprimer l'événement ${data.event.title}`}
+					inline={true}
+				/>
 			</div>
 			<div class="admin-btn" style="right: 120px;">
-				<IconButton icon="material-symbols:edit" action={() => openEditDialog.set(true)} label="Supprimer l'événement" inline={true}/>
+				<IconButton
+					icon="material-symbols:edit"
+					action={() => openEditDialog.set(true)}
+					label="Supprimer l'événement"
+					inline={true}
+				/>
 			</div>
 			{#if hasRolePermission(UserPermission.SEE_MAIL, $page.data.user?.role)}
 				<div class="admin-btn" style="right: 180px;">
-					<IconButton icon="material-symbols:mark-email-read" action={copyMails} label="Copier le mail des participants" inline={true}/>
+					<IconButton
+						icon="material-symbols:mark-email-read"
+						action={copyMails}
+						label="Copier le mail des participants"
+						inline={true}
+					/>
 				</div>
 			{/if}
 			<Edit event={data.event} open={openEditDialog} />
@@ -282,14 +332,20 @@
 				<Title id="simple-title">Supprimer ?</Title>
 				<Content id="simple-content">Êtes vous sûr de vouloir supprimer cet événement?</Content>
 				<Actions>
-					<Button on:click={() => {openDeleteConfirmDialog = false}}>
-					<Label>Non</Label>
+					<Button
+						on:click={() => {
+							openDeleteConfirmDialog = false;
+						}}
+					>
+						<Label>Non</Label>
 					</Button>
-					<Button on:click={() => {
-						openDeleteConfirmDialog = false
-						deleteEvent(data.event.id)
-						}}>
-					<Label>Oui</Label>
+					<Button
+						on:click={() => {
+							openDeleteConfirmDialog = false;
+							deleteEvent(data.event.id);
+						}}
+					>
+						<Label>Oui</Label>
 					</Button>
 				</Actions>
 			</Dialog>
@@ -310,7 +366,7 @@
 
 		#img {
 			filter: blur(3px);
-			background: url('/images/events/banner.webp') center/cover;
+			background: url("/images/events/banner.webp") center/cover;
 			aspect-ratio: 16/9;
 			position: absolute;
 			height: 100%;
@@ -401,7 +457,7 @@
 						padding: 0.5em 0;
 						background-color: $primary;
 						color: white;
-						font-family: 'Ubuntu', 'Arial';
+						font-family: "Ubuntu", "Arial";
 						font-size: 1em;
 						border-radius: 7px;
 						text-transform: uppercase;
@@ -448,7 +504,7 @@
 						border-radius: 200px;
 						padding: 5px;
 						transform: translateY(-20%);
-						
+
 						&:hover {
 							background-color: lightgray;
 						}
@@ -457,7 +513,7 @@
 							background-color: white;
 						}
 					}
-					
+
 					:global(svg) {
 						color: black;
 					}

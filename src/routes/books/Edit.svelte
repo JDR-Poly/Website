@@ -1,22 +1,23 @@
+<!-- @format -->
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import Dialog, { Content, Title, Actions } from '@smui/dialog';
-	import Select, { Option } from '@smui/select';
-	import Textfield from '@smui/textfield';
-	import Icon from '@smui/select/icon';
-	import Button, { Label } from '@smui/button';
-	import { error } from '$lib/stores';
-	import type { Book } from '$gtypes';
+	import type { Writable } from "svelte/store";
+	import Dialog, { Content, Title, Actions } from "@smui/dialog";
+	import Select, { Option } from "@smui/select";
+	import Textfield from "@smui/textfield";
+	import Icon from "@smui/select/icon";
+	import Button, { Label } from "@smui/button";
+	import { error } from "$lib/stores";
+	import type { Book } from "$gtypes";
 
 	export let book: Book;
 	export let open: Writable<boolean>;
 	export let statusList: string[];
 
 	async function editBook() {
-		fetch('/api/books/', {
-			method: 'PATCH',
+		fetch("/api/books/", {
+			method: "PATCH",
 			body: JSON.stringify(book),
-			headers: { 'Content-Type': 'application/json' }
+			headers: { "Content-Type": "application/json" },
 		})
 			.then((res) => {
 				location.reload();

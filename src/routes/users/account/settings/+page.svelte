@@ -1,27 +1,28 @@
+<!-- @format -->
 <script lang="ts">
-	import { info, error } from '$lib/stores';
-	import { page } from '$app/stores';
-	import Textfield from '@smui/textfield';
-	import Button, { Label } from '@smui/button';
-	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
+	import { info, error } from "$lib/stores";
+	import { page } from "$app/stores";
+	import Textfield from "@smui/textfield";
+	import Button, { Label } from "@smui/button";
+	import { enhance } from "$app/forms";
+	import { invalidateAll } from "$app/navigation";
 
-	let emailChangeEmail1 = '';
-	let emailChangeEmail2 = '';
-	let emailChangePassword = '';
+	let emailChangeEmail1 = "";
+	let emailChangeEmail2 = "";
+	let emailChangePassword = "";
 
-	let passwordChangeOldPassword = '';
-	let passwordChangeNewPassword1 = '';
-	let passwordChangeNewPassword2 = '';
+	let passwordChangeOldPassword = "";
+	let passwordChangeNewPassword1 = "";
+	let passwordChangeNewPassword2 = "";
 
-	let nameChangeName = '';
+	let nameChangeName = "";
 
-	let deleteAccountPassword = '';
+	let deleteAccountPassword = "";
 </script>
 
 <svelte:head>
 	<title>Paramètres | JDRPoly</title>
-	<meta name="description" content={`Changer ses paramètres`}>
+	<meta name="description" content={`Changer ses paramètres`} />
 </svelte:head>
 
 <main>
@@ -36,10 +37,10 @@
 		action="?/updateEmail"
 		use:enhance={({}) => {
 			return async ({ result, update }) => {
-				if (result.type == 'success') {
-					$info = 'Votre mail a été mis à jour.';
+				if (result.type == "success") {
+					$info = "Votre mail a été mis à jour.";
 					update();
-				} else if (result.type == 'failure') {
+				} else if (result.type == "failure") {
 					$error = result.data?.message;
 				}
 				invalidateAll();
@@ -71,9 +72,7 @@
 		<Button
 			touch
 			variant="unelevated"
-			disabled={!emailChangeEmail1 ||
-				!emailChangePassword ||
-				emailChangeEmail1 != emailChangeEmail2}
+			disabled={!emailChangeEmail1 || !emailChangePassword || emailChangeEmail1 != emailChangeEmail2}
 		>
 			<Label>Changer</Label>
 		</Button>
@@ -85,10 +84,10 @@
 		action="?/updateName"
 		use:enhance={({}) => {
 			return async ({ result, update }) => {
-				if (result.type == 'success') {
-					$info = 'Votre nom a été mis à jour.';
+				if (result.type == "success") {
+					$info = "Votre nom a été mis à jour.";
 					update();
-				} else if (result.type == 'failure') {
+				} else if (result.type == "failure") {
 					$error = result.data?.message;
 				}
 				invalidateAll();
@@ -104,7 +103,7 @@
 			style="width: 100%"
 		/>
 
-		<Button on:click={() => ''} touch variant="unelevated" disabled={!nameChangeName}>
+		<Button on:click={() => ""} touch variant="unelevated" disabled={!nameChangeName}>
 			<Label>Changer</Label>
 		</Button>
 	</form>
@@ -115,10 +114,10 @@
 		action="?/updatePassword"
 		use:enhance={({}) => {
 			return async ({ result, update }) => {
-				if (result.type == 'success') {
-					$info = 'Votre mot de passe a été mis à jour.';
+				if (result.type == "success") {
+					$info = "Votre mot de passe a été mis à jour.";
 					update();
-				} else if (result.type == 'failure') {
+				} else if (result.type == "failure") {
 					$error = result.data?.message;
 				}
 				invalidateAll();
@@ -177,7 +176,7 @@
 			style="width: 100%"
 		/>
 
-		<Button on:click={() => ''} touch variant="unelevated" disabled={!deleteAccountPassword}>
+		<Button on:click={() => ""} touch variant="unelevated" disabled={!deleteAccountPassword}>
 			<Label>SUPPRIMER</Label>
 		</Button>
 	</form>

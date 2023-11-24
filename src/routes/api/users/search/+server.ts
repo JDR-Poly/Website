@@ -1,5 +1,7 @@
+/** @format */
+
 import { error, json } from "@sveltejs/kit";
-import { db } from "$lib/server/postgresClient"
+import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import type { RequestHandler } from "./$types";
 
@@ -13,25 +15,32 @@ import type { RequestHandler } from "./$types";
  */
 
 export const GET = (async ({ url, locals }) => {
-	if(!locals.authenticated) throw error(401)
- 	if(!hasRolePermission(UserPermission.SEE_USERS_PROFILE, locals.user?.role)) throw error(403)
+	if (!locals.authenticated) throw error(401);
+	if (!hasRolePermission(UserPermission.SEE_USERS_PROFILE, locals.user?.role)) throw error(403);
 
-	const number = parseInt(url.searchParams.get("number") || "null") || null
-	const index = parseInt(url.searchParams.get("index") || "0") || 0
-	const searchText = (url.searchParams.get("searchText") != undefined ? "%" + (url.searchParams.get("searchText") || "") + "%" : "%")
-	const mailSQLText = locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role) ? "email, " : "" 
+	const number = parseInt(url.searchParams.get("number") || "null") || null;
+	const index = parseInt(url.searchParams.get("index") || "0") || 0;
+	const searchText =
+		url.searchParams.get("searchText") != undefined
+			? "%" + (url.searchParams.get("searchText") || "") + "%"
+			: "%";
+	const mailSQLText =
+		locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role)
+			? "email, "
+			: "";
 
-	return db.any(
-		`SELECT id, ${mailSQLText}name, role 
+	return db
+		.any(
+			`SELECT id, ${mailSQLText}name, role 
 		FROM users WHERE name ~~* $1 OR email ~~* $1
 		ORDER BY id DESC
 		LIMIT $2 OFFSET $3;`,
-		[searchText, number, index]
-	)
+			[searchText, number, index],
+		)
 		.then((res) => {
-			return json(res)
+			return json(res);
 		})
 		.catch((err) => {
-			throw error(500, err.message)
-		})
-}) satisfies RequestHandler
+			throw error(500, err.message);
+		});
+}) satisfies RequestHandler;

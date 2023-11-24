@@ -1,5 +1,7 @@
-import adapter from '@sveltejs/adapter-node';
-import preprocess from 'svelte-preprocess';
+/** @format */
+
+import adapter from "@sveltejs/adapter-node";
+import preprocess from "svelte-preprocess";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -7,15 +9,15 @@ const config = {
 	// for more information about preprocessors
 	preprocess: preprocess({
 		scss: {
-		  prependData: `@import './static/sass/_variables.scss';`
-		}
-	 }),
+			prependData: `@import './static/sass/_variables.scss';`,
+		},
+	}),
 
 	kit: {
 		adapter: adapter(),
 		alias: {
-			$components: 'src/lib/components',
-			$gtypes: 'src/types.ts'
+			$components: "src/lib/components",
+			$gtypes: "src/types.ts",
 		},
 		/*csp: {
             directives: {
@@ -25,7 +27,7 @@ const config = {
             },
 			mode: "auto"
         }*/
-	}
+	},
 };
 
 export default config;

@@ -1,12 +1,13 @@
+<!-- @format -->
 <script lang="ts">
-	import type { User } from '$gtypes';
-	import { error } from '$lib/stores';
-	import { page } from '$app/stores';
-	import { hasRolePermission, UserPermission } from '$lib/userPermissions';
-	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from '@smui/data-table';
-	import LinearProgress from '@smui/linear-progress';
-	import type { PageData } from './$types';
-	import IB from '@smui/icon-button';
+	import type { User } from "$gtypes";
+	import { error } from "$lib/stores";
+	import { page } from "$app/stores";
+	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from "@smui/data-table";
+	import LinearProgress from "@smui/linear-progress";
+	import type { PageData } from "./$types";
+	import IB from "@smui/icon-button";
 
 	export let data: PageData;
 
@@ -14,7 +15,7 @@
 	let usersSearchBar: User[] = [];
 	let selectedIndex = -1;
 
-	let searchText = '';
+	let searchText = "";
 	let index = 0;
 
 	//List of users
@@ -38,9 +39,9 @@
 	 * @param event KeyboardEvent from svelte
 	 */
 	function onKeypressInput(event: KeyboardEvent) {
-		if (event.key === 'ArrowDown') {
+		if (event.key === "ArrowDown") {
 			selectedIndex = Math.min(selectedIndex + 1, usersSearchBar.length - 1);
-		} else if (event.key === 'ArrowUp') {
+		} else if (event.key === "ArrowUp") {
 			selectedIndex = Math.max(0, selectedIndex - 1);
 		}
 	}
@@ -54,10 +55,10 @@
 	async function search(number: number, index: number): Promise<User[]> {
 		try {
 			loaded = false;
-			let userListURL = new URL($page.url.origin + '/api/users/search');
-			userListURL.searchParams.append('number', number as any);
-			userListURL.searchParams.append('index', index as any);
-			userListURL.searchParams.append('searchText', searchText);
+			let userListURL = new URL($page.url.origin + "/api/users/search");
+			userListURL.searchParams.append("number", number as any);
+			userListURL.searchParams.append("index", index as any);
+			userListURL.searchParams.append("searchText", searchText);
 
 			return fetch(userListURL).then(async (res) => {
 				const body = await res.json();
@@ -71,7 +72,7 @@
 			});
 		} catch (err) {
 			console.error(err);
-			$error = 'An error occured';
+			$error = "An error occured";
 			loaded = true;
 			return [];
 		}
@@ -79,7 +80,7 @@
 
 	function handleSort() {
 		users.sort((a, b) => {
-			return sortDirection === 'ascending' ? a.id - b.id : b.id - a.id
+			return sortDirection === "ascending" ? a.id - b.id : b.id - a.id;
 		});
 		users = users;
 	}
@@ -88,8 +89,8 @@
 		$page.data.authenticated && hasRolePermission(UserPermission.SEE_MAIL, $page.data.user.role);
 	let loaded = true;
 
-	let sort = 'id';
-	let sortDirection: Lowercase<keyof typeof SortValue> = 'descending';
+	let sort = "id";
+	let sortDirection: Lowercase<keyof typeof SortValue> = "descending";
 </script>
 
 <svelte:head>
@@ -127,7 +128,7 @@
 			<div class="searchBar-items">
 				{#each usersSearchBar as result, i}
 					<a href="/users/profile/{result.id}"
-						><div class={i == selectedIndex ? 'searchBar-active' : ''}>
+						><div class={i == selectedIndex ? "searchBar-active" : ""}>
 							<strong>{result.name}</strong>
 						</div></a
 					>
@@ -223,7 +224,7 @@
 		font-size: 16px;
 	}
 
-	input[type='text'] {
+	input[type="text"] {
 		background-color: #f1f1f1;
 		width: 100%;
 	}

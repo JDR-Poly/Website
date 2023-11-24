@@ -1,11 +1,12 @@
+<!-- @format -->
 <script lang="ts">
-	import Select, { Option } from '@smui/select';
-	import Icon from '@smui/select/icon';
-	import Dialog, { Content, Title, Actions } from '@smui/dialog';
-	import Button, { Label } from '@smui/button';
-	import Textfield from '@smui/textfield';
-	import type { Writable } from 'svelte/store';
-	import { error } from '$lib/stores';
+	import Select, { Option } from "@smui/select";
+	import Icon from "@smui/select/icon";
+	import Dialog, { Content, Title, Actions } from "@smui/dialog";
+	import Button, { Label } from "@smui/button";
+	import Textfield from "@smui/textfield";
+	import type { Writable } from "svelte/store";
+	import { error } from "$lib/stores";
 
 	export let open: Writable<boolean>;
 	export let statusList: string[];
@@ -14,13 +15,13 @@
 		const data = {
 			title: title,
 			caution: caution,
-			status: status
+			status: status,
 		};
 
-		fetch('/api/books', {
-			method: 'POST',
+		fetch("/api/books", {
+			method: "POST",
 			body: JSON.stringify(data),
-			headers: { 'Content-Type': 'application/json' }
+			headers: { "Content-Type": "application/json" },
 		})
 			.then((res) => {
 				location.reload();
@@ -30,9 +31,9 @@
 			});
 	}
 
-	let title = '';
-	let caution = '';
-	let status = 'Disponible';
+	let title = "";
+	let caution = "";
+	let status = "Disponible";
 </script>
 
 <Dialog bind:open={$open}>

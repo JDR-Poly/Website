@@ -1,18 +1,23 @@
+<!-- @format -->
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import Dialog, { Content, Title, Actions } from '@smui/dialog';
-	import Select, { Option } from '@smui/select';
-	import Textfield from '@smui/textfield';
-	import Icon from '@smui/select/icon';
-	import Button, { Label } from '@smui/button';
-	import { error, warning } from '$lib/stores';
-	import type { Event } from '$gtypes';
-	import IB from '@smui/icon-button';
-	import Checkbox from '@smui/checkbox';
-	import FormField from '@smui/form-field';
-	import { categories, returnJoinEventRoles } from '$lib/evenementsUtils';
-	import { getBase64, getLocalDateStringOrNullFromString, parseToLocalDateStringWithoutMilis } from '$lib/utils';
-	import Compressor from 'compressorjs';
+	import type { Writable } from "svelte/store";
+	import Dialog, { Content, Title, Actions } from "@smui/dialog";
+	import Select, { Option } from "@smui/select";
+	import Textfield from "@smui/textfield";
+	import Icon from "@smui/select/icon";
+	import Button, { Label } from "@smui/button";
+	import { error, warning } from "$lib/stores";
+	import type { Event } from "$gtypes";
+	import IB from "@smui/icon-button";
+	import Checkbox from "@smui/checkbox";
+	import FormField from "@smui/form-field";
+	import { categories, returnJoinEventRoles } from "$lib/evenementsUtils";
+	import {
+		getBase64,
+		getLocalDateStringOrNullFromString,
+		parseToLocalDateStringWithoutMilis,
+	} from "$lib/utils";
+	import Compressor from "compressorjs";
 
 	export let event: Event;
 	let images: null | FileList = null;
@@ -21,17 +26,17 @@
 
 	export let open: Writable<boolean>;
 
-	async function editEvent() {	
+	async function editEvent() {
 		if (isImageProcessing) {
 			$warning = "L'image est en cours de traitement. Attendez 5 secondes et recommencez.";
 			return;
 		}
-			
+
 		fetch(`/api/events/${event.id}`, {
-			method: 'PATCH',
+			method: "PATCH",
 			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
+				Accept: "application/json",
+				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				title: event.title,
@@ -43,8 +48,8 @@
 				inscription_group: event.inscription_group,
 				inscription_limit: event.inscription_limit,
 				inscription_start: event.inscription_start,
-				inscription_stop: event.inscription_stop
-			})
+				inscription_stop: event.inscription_stop,
+			}),
 		})
 			.then((res) => {
 				location.reload();
@@ -62,22 +67,22 @@
 		return false;
 	})();
 
-	
 	//trick for bind:value for date
-	let internal_date: string = event.date ? parseToLocalDateStringWithoutMilis(event.date) : '';
-	$: if (internal_date) event.date = getLocalDateStringOrNullFromString(internal_date) as string
+	let internal_date: string = event.date ? parseToLocalDateStringWithoutMilis(event.date) : "";
+	$: if (internal_date) event.date = getLocalDateStringOrNullFromString(internal_date) as string;
 
 	let internal_inscription_start: string = event.inscription_start
 		? parseToLocalDateStringWithoutMilis(event.inscription_start)
-		: '';
-	
-	$: if (internal_inscription_start) event.inscription_start = getLocalDateStringOrNullFromString(internal_inscription_start) as string
+		: "";
+
+	$: if (internal_inscription_start)
+		event.inscription_start = getLocalDateStringOrNullFromString(internal_inscription_start) as string;
 
 	let internal_inscription_stop: string = event.inscription_stop
 		? parseToLocalDateStringWithoutMilis(event.inscription_stop)
-		: '';
+		: "";
 	$: if (internal_inscription_stop)
-		event.inscription_stop = getLocalDateStringOrNullFromString(internal_inscription_stop) as string
+		event.inscription_stop = getLocalDateStringOrNullFromString(internal_inscription_stop) as string;
 
 	//Checkbot value
 	let isInscriptionStop = Boolean(internal_inscription_stop);
@@ -120,25 +125,25 @@
 					on:change={async () => {
 						if (images && images[0]) {
 							if (images[0].size > 4e6) {
-								$warning = 'Image max 4MB';
+								$warning = "Image max 4MB";
 								images = null;
 							} else {
-								isImageProcessing = true
-								console.log('Processing image');
+								isImageProcessing = true;
+								console.log("Processing image");
 
 								new Compressor(images[0], {
 									quality: 0.6,
-									mimeType: 'image/webp',
+									mimeType: "image/webp",
 									maxWidth: 1536,
 									maxHeight: 864,
 									async success(result) {
-										console.log('Image processing finished.');
+										console.log("Image processing finished.");
 										image = result;
 										isImageProcessing = false;
 									},
 									error(err) {
 										console.log(err.message);
-									}
+									},
 								});
 							}
 						}
@@ -159,7 +164,7 @@
 					on:change={() => {
 						if (!event) return;
 						if (!event.inscription) {
-							event.inscription_group = 'MEMBER';
+							event.inscription_group = "MEMBER";
 							event.inscription_start = undefined;
 							event.inscription_stop = undefined;
 							isInscriptionStop = false;
@@ -198,7 +203,7 @@
 						on:change={() => {
 							if (hasInscriptionLimit && !event.inscription_limit) {
 								event.inscription_limit = 16;
-							} else if(!hasInscriptionLimit) {
+							} else if (!hasInscriptionLimit) {
 								event.inscription_limit = undefined;
 							}
 						}}
@@ -256,11 +261,11 @@
 {/if}
 
 <style lang="scss">
-	.hide-file-ui :global(input[type='file']::file-selector-button) {
+	.hide-file-ui :global(input[type="file"]::file-selector-button) {
 		display: none;
 	}
 
-	.hide-file-ui :global(:not(.mdc-text-field--label-floating) input[type='file']) {
+	.hide-file-ui :global(:not(.mdc-text-field--label-floating) input[type="file"]) {
 		color: transparent;
 	}
 
