@@ -7,7 +7,6 @@
 		"build": "env-cmd vite build",
 		"package": "vite package",
 		"preview": "env-cmd vite preview",
-		"prepare": "npm run smui-theme",
 		"migrator": "NODE_OPTIONS='-r dotenv/config' node migrator.js",
 		"smui-theme": "smui-theme compile static/smui.css -i src/theme",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
