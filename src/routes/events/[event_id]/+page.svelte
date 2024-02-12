@@ -136,6 +136,10 @@
 	<title>{data.event.title} | JDRPoly</title>
 	<meta
 		name="description"
+		content={`${data.event.title} le ${dateFormater.format(Date.parse(data.event.date))}`}
+	/>
+	<meta
+		name="keywords"
 		content={`Événement JDRPoly, ${data.event.title}, category: ${data.event.category}, date: ${data.event.date}`}
 	/>
 </svelte:head>
