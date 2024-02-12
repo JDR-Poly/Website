@@ -22,7 +22,7 @@ const config = {
 		alias: {
 			$components: "src/lib/components",
 			$gtypes: "src/types.ts",
-			$utils: "src/lib/utils"
+			$utils: "src/lib/utils",
 		},
 		/*csp: {
             directives: {
