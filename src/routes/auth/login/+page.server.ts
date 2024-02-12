@@ -73,6 +73,10 @@ export const actions = {
 		if (!validateEmail(email) || !validateUsername(username) || !validatePassword(password))
 			return fail(406, { message: "email, username or password invalid" });
 
+
+		if(new Blob([password!]).size >= 72) {
+			return fail(406, { message : "Password cannot be longer than 72 bytes due to security implementation."})
+		} 
 		if (import.meta.env.PROD) {
 			const captchaToken = form.get("cf-turnstile-response")!.toString();
 			const { success, error } = await validateToken(captchaToken, fetch);
@@ -158,12 +162,12 @@ function validateEmail(email?: string): Boolean {
 	return new RegExp("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$").test(email);
 }
 
-function validateUsername(email?: string): Boolean {
-	return true;
+function validateUsername(username?: string): Boolean {
+	return username != null && username.length > 2;
 }
 
 function validatePassword(password?: string): Boolean {
-	return true;
+	return password != null && password.length > 6;
 }
 
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789%!$*#@?a";
