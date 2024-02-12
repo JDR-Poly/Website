@@ -4,6 +4,7 @@
 	import Textfield from "@smui/textfield";
 	import { applyAction, enhance } from "$app/forms";
 	import IconButton from "$components/IconButton.svelte";
+	import { page } from "$app/stores";
 
 	let memberCode = "";
 
@@ -13,8 +14,16 @@
 </script>
 
 <svelte:head>
+	<!-- Primary Meta Tags -->
 	<title>Entrer un code | JDRPoly</title>
-	<meta name="description" content={`Activer son code pour devenir membre`} />
+	<meta name="title" content="Entrer un code | JDRPoly" />
+	<meta name="description" content="Activer son code pour devenir membre." />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content="Entrer un code | JDRPoly" />
+	<meta property="og:description" content="Activer son code pour devenir membre." />
 </svelte:head>
 
 <main>

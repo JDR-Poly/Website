@@ -68,8 +68,16 @@
 </script>
 
 <svelte:head>
+	<!-- Primary Meta Tags -->
 	<title>Documents officiels | JDRPoly</title>
-	<meta name="description" content={`Règlement JDRPoly, liste des membres d'honneur, organigrame`} />
+	<meta name="title" content="Documents officiels | JDRPoly" />
+	<meta name="description" content="Règlement JDRPoly, liste des membres d'honneur, organigrame." />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content="Documents officiels | JDRPoly" />
+	<meta property="og:description" content="Règlement JDRPoly, liste des membres d'honneur, organigrame." />
 </svelte:head>
 
 <main>

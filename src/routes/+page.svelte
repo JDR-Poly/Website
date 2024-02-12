@@ -2,6 +2,7 @@
 <script lang="ts">
 	import EventCard from "$components/EventCard.svelte";
 	import Icon from "@iconify/svelte";
+	import { page } from "$app/stores";
 
 	import { fade } from "svelte/transition";
 	import type { Event } from "$gtypes";
@@ -22,9 +23,20 @@
 </script>
 
 <svelte:head>
+	<!-- Primary Meta Tags -->
 	<title>Accueil | JDRPoly</title>
+	<meta name="title" content="Accueil | JDRPoly" />
 	<meta
 		name="description"
+		content="JDRPoly est la commission de jeux de rôle de l'AGEPoly. Elle promeut les jeux de rôle à l'EPFL."
+	/>
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content="Accueil | JDRPoly" />
+	<meta
+		property="og:description"
 		content="JDRPoly est la commission de jeux de rôle de l'AGEPoly. Elle promeut les jeux de rôle à l'EPFL."
 	/>
 </svelte:head>

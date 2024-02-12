@@ -6,16 +6,21 @@
 	import EventCard from "$components/EventCard.svelte";
 	import IconButton from "$components/IconButton.svelte";
 	import { categories } from "$lib/evenementsUtils";
-
+	import { page } from "$app/stores";
 	export let data: PageData;
 </script>
 
 <svelte:head>
+	<!-- Primary Meta Tags -->
 	<title>Événements | JDRPoly</title>
-	<meta
-		name="description"
-		content={`Liste d'événement JDRPoly, Catégories: ${categories}, Pays: Suisse `}
-	/>
+	<meta name="title" content="Événements | JDRPoly" />
+	<meta name="description" content={`Liste des événements de JDRPoly, Catégories: ${categories}`} />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content="Événements | JDRPoly" />
+	<meta property="og:description" content={`Liste des événements de JDRPoly, Catégories: ${categories}`} />
 </svelte:head>
 
 <main>

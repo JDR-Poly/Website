@@ -7,6 +7,7 @@
 	import { goto, invalidateAll } from "$app/navigation";
 	import LinearProgress from "@smui/linear-progress";
 	import { Turnstile } from "svelte-turnstile";
+	import { page } from "$app/stores";
 
 	let lastName = "";
 	let firstName = "";
@@ -27,8 +28,16 @@
 </script>
 
 <svelte:head>
+	<!-- Primary Meta Tags -->
 	<title>{formType} | JDRPoly</title>
+	<meta name="title" content={`${formType} | JDRPoly`} />
 	<meta name="description" content={formType} />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content={`${formType} | JDRPoly`} />
+	<meta property="og:description" content={formType} />
 </svelte:head>
 
 <main>

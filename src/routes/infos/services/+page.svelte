@@ -1,7 +1,19 @@
 <!-- @format -->
+<script lang="ts">
+	import { page } from "$app/stores";
+</script>
+<!-- @format -->
 <svelte:head>
+	<!-- Primary Meta Tags -->
 	<title>Services | JDRPoly</title>
-	<meta name="description" content={`Services proposées, salles à disposition`} />
+	<meta name="title" content="Services | JDRPoly" />
+	<meta name="description" content="Services proposées, salles à disposition." />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content="Services | JDRPoly" />
+	<meta property="og:description" content="Services proposées, salles à disposition." />
 </svelte:head>
 
 <main>
@@ -13,7 +25,6 @@
 		quelques jours en avance. Les salles sont disponibles pour utilisation de 19h à 22h.
 	</p>
 </main>
-
 <style lang="scss">
 	main {
 		width: 70%;

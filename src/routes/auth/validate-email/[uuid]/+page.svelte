@@ -19,8 +19,16 @@
 </script>
 
 <svelte:head>
-	<title>Vérification mail | JDRPoly</title>
-	<meta name="description" content="Mail validé" />
+	<!-- Primary Meta Tags -->
+	<title>Valider email | JDRPoly</title>
+	<meta name="title" content="Valider email | JDRPoly" />
+	<meta name="description" content="Valider son mail d'utilisateur" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content="Valider email | JDRPoly" />
+	<meta property="og:description" content="Valider son mail d'utilisateur" />
 </svelte:head>
 
 <main>

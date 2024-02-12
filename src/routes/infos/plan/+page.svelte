@@ -1,7 +1,19 @@
 <!-- @format -->
+<script lang="ts">
+	import { page } from "$app/stores";
+</script>
+<!-- @format -->
 <svelte:head>
+	<!-- Primary Meta Tags -->
 	<title>Accès | JDRPoly</title>
-	<meta name="description" content={`Instruction accèder aux salles des événéments`} />
+	<meta name="title" content="Accès | JDRPoly" />
+	<meta name="description" content="Instruction accèder aux salles des événéments." />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content="Accès | JDRPoly" />
+	<meta property="og:description" content="Instruction accèder aux salles des événéments." />
 </svelte:head>
 
 <main>
@@ -29,7 +41,6 @@
 
 	<img src="/images/plan/plan.webp" alt="plan accès INM" width="1200" height="1700" />
 </main>
-
 <style lang="scss">
 	main {
 		width: 70%;

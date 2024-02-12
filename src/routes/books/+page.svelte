@@ -10,7 +10,7 @@
 	import type { PageData } from "./$types";
 	import IconButton from "$components/IconButton.svelte";
 	import Icon, { iconExists } from "@iconify/svelte";
-	import { text } from "@sveltejs/kit";
+	import { page } from "$app/stores";
 
 	const openAddDialog = writable(false);
 	const openEditDialog = writable(false);
@@ -73,8 +73,16 @@
 </script>
 
 <svelte:head>
+	<!-- Primary Meta Tags -->
 	<title>Livres | JDRPoly</title>
+	<meta name="title" content="Livres | JDRPoly" />
 	<meta name="description" content="Livres de jeux de rôle empruntable." />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content="Livres | JDRPoly" />
+	<meta property="og:description" content="Livres de jeux de rôle empruntable." />
 </svelte:head>
 
 <main>

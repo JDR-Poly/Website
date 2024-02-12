@@ -133,14 +133,25 @@
 </script>
 
 <svelte:head>
+	<!-- Primary Meta Tags -->
 	<title>{data.event.title} | JDRPoly</title>
+	<meta name="title" content={`${data.event.title} | JDRPoly`} />
 	<meta
 		name="description"
-		content={`${data.event.title} le ${dateFormater.format(Date.parse(data.event.date))}`}
+		content={`Un événement de ${data.event.category} le ${dateFormater.format(
+			Date.parse(data.event.date),
+		)}`}
 	/>
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.href} />
+	<meta property="og:title" content={`${data.event.title} | JDRPoly`} />
 	<meta
-		name="keywords"
-		content={`Événement JDRPoly, ${data.event.title}, category: ${data.event.category}, date: ${data.event.date}`}
+		property="og:description"
+		content={`Un événement de ${data.event.category} le ${dateFormater.format(
+			Date.parse(data.event.date),
+		)}`}
 	/>
 </svelte:head>
 
