@@ -11,7 +11,7 @@
 	"htmlWhitespaceSensitivity": "css",
 	"vueIndentScriptAndStyle": false,
 	"proseWrap": "preserve",
-	"insertPragma": false,
+	"insertPragma": true,
 	"printWidth": 110,
 	"requirePragma": false,
 	"tabWidth": 4,

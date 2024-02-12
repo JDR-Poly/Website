@@ -1,3 +1,5 @@
+/** @format */
+
 import { fontFamily } from "tailwindcss/defaultTheme";
 
 /** @type {import('tailwindcss').Config} */
