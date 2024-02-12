@@ -30,9 +30,14 @@ ALTER TABLE public.sessions
  ----- EMAIL VALIDATION CODE TABLE -----
 
 CREATE TABLE public.email_validation(
-	id INT PRIMARY KEY NOT NULL,
+	user_id INT PRIMARY KEY NOT NULL,
 	validation_token VARCHAR(255) NOT NULL
 );
+
+ALTER TABLE public.email_validation
+    ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON DELETE CASCADE ON UPDATE CASCADE;
 
  ----- MEMBER CODE TABLE -----
 
