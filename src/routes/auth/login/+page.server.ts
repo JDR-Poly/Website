@@ -73,10 +73,11 @@ export const actions = {
 		if (!validateEmail(email) || !validateUsername(username) || !validatePassword(password))
 			return fail(406, { message: "email, username or password invalid" });
 
-
-		if(new Blob([password!]).size >= 72) {
-			return fail(406, { message : "Password cannot be longer than 72 bytes due to security implementation."})
-		} 
+		if (new Blob([password!]).size >= 72) {
+			return fail(406, {
+				message: "Password cannot be longer than 72 bytes due to security implementation.",
+			});
+		}
 		if (import.meta.env.PROD) {
 			const captchaToken = form.get("cf-turnstile-response")!.toString();
 			const { success, error } = await validateToken(captchaToken, fetch);
