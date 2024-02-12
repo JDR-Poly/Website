@@ -1,19 +1,20 @@
 <!-- @format -->
 <script lang="ts">
-	import AlertDisplay from "$lib/components/AlertDisplay.svelte";
-	import Navbar from "./_layout/Navbar.svelte";
-	import Footer from "./_layout/Footer.svelte";
+	import "../app.pcss";
+    import AlertDisplay from "$lib/components/AlertDisplay.svelte";
+    import Navbar from "./_layout/Navbar.svelte";
+    import Footer from "./_layout/Footer.svelte";
 </script>
 
 <nav>
-	<Navbar />
+	<Navbar></Navbar>
 </nav>
 
-<slot />
+<slot></slot>
 
-<Footer />
+<Footer></Footer>
 
-<AlertDisplay />
+<AlertDisplay></AlertDisplay>
 
 <style lang="scss" global>
 	@import "static/sass/layout";
