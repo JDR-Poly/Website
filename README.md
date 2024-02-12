@@ -44,9 +44,3 @@ TURNSTILE_SECRET=
 
 https use express server under the hood (https://kit.svelte.dev/docs/adapter-node#custom-server),
 you will need to modify server.js to set your own certificate.
-
-## Additionals informations
-
-### Adding smui packages (deprecated - SMUI is currently being removed) :
-
-If you add a smui package, you need to run `npm run prepare` after having added the smui package
