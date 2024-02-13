@@ -50,6 +50,12 @@ const config = {
 					DEFAULT: "hsl(var(--card) / <alpha-value>)",
 					foreground: "hsl(var(--card-foreground) / <alpha-value>)",
 				},
+				//Custom, not the best way to do it
+				//Should change the default primary varriable
+				cprimary: "#030528",
+				cprimarylight: "#011143",
+				csecondary: "#f2f2f2",
+				csecondarydark: "#ececec",
 			},
 			borderRadius: {
 				lg: "var(--radius)",
