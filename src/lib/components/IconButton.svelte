@@ -4,9 +4,9 @@
 
 	export let icon: string;
 	export let action: (e: MouseEvent) => void;
-	export let text: string = "";
-	export let inline: boolean = false;
-	export let disabled: boolean = false;
+	export let text = "";
+	export let inline = false;
+	export let disabled = false;
 	export let label: string;
 </script>
 

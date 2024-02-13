@@ -21,7 +21,7 @@ export const handle: Handle = async function ({ event, resolve }) {
 	//Get user session
 	const id = await db
 		.one("SELECT user_id FROM sessions WHERE cookieId=$1", [session], (a) => a.user_id)
-		.catch(() => {});
+		.catch();
 	if (!id) return resolve(event);
 
 	//Get user

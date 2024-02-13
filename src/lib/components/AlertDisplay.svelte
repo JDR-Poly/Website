@@ -1,13 +1,13 @@
 <!-- @format -->
 <script lang="ts">
-	import { fade, fly } from "svelte/transition";
+	import { fly } from "svelte/transition";
 	import { error, warning, info } from "$lib/stores";
 	import IconButton from "./IconButton.svelte";
 
 	let idCounter = 0;
 
 	function closeButton(event: MouseEvent) {
-		removeAlertById(parseInt((event.target as any).parentElement.parentElement.id));
+		removeAlertById(parseInt((event.target as HTMLElement)?.parentElement?.parentElement?.id as string));
 	}
 
 	function removeAlertById(id: number) {

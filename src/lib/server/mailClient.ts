@@ -23,7 +23,7 @@ async function preloadTransporter() {
 				pass: env.MAIL_PASSWORD,
 			},
 		});
-		testTransporter.verify(async (error, success) => {
+		testTransporter.verify(async (error, _) => {
 			if (!error) {
 				transporter = testTransporter;
 				logger.info("Email transporter is correctly linked");

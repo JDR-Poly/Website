@@ -18,8 +18,8 @@ const categories = [
  * @returns list of possible group for event filter
  */
 function returnJoinEventRoles(): string[] {
-	let res = [];
-	for (let permission in UserPermission) {
+	const res = [];
+	for (const permission in UserPermission) {
 		if (permission.includes("JOIN_EVENT_")) {
 			res.push(permission.split("JOIN_EVENT_")[1]);
 		}

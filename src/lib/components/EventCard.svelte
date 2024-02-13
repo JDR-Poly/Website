@@ -5,7 +5,7 @@
 
 	export let event: Event;
 
-	let regexExpr: RegExp = /(\n){2,}/g;
+	let regexExpr = /(\n){2,}/g;
 </script>
 
 <div class="event">
