@@ -1,16 +1,17 @@
 <!-- @format -->
 <script lang="ts">
 	import type { PageData } from "./$types";
-	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from "@smui/data-table";
 	import type { Event } from "$gtypes";
 	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 	import { page } from "$app/stores";
 	import { goto } from "$app/navigation";
 	import IconButton from "$components/IconButton.svelte";
-	import IB from "@smui/icon-button";
+	import DataTable from "./data-table.svelte";
+
 	export let data: PageData;
 
 	let events: Event[] = data.events;
+
 	function handleSort() {
 		events.sort((a: Event, b: Event) => {
 			const [aVal, bVal] = [a[sort], b[sort]][
@@ -33,56 +34,13 @@
 	}
 
 	let sort: keyof Event = "date";
-	let sortDirection: Lowercase<keyof typeof SortValue> = "ascending";
 </script>
 
 <main>
-	<h2>Événements</h2>
-
-	<DataTable
-		table$aria-label="Événements"
-		style="width: 100%;"
-		sortable
-		bind:sort
-		bind:sortDirection
-		on:SMUIDataTable:sorted={handleSort}
-	>
-		<Head>
-			<Row>
-				<Cell numeric columnId="id">
-					<IB class="material-icons">arrow_upward</IB>
-					<Label>Id</Label>
-				</Cell>
-				<Cell sortable={false}>Titre</Cell>
-				<Cell sortable={false}>Catégorie</Cell>
-				<Cell columnId="date">
-					<Label>Date</Label>
-					<IB class="material-icons">arrow_upward</IB>
-				</Cell>
-			</Row>
-		</Head>
-		<Body>
-			{#each events as event (event.id)}
-				<Row>
-					<Cell numeric>{event.id}</Cell>
-					<Cell><a href="/events/{event.id}">{event.title}</a></Cell>
-					<Cell>{event.category}</Cell>
-					<Cell
-						>{new Intl.DateTimeFormat("fr-Fr", {
-							year: "numeric",
-							month: "numeric",
-							day: "numeric",
-							hour: "numeric",
-							minute: "numeric",
-							second: "numeric",
-							hour12: false,
-							timeZone: "Europe/Paris",
-						}).format(Date.parse(event.date))}</Cell
-					>
-				</Row>
-			{/each}
-		</Body>
-	</DataTable>
+	<div class="container mx-auto py-10">
+		<h2>Événements :</h2>
+		<DataTable {events}/>
+	</div>
 
 	{#if hasRolePermission(UserPermission.CREATE_EVENT, $page.data.user?.role)}
 		<div class="add-button-container">
@@ -100,13 +58,13 @@
 
 <style lang="scss">
 	main {
-		margin: 4em auto;
-		width: 70%;
-		min-height: 70vh;
+		margin: 4em;
 
 		h2 {
-			margin-bottom: 0.5em;
-			width: fit-content;
+			text-transform: uppercase;
+			font-weight: 600;
+			letter-spacing: 0.15em;
+			margin-bottom: 5px;
 		}
 	}
 
