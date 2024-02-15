@@ -1,20 +1,17 @@
 <!-- @format -->
 <script lang="ts">
 	import { error } from "$lib/stores";
-	import Radio from "@smui/radio";
-	import FormField from "@smui/form-field";
-	import Textfield from "@smui/textfield";
-	import HelperText from "@smui/textfield/helper-text";
-	import Button, { Label } from "@smui/button";
-	import LinearProgress from "@smui/linear-progress";
 	import { applyAction, enhance } from "$app/forms";
+	import * as RadioGroup from "$lib/components/ui/radio-group";
+	import { Label } from "$lib/components/ui/label";
+	import { Textarea } from "$lib/components/ui/textarea";
+	import { Button } from "$lib/components/ui/button";
+	import type { PageData, ActionData } from './$types';
 
-	let errorMails: string[] = [];
-
-	let periodsNumber = 1;
-	let mailText = "";
-
+	export let form: ActionData;
+	
 	let waitingForResult = false;
+	let errorMails: undefined | string[]
 </script>
 
 <svelte:head>
@@ -28,11 +25,12 @@
 		use:enhance={({}) => {
 			waitingForResult = true;
 
-			return async ({ result, update }) => {
+			return async ({ result, update }) => {				
 				waitingForResult = false;
 				if (result.type == "success") {
-					errorMails = result.data?.errorMails;
-					if (!(errorMails.length > 0)) {
+					errorMails = form?.errorMails;
+										
+					if (errorMails == null || errorMails.length > 0) {
 						update();
 					}
 				} else if (result.type === "error" && result.error.message) {
@@ -41,30 +39,24 @@
 				await applyAction(result);
 			};
 		}}
-	>
-		<Textfield textarea bind:value={mailText} label="Mails" input$name="emails">
-			<HelperText slot="helper"
-				>test@gmail.com,dark.vador@jdrpoly.ch, informatique@jdrpoly.ch</HelperText
-			>
-		</Textfield>
-		<p>Combien de semestres ?</p>
-		{#each ["1 semestre", "2 semestres"] as option, i}
-			<FormField>
-				<Radio bind:group={periodsNumber} value={i + 1} touch input$name="periodsNumber" /><span
-					slot="label">{option}</span
-				>
-			</FormField>
-		{/each}
-		<br />
-		{#if waitingForResult}
-			<LinearProgress indeterminate />
-		{/if}
-		<Button color="primary" variant="unelevated" disabled={waitingForResult}>
-			<Label>Ajouter</Label>
-		</Button>
+	>	
+		<RadioGroup.RadioGroup value="1">
+			<div class="flex items-center space-x-2">
+				<RadioGroup.Item value="1" id="option-1" name="test1"/>
+				<Label for="option-1">1</Label>
+			</div>
+			<div class="flex items-center space-x-2">
+				<RadioGroup.Item value="2" id="option-2" name="test1"/>
+				<Label for="option-2">2</Label>
+			</div>
+			<RadioGroup.Input name="periodsNumber" />
+		</RadioGroup.RadioGroup>
+		<Label>Emails</Label>
+		<Textarea placeholder="test@gmail.com,dark.vador@jdrpoly.ch, informatique@jdrpoly.ch" name="emails" />
+		<Button type="submit">Ajouter</Button>
 	</form>
 
-	{#if errorMails.length > 0}
+	{#if errorMails && errorMails.length > 0}
 		<div id="error">
 			<h3>Erreurs dans ces mails :</h3>
 			<p>(Les autres mails ont bien été envoyés)</p>
@@ -105,20 +97,5 @@
 				margin-left: 35px;
 			}
 		}
-	}
-
-	form {
-		width: fit-content;
-
-		:global(.mdc-linear-progress) {
-			margin: 2em 0;
-		}
-
-		:global(.mdc-button) {
-			margin: 1em 0;
-		}
-	}
-	:global(.mdc-text-field__input) {
-		width: min(500px, 70vw);
 	}
 </style>
