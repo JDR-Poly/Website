@@ -4,9 +4,9 @@ import type { User } from "$gtypes";
 import type { PageLoad } from "./$types";
 import { redirect } from "@sveltejs/kit";
 
-export const load = (({ params, fetch }) => {
+export const load = (async ({ params, fetch }) => {
 	return {
-		profileUser: fetch("/api/users/" + params.id)
+		profileUser: await fetch("/api/users/" + params.id)
 			.then((res) => res.json())
 			.then((res) => {
 				return res as User;

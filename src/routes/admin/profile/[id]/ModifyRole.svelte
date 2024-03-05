@@ -4,10 +4,10 @@
 	import { Role, Roles } from "$lib/userPermissions";
 	import type { User } from "$gtypes";
 	import { onMount } from "svelte";
-	import FormField from "@smui/form-field";
-	import Radio from "@smui/radio";
-	import Button, { Label } from "@smui/button";
 	import { Period } from "$lib/publicMemberPeriod";
+	import * as RadioGroup from "$lib/components/ui/radio-group";
+	import { Label } from "$lib/components/ui/label";
+	import { Button } from "$lib/components/ui/button";
 
 	export let user: User;
 
@@ -17,12 +17,15 @@
 
 	let period = userPeriod.clone();
 
-	let periodsNumber = 1;
+	let periodsNumber = "1";
+	$ : { updatePeriod(periodsNumber) }
 	updatePeriod(periodsNumber);
 
-	function updatePeriod(periodsNumber: number) {
+	function updatePeriod(periodsString: string) {
+		const nbr = parseInt(periodsString) || 1;
 		period = userPeriod.clone();
-		period.addSemesters(periodsNumber);
+		period.addSemesters(nbr);
+	
 		if (roleName == Roles.MEMBER.name) {
 			period.start = new Date(Date.now());
 		}
@@ -81,21 +84,21 @@
 	{/if}
 	<br />
 	Ajouter :
-	{#each ["1 semestre", "2 semestres"] as option, i}
-		<FormField>
-			<Radio
-				bind:group={periodsNumber}
-				value={i + 1}
-				touch
-				on:change={() => {
-					updatePeriod(periodsNumber);
-				}}
-			/><span slot="label">{option}</span>
-		</FormField>
-	{/each}
+	<RadioGroup.RadioGroup 
+		bind:value={periodsNumber}
+	>
+		{#each ["1 semestre", "2 semestres"] as option, i}
+			<div class="flex items-center space-x-2">
+				{i+1}
+				<RadioGroup.Item value={(i+1).toString()} id={option} name={option}/>
+				<Label for={option}>{option}</Label>
+			</div>
+		{/each}
+		<RadioGroup.Input name="periodsNumber" />
+	</RadioGroup.RadioGroup>
+	
 {/if}
 
 <br />
-<Button on:click={() => submitChange()} touch variant="unelevated" disabled={!roleName}>
-	<Label>Changer</Label>
-</Button>
+	
+<Button variant="outline" disabled={!roleName} on:click={() => submitChange()}>Changer</Button>
