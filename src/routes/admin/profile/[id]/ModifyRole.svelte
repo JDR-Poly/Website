@@ -18,7 +18,6 @@
 	let period = userPeriod.clone();
 
 	let periodsNumber = "1";
-	$ : { updatePeriod(periodsNumber) }
 	updatePeriod(periodsNumber);
 
 	function updatePeriod(periodsString: string) {
@@ -86,6 +85,7 @@
 	Ajouter :
 	<RadioGroup.RadioGroup 
 		bind:value={periodsNumber}
+		onValueChange={() => updatePeriod(periodsNumber)}
 	>
 		{#each ["1 semestre", "2 semestres"] as option, i}
 			<div class="flex items-center space-x-2">

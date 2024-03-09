@@ -43,11 +43,11 @@
 		<RadioGroup.RadioGroup value="1">
 			<div class="flex items-center space-x-2">
 				<RadioGroup.Item value="1" id="option-1" name="test1"/>
-				<Label for="option-1">1</Label>
+				<Label for="option-1">1 semestre</Label>
 			</div>
 			<div class="flex items-center space-x-2">
 				<RadioGroup.Item value="2" id="option-2" name="test1"/>
-				<Label for="option-2">2</Label>
+				<Label for="option-2">2 semestres</Label>
 			</div>
 			<RadioGroup.Input name="periodsNumber" />
 		</RadioGroup.RadioGroup>
