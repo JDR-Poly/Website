@@ -1,13 +1,13 @@
 <!-- @format -->
 <script lang="ts">
-	import Textfield from "@smui/textfield";
-	import Button, { Label } from "@smui/button";
 	import { applyAction, enhance } from "$app/forms";
 	import { warning, info } from "$lib/stores";
 	import { goto, invalidateAll } from "$app/navigation";
-	import LinearProgress from "@smui/linear-progress";
+	import { Input } from "$lib/components/ui/input";
 	import { Turnstile } from "svelte-turnstile";
 	import { page } from "$app/stores";
+	import { Button } from "$lib/components/ui/button";
+	import InfiniteProgress from "$components/InfiniteProgress.svelte";
 
 	let lastName = "";
 	let firstName = "";
@@ -73,37 +73,33 @@
 							};
 						}}
 					>
-						<Textfield
-							id="username"
-							input$name="email"
+						<Input
+							id="email"
+							name="email"
 							type="email"
 							bind:value={email}
-							label="Mail"
-							style="width: 100%"
-							variant="outlined"
+							placeholder="Mail"
+							class="my-4 py-6 bg-inherit border-slate-400 focus:border-transparent focus-visible:ring-1"
 						/>
-						<Textfield
+						<Input
 							id="password"
-							input$name="password"
+							name="password"
 							type="password"
 							bind:value={password}
-							label="Mot de Passe"
-							style="width: 100%"
-							variant="outlined"
+							placeholder="Mot de Passe"
+							class="my-4 py-6 bg-inherit border-slate-400 focus:border-transparent focus-visible:ring-1"
 						/>
 
 						{#if loading}
-							<LinearProgress indeterminate />
+							<InfiniteProgress />
 						{/if}
 
 						<div class="button">
 							<Button
-								touch
-								variant="unelevated"
+								type="submit"
 								disabled={!email || !password || email.match(EMAIL_REGEX) == null}
+								class="w-full">Se connecter</Button
 							>
-								<Label>Se connecter</Label>
-							</Button>
 						</div>
 					</form>
 				{:else if formType == form.REGISTER}
@@ -129,61 +125,60 @@
 							};
 						}}
 					>
-						<Textfield
-							id="username"
-							input$name="email"
+						<Input
+							id="email"
+							name="email"
 							type="email"
 							bind:value={email}
-							label="Mail"
-							style="width: 100%"
-							variant="outlined"
+							placeholder="Mail"
 							required
+							class="my-4 py-6 bg-inherit border-slate-400 focus:border-transparent focus-visible:ring-1"
 						/>
-						<Textfield
-							input$name="lastname"
+
+						<Input
+							id="lastname"
+							name="lastname"
 							type="text"
 							bind:value={lastName}
-							label="Nom"
-							style="width: 100%"
-							variant="outlined"
+							placeholder="Nom"
+							class="my-4 py-6 bg-inherit border-slate-400 focus:border-transparent focus-visible:ring-1"
 						/>
-						<Textfield
-							input$name="firstname"
+						<Input
+							id="firstname"
+							name="firstname"
 							type="text"
 							bind:value={firstName}
-							label="Prénom"
-							style="width: 100%"
-							variant="outlined"
+							placeholder="Prénom"
 							required
+							class="my-4 py-6 bg-inherit border-slate-400 focus:border-transparent focus-visible:ring-1"
 						/>
-						<Textfield
+
+						<Input
 							id="password"
-							input$name="password"
+							name="password"
 							type="password"
 							bind:value={password}
-							label="Mot de Passe"
-							style="width: 100%"
-							variant="outlined"
+							placeholder="Mot de Passe"
 							required
+							class="my-4 py-6 bg-inherit border-slate-400 focus:border-transparent focus-visible:ring-1"
 						/>
 
 						{#if import.meta.env.PROD}
 							<Turnstile siteKey="0x4AAAAAAAE1uyTWfzpY2dHE" theme="light" />
 						{/if}
 						{#if loading}
-							<LinearProgress indeterminate />
+							<InfiniteProgress />
 						{/if}
 
 						<div class="button">
 							<Button
-								touch
-								variant="unelevated"
+								type="submit"
 								disabled={!email ||
 									!password ||
 									!firstName ||
 									email.match(EMAIL_REGEX) == null}
-							>
-								<Label>S'inscrire</Label>
+								class="w-full"
+								>S'inscrire
 							</Button>
 						</div>
 					</form>
@@ -210,26 +205,26 @@
 							};
 						}}
 					>
-						<Textfield
-							input$name="email"
+						<Input
+							id="email"
+							name="email"
 							type="email"
 							bind:value={email}
-							label="Mail"
-							style="width: 100%"
-							variant="outlined"
+							placeholder="Mail"
+							class="my-4 py-6 bg-inherit border-slate-400 focus:border-transparent focus-visible:ring-1"
+							required
 						/>
 
 						{#if loading}
-							<LinearProgress indeterminate />
+							<InfiniteProgress />
 						{/if}
 
 						<div class="button">
 							<Button
-								touch
-								variant="unelevated"
+								type="submit"
+								class="w-full"
 								disabled={!email || email.match(EMAIL_REGEX) == null}
-							>
-								<Label>Demander un nouveau mot de passe</Label>
+								>Demander un nouveau mot de passe
 							</Button>
 						</div>
 					</form>
@@ -238,18 +233,14 @@
 			<div id="login-divider"><span><p>ou</p></span></div>
 			<div id="other-form">
 				{#if formType != form.REGISTER}
-					<div class="button">
-						<Button on:click={() => (formType = form.REGISTER)} touch variant="unelevated">
-							<Label>S'inscrire</Label>
-						</Button>
-					</div>
+					<Button on:click={() => (formType = form.REGISTER)} class="w-full bg-[#031c57] my-1"
+						>S'inscrire</Button
+					>
 				{/if}
 				{#if formType != form.LOGIN}
-					<div class="button">
-						<Button on:click={() => (formType = form.LOGIN)} touch variant="unelevated">
-							<Label>Se connecter</Label>
-						</Button>
-					</div>
+					<Button on:click={() => (formType = form.LOGIN)} class="w-full bg-[#031c57] my-1"
+						>Se connecter</Button
+					>
 				{/if}
 				{#if formType != form.PASSWORD_LOST}
 					<a on:click={() => (formType = form.PASSWORD_LOST)} href="/auth/login"
