@@ -98,6 +98,7 @@
 			}}
 			autocomplete="off"
 			class="my-4"
+			id="page-start"
 		>
 			<div
 				class="searchBar mr-4"
@@ -128,7 +129,7 @@
 			<Button type="submit" variant={"outline"}>Chercher</Button>
 		</form>
 
-		<DataTable {users} pageSize={data.pageSize} />
+		<DataTable {users} pageSize={data.pageSize}/>
 	</div>
 </main>
 

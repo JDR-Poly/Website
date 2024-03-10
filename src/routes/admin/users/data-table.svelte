@@ -122,6 +122,7 @@
 		variant="outline"
 		size="sm"
 		on:click={() => {
+			location.hash = "#page-start"
 			page--;
 			updateUsers();
 		}}
@@ -134,6 +135,7 @@
 		on:click={() => {
 			page++;
 			updateUsers();
+			location.hash = "#page-start"
 		}}>Next</Button
 	>
 </div>
