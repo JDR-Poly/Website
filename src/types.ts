@@ -23,12 +23,15 @@ type Event = {
 
 /**
  * A user with the same key/type
- * of the database
+ * of the database.
+ * A string is used instead of a Role object for storing
+ * the role since sending/receiving data on front-end doesn't allow sending
+ * objects. 
  */
 type User = {
 	id: Id;
 	name: string;
-	role: Role;
+	roleString: string;
 	is_email_validated: boolean;
 	account_creation: DateString;
 	email?: string;
