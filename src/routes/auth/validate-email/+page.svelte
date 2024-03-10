@@ -1,14 +1,26 @@
 <!-- @format -->
 <script lang="ts">
 	import { info, error } from "$lib/stores";
-	import Button, { Label } from "@smui/button";
 	import { enhance } from "$app/forms";
 	import type { PageData } from "./$types";
 	import { page } from "$app/stores";
+	import type { ActionResult } from "@sveltejs/kit";
+	import { Button } from "$lib/components/ui/button";
 
 	function getUserEmail(): string {
 		if (data.user) return data.user.email!;
 		else return "";
+	}
+
+	function handleRequestEmail(
+		result: ActionResult<Record<string, unknown> | undefined, Record<string, unknown> | undefined>,
+	) {
+		if (result.type == "success") {
+			$info = "Le mail vient d'être envoyé";
+		} else if (result.type == "failure") {
+			let message = result?.data?.message;
+			if (message) $error = message as string;
+		}
 	}
 	export let data: PageData;
 </script>
@@ -35,20 +47,10 @@
 	<form
 		method="POST"
 		use:enhance={({}) => {
-			return async ({ result }) => {
-				if (result.type == "success") {
-					$info = "Le mail vient d'être envoyé";
-				} else if (result.type == "failure") {
-					$error = result?.data?.message;
-				}
-			};
+			return async ({ result }) => handleRequestEmail(result);
 		}}
 	>
-		<div class="button">
-			<Button touch variant="unelevated">
-				<Label>Renvoyer un mail</Label>
-			</Button>
-		</div>
+		<Button type="submit">Renvoyer un mail</Button>
 	</form>
 </main>
 
