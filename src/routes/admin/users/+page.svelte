@@ -8,7 +8,6 @@
 	import DataTable from "./data-table.svelte";
 	import { Button } from "$lib/components/ui/button";
 
-
 	export let data: PageData;
 
 	let users: User[] = data.users;
@@ -80,7 +79,6 @@
 	let canSeeEmail =
 		$page.data.authenticated && hasRolePermission(UserPermission.SEE_MAIL, $page.data.user.role);
 	let loaded = true;
-
 </script>
 
 <svelte:head>
@@ -89,50 +87,48 @@
 
 <main>
 	<div class="container mx-auto w-dvw py-10">
-	
-	<h2>Utilisateurs</h2>
+		<h2>Utilisateurs</h2>
 
-	<form
-		on:submit|preventDefault={async () => {
-			index = 0;
-			loaded = false;
-			users = await search(100, index);
-			loaded = true;
-		}}
-		autocomplete="off"
-		class="my-4"
-	>
-		 <div
-			class="searchBar mr-4"
-			on:focusout={(event) => {
-				setTimeout(() => {
-					selectedIndex = -1;
-					usersSearchBar = [];
-				}, 500);
+		<form
+			on:submit|preventDefault={async () => {
+				index = 0;
+				loaded = false;
+				users = await search(100, index);
+				loaded = true;
 			}}
+			autocomplete="off"
+			class="my-4"
 		>
-			<input
-				type="text"
-				placeholder="Chercher un utilisateur"
-				bind:value={searchText}
-				on:input={inputChange}
-				on:keydown={onKeypressInput}
-				
-			/>
-			<div class="searchBar-items">
-				{#each usersSearchBar as result, i}
-					<a href="/users/profile/{result.id}"
-						><div class={i == selectedIndex ? "searchBar-active" : ""}>
-							<strong>{result.name}</strong>
-						</div></a
-					>
-				{/each}
+			<div
+				class="searchBar mr-4"
+				on:focusout={(event) => {
+					setTimeout(() => {
+						selectedIndex = -1;
+						usersSearchBar = [];
+					}, 500);
+				}}
+			>
+				<input
+					type="text"
+					placeholder="Chercher un utilisateur"
+					bind:value={searchText}
+					on:input={inputChange}
+					on:keydown={onKeypressInput}
+				/>
+				<div class="searchBar-items">
+					{#each usersSearchBar as result, i}
+						<a href="/users/profile/{result.id}"
+							><div class={i == selectedIndex ? "searchBar-active" : ""}>
+								<strong>{result.name}</strong>
+							</div></a
+						>
+					{/each}
+				</div>
 			</div>
-		</div>
-		<Button type="submit" variant={"outline"}>Chercher</Button>
-	</form>
+			<Button type="submit" variant={"outline"}>Chercher</Button>
+		</form>
 
-		<DataTable {users} pageSize={data.pageSize}/>
+		<DataTable {users} pageSize={data.pageSize} />
 	</div>
 </main>
 

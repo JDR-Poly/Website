@@ -15,22 +15,21 @@
 
 	export let users: User[];
 	export let pageSize: number;
-	
-	let page = 0
-	let sortOrder: 'asc' | 'desc' = 'desc'
-	let lastPage = users.length <= pageSize
-	let userWritable = writable(lastPage ? users : users.slice(0, -1))
+
+	let page = 0;
+	let sortOrder: "asc" | "desc" = "desc";
+	let lastPage = users.length <= pageSize;
+	let userWritable = writable(lastPage ? users : users.slice(0, -1));
 
 	async function updateUsers() {
 		fetch(`/api/users/search?number=${pageSize + 1}&sort=${sortOrder}&index=${page * pageSize}`) //always request one more to know if it's the last page.
 			.then(async (res) => {
-				return res.json() 
+				return res.json();
 			})
 			.then((users: User[]) => {
-				lastPage = users.length <= pageSize
-				userWritable.set(lastPage ? users : users.slice(0, -1))
-			})
-		
+				lastPage = users.length <= pageSize;
+				userWritable.set(lastPage ? users : users.slice(0, -1));
+			});
 	}
 
 	const table = createTable(userWritable);
@@ -57,6 +56,7 @@
 
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } = table.createViewModel(columns);
 </script>
+
 <div class="rounded-md border">
 	<Table.Root {...$tableAttrs}>
 		<Table.Header>
@@ -67,14 +67,17 @@
 							<Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
 								<Table.Head {...attrs}>
 									{#if cell.id === "id"}
-										<Button variant="ghost" on:click={() => {
-											if(sortOrder === 'asc') {
-												sortOrder = 'desc'
-											} else {
-												sortOrder = 'asc'
-											}
-											updateUsers()
-										}}>
+										<Button
+											variant="ghost"
+											on:click={() => {
+												if (sortOrder === "asc") {
+													sortOrder = "desc";
+												} else {
+													sortOrder = "asc";
+												}
+												updateUsers();
+											}}
+										>
 											<Render of={cell.render()} />
 											<ArrowUpDown class={"ml-2 h-4 w-4"} />
 										</Button>
@@ -91,21 +94,25 @@
 		<Table.Body {...$tableBodyAttrs}>
 			{#each $pageRows as row (row.id)}
 				<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row {...rowAttrs}>
-							{#each row.cells as cell (cell.id)}
-								<Subscribe attrs={cell.attrs()} let:attrs>
-									<Table.Cell {...attrs}>
-										<!--
+					<Table.Row {...rowAttrs}>
+						{#each row.cells as cell (cell.id)}
+							<Subscribe attrs={cell.attrs()} let:attrs>
+								<Table.Cell {...attrs}>
+									<!--
 											I have yet to found a way to put a link on the whole row instead of the individual
 											cells. Doing this on the whole row leads to display issues.
 										-->
-										<a href={`/users/profile/${row.cells[0].render()}`} target="_blank" class="text-black block">
-											<Render of={cell.render()}/>
-										</a> 
-									</Table.Cell>
-								</Subscribe>
-							{/each}
-						</Table.Row>
+									<a
+										href={`/users/profile/${row.cells[0].render()}`}
+										target="_blank"
+										class="text-black block"
+									>
+										<Render of={cell.render()} />
+									</a>
+								</Table.Cell>
+							</Subscribe>
+						{/each}
+					</Table.Row>
 				</Subscribe>
 			{/each}
 		</Table.Body>
@@ -116,10 +123,9 @@
 		variant="outline"
 		size="sm"
 		on:click={() => {
-			page--
-			updateUsers()
-			}
-		}
+			page--;
+			updateUsers();
+		}}
 		disabled={page <= 0}>Previous</Button
 	>
 	<Button
@@ -127,8 +133,8 @@
 		size="sm"
 		disabled={lastPage}
 		on:click={() => {
-			page++
-			updateUsers()
-			}}>Next</Button
+			page++;
+			updateUsers();
+		}}>Next</Button
 	>
 </div>
