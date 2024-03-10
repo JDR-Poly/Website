@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
 import type { DateString } from "$gtypes";
+import { Roles } from "./userPermissions";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -90,10 +91,35 @@ function parseToLocalDateStringWithoutMilis(date: DateString): string {
 	return newDate.toISOString().slice(0, -8);
 }
 
+function getTranslatedRoleName(name: string): string {
+	switch (name) {
+		case Roles.ADMIN.name:
+			return "Administrateur";
+			break;
+		case Roles.COMMITTEE.name:
+			return "Comité";
+			break;
+		case Roles.HONORARY_MEMBER.name:
+			return "Membre d'honneur";
+			break;
+		case Roles.MEMBER.name:
+			return "Membre";
+			break;
+		case Roles.USER.name:
+			return "Utilisateur";
+			break;
+		case Roles.DISCORD_BOT.name:
+			return "Bot discord";
+			break;
+	}
+	return "Erreur de rôle";
+}
+
 export {
 	getBase64,
 	__envDir,
 	getLocalDateStringOrNullFromString,
 	getByteArrayFromBase64,
 	parseToLocalDateStringWithoutMilis,
+	getTranslatedRoleName
 };
