@@ -4,12 +4,14 @@
 	import { error } from "$lib/stores";
 	import { page } from "$app/stores";
 	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
-	import DataTable, { Head, Body, Row, Cell, SortValue, Label } from "@smui/data-table";
-	import LinearProgress from "@smui/linear-progress";
 	import type { PageData } from "./$types";
-	import IB from "@smui/icon-button";
+	import DataTable from "./data-table.svelte";
+	import { Button } from "$lib/components/ui/button";
+
 
 	export let data: PageData;
+
+	let users: User[] = data.users;
 
 	//Search completion variables
 	let usersSearchBar: User[] = [];
@@ -17,9 +19,6 @@
 
 	let searchText = "";
 	let index = 0;
-
-	//List of users
-	let users: User[] = data.users;
 
 	/**
 	 * Handle when the user write text in the searchBar
@@ -78,19 +77,10 @@
 		}
 	}
 
-	function handleSort() {
-		users.sort((a, b) => {
-			return sortDirection === "ascending" ? a.id - b.id : b.id - a.id;
-		});
-		users = users;
-	}
-
 	let canSeeEmail =
 		$page.data.authenticated && hasRolePermission(UserPermission.SEE_MAIL, $page.data.user.role);
 	let loaded = true;
 
-	let sort = "id";
-	let sortDirection: Lowercase<keyof typeof SortValue> = "descending";
 </script>
 
 <svelte:head>
@@ -98,6 +88,8 @@
 </svelte:head>
 
 <main>
+	<div class="container mx-auto w-dvw py-10">
+	
 	<h2>Utilisateurs</h2>
 
 	<form
@@ -108,9 +100,10 @@
 			loaded = true;
 		}}
 		autocomplete="off"
+		class="my-4"
 	>
-		<div
-			class="searchBar"
+		 <div
+			class="searchBar mr-4"
 			on:focusout={(event) => {
 				setTimeout(() => {
 					selectedIndex = -1;
@@ -124,6 +117,7 @@
 				bind:value={searchText}
 				on:input={inputChange}
 				on:keydown={onKeypressInput}
+				
 			/>
 			<div class="searchBar-items">
 				{#each usersSearchBar as result, i}
@@ -135,53 +129,10 @@
 				{/each}
 			</div>
 		</div>
-		<button>Chercher</button>
+		<Button type="submit" variant={"outline"}>Chercher</Button>
 	</form>
 
-	<div id="datatable">
-		{#if users}
-			<DataTable
-				table$aria-label="User list"
-				style="width: 100%;"
-				sortable
-				bind:sort
-				bind:sortDirection
-				on:SMUIDataTable:sorted={handleSort}
-			>
-				<Head>
-					<Row>
-						<Cell numeric columnId="id">
-							<IB class="material-icons">^</IB>
-							<Label>Id</Label>
-						</Cell>
-						<Cell style="width: 100%;" sortable={false}>Nom</Cell>
-						<Cell sortable={false}>Rôle</Cell>
-						{#if canSeeEmail}
-							<Cell sortable={false}>Email</Cell>
-						{/if}
-					</Row>
-				</Head>
-				<Body>
-					{#each users as user (user.id)}
-						<Row>
-							<Cell numeric>{user.id}</Cell>
-							<Cell><a href="/users/profile/{user.id}">{user.name}</a></Cell>
-							<Cell>{user.role}</Cell>
-							{#if canSeeEmail}
-								<Cell>{user.email}</Cell>
-							{/if}
-						</Row>
-					{/each}
-				</Body>
-
-				<LinearProgress
-					indeterminate
-					bind:closed={loaded}
-					aria-label="Data is being loaded..."
-					slot="progress"
-				/>
-			</DataTable>
-		{/if}
+		<DataTable {users} pageSize={data.pageSize}/>
 	</div>
 </main>
 
@@ -204,16 +155,6 @@
 			position: relative;
 			display: inline-block;
 			width: 40vw;
-		}
-
-		button {
-			padding: 6px;
-			border-radius: 2px;
-			cursor: pointer;
-		}
-
-		#datatable {
-			margin: 1em;
 		}
 	}
 

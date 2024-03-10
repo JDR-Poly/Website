@@ -1,20 +1,15 @@
 /** @format */
 
-import type { Event, User } from "$gtypes";
+import type { User } from "$gtypes";
 import type { PageLoad } from "./$types";
 
 export const load = (async ({ fetch }) => {
+	const pageSize = 100
 	return {
-		users: fetch("/api/users/search?number=100")
+		users: await fetch(`/api/users/search?number=${pageSize + 1}&sort=desc`) //always request one more to know if it's the last page.
 			.then(async (res) => {
-				return res.json();
-			})
-			.then((events: User[]) => {
-				return events.sort((a, b) => {
-					if (a.id > b.id) return -1;
-					else if (a.id == b.id) return 0;
-					else return 1;
-				});
+				return (await res.json()) as User[] 
 			}),
+		pageSize: pageSize
 	};
 }) satisfies PageLoad;

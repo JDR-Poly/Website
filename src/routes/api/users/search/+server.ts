@@ -11,6 +11,7 @@ import type { RequestHandler } from "./$types";
  * @param {number} url.searchParams.number how many users to look for (default all)
  * @param {number} url.searchParams.index index from which to start returning users from
  * @param {string} url.searchParams.searchText name to look for
+ * @param {undefined | 'asc' | 'desc'} url.searchParams.sort sort order of id (default to desc)
  * @return {User[]} users found
  */
 
@@ -28,12 +29,12 @@ export const GET = (async ({ url, locals }) => {
 		locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role)
 			? "email, "
 			: "";
-
+	const sortSQL = url.searchParams.get("sort") != 'asc' ? "DESC" : "ASC"
 	return db
 		.any(
 			`SELECT id, ${mailSQLText}name, role 
 		FROM users WHERE name ~~* $1 OR email ~~* $1
-		ORDER BY id DESC
+		ORDER BY id ${sortSQL}
 		LIMIT $2 OFFSET $3;`,
 			[searchText, number, index],
 		)
