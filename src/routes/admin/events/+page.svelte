@@ -11,29 +11,6 @@
 	export let data: PageData;
 
 	let events: Event[] = data.events;
-
-	function handleSort() {
-		events.sort((a: Event, b: Event) => {
-			const [aVal, bVal] = [a[sort], b[sort]][
-				sortDirection === "ascending" ? "slice" : "reverse"
-			]() as [any, any];
-			if (!aVal || !bVal) return 0;
-			if (sort == "date") {
-				const aDate = new Date(Date.parse(aVal));
-				const bDate = new Date(Date.parse(bVal));
-				if (aDate < bDate) return -1;
-				else if (aDate.getTime() == bDate.getTime()) return 0;
-				else return 1;
-			} else if (typeof aVal == "number" && typeof bVal == "number") {
-				return Number(aVal) - Number(bVal);
-			}
-
-			return 0;
-		});
-		events = events;
-	}
-
-	let sort: keyof Event = "date";
 </script>
 
 <main>

@@ -83,11 +83,16 @@
 
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } = table.createViewModel(columns);
 	const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
-    const { filterValue } = pluginStates.filter;
+	const { filterValue } = pluginStates.filter;
 </script>
 
 <div class="flex items-center py-4">
-	<Input class="max-w-md" placeholder="Filtrer par titre ou catégorie..." type="text" bind:value={$filterValue} />
+	<Input
+		class="max-w-md"
+		placeholder="Filtrer par titre ou catégorie..."
+		type="text"
+		bind:value={$filterValue}
+	/>
 </div>
 <div class="rounded-md border">
 	<Table.Root {...$tableAttrs}>
@@ -120,7 +125,16 @@
 						{#each row.cells as cell (cell.id)}
 							<Subscribe attrs={cell.attrs()} let:attrs>
 								<Table.Cell {...attrs}>
-									<Render of={cell.render()} />
+									<!--
+											I have yet to found a way to put a link on the whole row instead of the individual
+											cells. Doing this on the whole row leads to display issues.
+										-->
+									<a
+										href={`/events/${row.cells[0].render()}`}
+										class="text-black block"
+									>
+										<Render of={cell.render()} />
+									</a>
 								</Table.Cell>
 							</Subscribe>
 						{/each}

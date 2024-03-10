@@ -104,7 +104,6 @@
 										-->
 									<a
 										href={`/users/profile/${row.cells[0].render()}`}
-										target="_blank"
 										class="text-black block"
 									>
 										<Render of={cell.render()} />
