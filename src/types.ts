@@ -31,7 +31,7 @@ type Event = {
 type User = {
 	id: Id;
 	name: string;
-	roleString: string;
+	role: Role;
 	is_email_validated: boolean;
 	account_creation: DateString;
 	email?: string;

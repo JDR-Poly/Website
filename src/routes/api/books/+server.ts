@@ -30,7 +30,7 @@ export const POST = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401);
 
 	const body = await request.json();
-	if (!hasRolePermission(UserPermission.MODIFY_BOOKS, locals.user?.roleString))
+	if (!hasRolePermission(UserPermission.MODIFY_BOOKS, locals.user?.role))
 		throw error(403, "User doesn't have the permission to do that");
 
 	return db
@@ -64,7 +64,7 @@ export const PATCH = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401);
 
 	let body = await request.json();
-	if (!hasRolePermission(UserPermission.MODIFY_BOOKS, locals.user?.roleString))
+	if (!hasRolePermission(UserPermission.MODIFY_BOOKS, locals.user?.role))
 		throw error(403, "User doesn't have the permission to do that");
 	if (!Array.isArray(body)) body = [body];
 

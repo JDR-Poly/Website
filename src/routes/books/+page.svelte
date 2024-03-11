@@ -111,7 +111,7 @@
 				{:else}
 					<b>{book.status}</b>
 				{/if}
-				{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.roleString)}
+				{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.role)}
 					<div class="admin-buttons">
 						<IconButton
 							icon="material-symbols:edit"
@@ -160,7 +160,7 @@
 	</ul>
 </main>
 
-{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.roleString)}
+{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.role)}
 	<Add open={openAddDialog} {statusList} />
 	{#if editBook}
 		<Edit open={openEditDialog} book={editBook} {statusList} />
