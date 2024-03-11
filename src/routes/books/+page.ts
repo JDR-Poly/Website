@@ -1,13 +1,10 @@
 /** @format */
-
-import { error } from "@sveltejs/kit";
-
 import type { PageLoad } from "./$types";
 import type { Book } from "$gtypes";
 
 export const load = (async ({ fetch }) => {
 	return {
-		books: fetch("/api/books")
+		books: await fetch("/api/books")
 			.then((res) => {
 				return res.json();
 			})

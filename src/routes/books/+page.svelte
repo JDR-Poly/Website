@@ -4,15 +4,15 @@
 	import { writable } from "svelte/store";
 	import { error, warning } from "$lib/stores";
 	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
-	import Edit from "./Edit.svelte";
 	import { __sortByItemOrder } from "./+page";
 	import type { Book } from "$gtypes";
 	import type { PageData } from "./$types";
 	import IconButton from "$components/IconButton.svelte";
-	import Icon, { iconExists } from "@iconify/svelte";
+	import Icon from "@iconify/svelte";
 	import { page } from "$app/stores";
+	import Edit from "./Edit.svelte";
 
-	const openAddDialog = writable(false);
+	let openAddDialog = writable(false);
 	const openEditDialog = writable(false);
 
 	export let data: PageData;
@@ -87,7 +87,6 @@
 
 <main>
 	<h2>Livres :</h2>
-
 	<p>
 		Bienvenue sur la magnifique page de la bibliothèque de JDR-Poly. Tu as toujours voulu essayer d'être
 		MJ dans un de tes univers préférés ? Tu es un passionné des mondes de fiction et de leur lore ? Voici
@@ -100,22 +99,19 @@
 			<li class="book">
 				<p>{book.title} |</p>
 				{#if book.status == "Disponible" || book.status == "Indisponible"}
-					<b>Disponible:</b>
+					<b> Disponible: </b>
 					<Icon
 						icon={book.status == "Disponible"
 							? "material-symbols:done"
 							: "material-symbols:close"}
 						style="font-size:22px; color:black;"
+						class="inline"
 						inline={true}
 					/>
 				{:else}
 					<b>{book.status}</b>
 				{/if}
-				<br />
-				<p>
-					<i>Caution: {book.caution} CHF</i>
-				</p>
-				{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.role)}
+				{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.roleString)}
 					<div class="admin-buttons">
 						<IconButton
 							icon="material-symbols:edit"
@@ -155,12 +151,16 @@
 						/>
 					</div>
 				{/if}
+				<br />
+				<p>
+					<i>Caution: {book.caution} CHF</i>
+				</p>
 			</li>
 		{/each}
 	</ul>
 </main>
 
-{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.role)}
+{#if hasRolePermission(UserPermission.MODIFY_BOOKS, data.user?.roleString)}
 	<Add open={openAddDialog} {statusList} />
 	{#if editBook}
 		<Edit open={openEditDialog} book={editBook} {statusList} />
@@ -241,7 +241,7 @@
 		:global(svg) {
 			color: black;
 			padding: 5px;
-			font-size: 25px;
+			font-size: 30px;
 			border-radius: 25px;
 
 			&:hover {
