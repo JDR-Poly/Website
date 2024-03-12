@@ -22,10 +22,15 @@ export const actions = {
 			return fail(403, { message: "User doesn't have the permission to do that" });
 
 		const body = await request.formData();
+		console.log(body);
+		
 		const category = body.get("category")?.toString();
 		if (!category) return fail(400, { message: "No category found" });
 		const image = body.get("image")?.valueOf() as Blob | undefined;
+		console.log(image);
+		
 		const barray = image ? Buffer.from(await image.arrayBuffer()) : null;
+		console.log(barray);
 
 		return db
 			.any("SELECT item_order FROM committee_info WHERE category = $1", [category])

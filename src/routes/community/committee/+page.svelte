@@ -1,16 +1,19 @@
 <!-- @format -->
 <script lang="ts">
 	import Category from "./Category.svelte";
-	import Add from "./Add.svelte";
-	import { writable } from "svelte/store";
-	import Accordion from "@smui-extra/accordion";
+	import { writable, type Readable } from "svelte/store";
 	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 	import type { PageData } from "./$types";
 	import IconButton from "$components/IconButton.svelte";
 	import { page } from "$app/stores";
+	import * as Accordion from "$lib/components/ui/accordion/index.js";
+	import Add from './Add.svelte'
+
 	export let data: PageData;
 
 	const openAddDialog = writable(false);
+
+	let openAccordions = writable([data.categories[0]])
 </script>
 
 <svelte:head>
@@ -28,11 +31,11 @@
 
 <main>
 	<h2>Comité :</h2>
-	<Accordion>
-		{#each data.categories as category, i}
-			<Category {category} defaultOpen={i == 0} />
+	<Accordion.Root  class="w-full" value={$openAccordions}>
+		{#each data.categories as category}
+			<Category {category} {openAccordions}/>
 		{/each}
-	</Accordion>
+	</Accordion.Root>
 </main>
 
 {#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, data.user?.role)}

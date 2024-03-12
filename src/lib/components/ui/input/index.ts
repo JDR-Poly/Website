@@ -24,6 +24,7 @@ export type InputEvents = {
 
 export {
 	Root,
+	type FormInputEvent,
 	//
 	Root as Input,
 };

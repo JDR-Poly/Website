@@ -1,6 +1,6 @@
 <!-- @format -->
 <script lang="ts">
-	import { Panel, Header, Content } from "@smui-extra/accordion";
+	import * as Accordion from "$lib/components/ui/accordion/index.js";
 	import { error } from "$lib/stores";
 	import type { Committee } from "$gtypes";
 	import { page } from "$app/stores";
@@ -8,11 +8,11 @@
 	import { onMount } from "svelte";
 	import ImageB64 from "$components/ImageB64.svelte";
 	import IconButton from "$components/IconButton.svelte";
+	import type { Readable, Writable } from "svelte/store";
 
 	export let category: string;
-	export let defaultOpen: boolean;
+	export let openAccordions: Writable<string[]>
 
-	let open = defaultOpen;
 	let isAChange = false;
 	let hasFetched = false; //Prevent fetching every time the category is opened
 	let hasBeenMounted = false;
@@ -35,7 +35,7 @@
 	}
 
 	$: {
-		if (hasBeenMounted && open) fetchCommittees();
+		if (hasBeenMounted && $openAccordions.includes(category)) fetchCommittees();
 	}
 
 	function sortByItemOrder(committees: Committee[]) {
@@ -92,20 +92,20 @@
 				$error = err.message;
 			});
 	}
+
+	function onTrigger() {
+		if($openAccordions.includes(category)) {
+			$openAccordions = $openAccordions.filter((str) => str !== category)
+		} else {
+			$openAccordions = [...$openAccordions, category]
+		}
+	}
 </script>
 
-<Panel
-	{open}
-	on:SMUIAccordionPanel:opening={() => {
-		open = true;
-	}}
-	on:SMUIAccordionPanel:closing={() => {
-		open = false;
-	}}
->
-	<Header>{category}</Header>
-
-	<Content>
+<Accordion.Item value={category} >
+    <Accordion.Trigger on:click={onTrigger}>{category}</Accordion.Trigger>
+    <Accordion.Content>
+		
 		<div class="grid">
 			{#each committees as committee, i}
 				<div class="card">
@@ -158,8 +158,9 @@
 				/>
 			</div>
 		{/if}
-	</Content>
-</Panel>
+	</Accordion.Content>
+</Accordion.Item>
+
 
 <style lang="scss">
 	.grid {
