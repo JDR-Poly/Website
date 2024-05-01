@@ -83,7 +83,7 @@
 <main>
 	<h2>Documents officiels :</h2>
 
-	<ul>
+	<ul class="list-disc">
 		<li><a href="/files/Règlement_interne_Février_2021_Signé.pdf">Règlement interne</a></li>
 		<li><a href="/files/Organigramme_2021.pdf">Organigramme</a></li>
 	</ul>

@@ -6,7 +6,7 @@ import type { HonorMember } from "$gtypes";
 
 export const load = (async ({ fetch }) => {
 	return {
-		honormembers: fetch("/api/honormembers").then(async (res) => {
+		honormembers: await fetch("/api/honormembers").then(async (res) => {
 			const body = await res.json();
 			if (!res.ok) throw error(res.status, body.message);
 			return __sortByItemOrder(body) as HonorMember[];

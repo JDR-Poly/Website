@@ -1,12 +1,14 @@
 <!-- @format -->
 <script lang="ts">
 	import type { Writable } from "svelte/store";
-	import Dialog, { Content, Title, Actions } from "@smui/dialog";
-	import Textfield from "@smui/textfield";
-	import Icon from "@smui/select/icon";
-	import Button, { Label } from "@smui/button";
 	import { error } from "$lib/stores";
 	import type { HonorMember } from "$gtypes";
+	import * as Dialog from "$components/ui/dialog";
+	import { Button } from "$lib/components/ui/button";
+	import Label from "$components/ui/label/label.svelte"; 
+	import { Input } from "$lib/components/ui/input";
+	import { Textarea } from "$lib/components/ui/textarea/index.js";
+	import Icon from "@iconify/svelte";
 
 	export let honorMember: HonorMember;
 	export let open: Writable<boolean>;
@@ -26,34 +28,50 @@
 	}
 </script>
 
-<Dialog bind:open={$open}>
-	<Title id="simple-title">Editer un membre d'honneur</Title>
-	<Content id="edit-content">
-		<Textfield type="text" label="Nom" bind:value={honorMember.name} style="min-width: 400px;" />
-		<Textfield
-			type="text"
-			label="Description"
-			bind:value={honorMember.description}
-			style="min-width: 400px;"
-			textarea
-		/>
-	</Content>
-	<Actions>
-		<Button>
-			<Label>Annuler</Label>
-		</Button>
-		<Button on:click={editHonorMember}>
-			<Label>Modifier</Label>
-		</Button>
-	</Actions>
-</Dialog>
+<Dialog.Root 
+	open={$open}
+	onOutsideClick={() => ($open = false)}
+	onOpenChange={(newOpen) => {if(!newOpen && $open) {$open = false}}} 
+> 
+	<!-- onOpenChange is here only because clicking on the 'x' button to close the dialog doesn't update the
+	store $open 
+	-->
+<Dialog.Content class="!max-w-4xl">
+	<Dialog.Header>
+		<Dialog.Title>Editer un membre d'honneur</Dialog.Title>
+	</Dialog.Header>
+	<div id="scroll-component" class="max-h-[70vh] overflow-y-scroll">
+		<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
+			<Label for="title">Nom</Label>
+			<Icon icon="material-symbols:person" inline/>
+			<Input type="text" id="title" bind:value={honorMember.name} />
+		</div>
+
+		<div class="grid w-11/12 gap-1.5 dialog-input-elem">
+			<Label for="description">Description</Label>
+			<Textarea id="description" bind:value={honorMember.description} class="min-h-64"/>
+		</div>
+	</div>
+	<Dialog.Footer>
+		<Button
+			on:click={() => {
+				$open = false;
+			}}>Annuler</Button
+		>
+		<Button on:click={() => {
+			$open = false;
+			editHonorMember()
+		}}>Modifier</Button>
+	</Dialog.Footer>
+</Dialog.Content>
+</Dialog.Root>
 
 <style lang="scss">
-	:global(.mdc-dialog__surface) {
-		max-width: 600px !important;
-		width: 80vw !important;
-	}
-	:global(.mdc-text-field) {
-		margin: 1em 0 1em 0;
+	.dialog-input-elem {
+		margin-top: 1.25rem;
+		margin-bottom: 1.25rem;
+		margin-left: 0.5rem;
 	}
 </style>
+
+
