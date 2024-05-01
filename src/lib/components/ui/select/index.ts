@@ -1,3 +1,5 @@
+/** @format */
+
 import { Select as SelectPrimitive } from "bits-ui";
 
 import Label from "./select-label.svelte";

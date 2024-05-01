@@ -1,3 +1,5 @@
+/** @format */
+
 import { RadioGroup as RadioGroupPrimitive } from "bits-ui";
 
 import Root from "./radio-group.svelte";

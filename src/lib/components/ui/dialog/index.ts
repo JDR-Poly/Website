@@ -1,3 +1,5 @@
+/** @format */
+
 import { Dialog as DialogPrimitive } from "bits-ui";
 
 const Root = DialogPrimitive.Root;
