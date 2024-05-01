@@ -23,12 +23,12 @@ export const actions = {
 
 		const body = await request.formData();
 		console.log(body);
-		
+
 		const category = body.get("category")?.toString();
 		if (!category) return fail(400, { message: "No category found" });
 		const image = body.get("image")?.valueOf() as Blob | undefined;
 		console.log(image);
-		
+
 		const barray = image ? Buffer.from(await image.arrayBuffer()) : null;
 		console.log(barray);
 

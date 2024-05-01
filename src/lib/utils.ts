@@ -121,5 +121,5 @@ export {
 	getLocalDateStringOrNullFromString,
 	getByteArrayFromBase64,
 	parseToLocalDateStringWithoutMilis,
-	getTranslatedRoleName
+	getTranslatedRoleName,
 };

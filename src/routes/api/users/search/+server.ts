@@ -29,7 +29,7 @@ export const GET = (async ({ url, locals }) => {
 		locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role)
 			? "email, "
 			: "";
-	const sortSQL = url.searchParams.get("sort") != 'asc' ? "DESC" : "ASC"
+	const sortSQL = url.searchParams.get("sort") != "asc" ? "DESC" : "ASC";
 	return db
 		.any(
 			`SELECT id, ${mailSQLText}name, role 

@@ -67,7 +67,7 @@ export const actions = {
 			user.role = Roles[user.role];
 			updateMemberPeriod(user, period);
 		});
-		//Send email and code to users that don't have an account		
+		//Send email and code to users that don't have an account
 		const errorMails = await createAndSendMemberCodes(emailsNotFound, periodsNumber);
 		return {
 			success: true,
@@ -89,7 +89,7 @@ async function createAndSendMemberCodes(emails: string[], periodsNumber: number)
 	emails.forEach((email) => {
 		try {
 			const code = uuid();
-			
+
 			db.none(
 				"INSERT INTO members_code(validation_token, periods) VALUES($[validation_token], $[periods])",
 				{
@@ -103,7 +103,7 @@ async function createAndSendMemberCodes(emails: string[], periodsNumber: number)
 				const res = await sendMail(email, "JDRPoly: Code de membre", userContent);
 				if (res instanceof Error) return email;
 				else return "";
-			})()
+			})();
 			promises.push(promise);
 		} catch (err) {
 			mailsError.push(email);
