@@ -6,7 +6,7 @@ import type { Event, Id } from "$gtypes";
 
 export const load = (async ({ params, fetch }) => {
 	return {
-		event: fetch(`/api/events/${params.event_id}`)
+		event: await fetch(`/api/events/${params.event_id}`)
 			.then(async (res) => {
 				const body = await res.json();
 				if (!res.ok) throw error(res.status, body.message);
@@ -15,7 +15,7 @@ export const load = (async ({ params, fetch }) => {
 			.catch((err) => {
 				throw redirect(307, "/404");
 			}),
-		subscribed: fetch(`/api/events/${params.event_id}/subscribe`).then(async (res) => {
+		subscribed: await fetch(`/api/events/${params.event_id}/subscribe`).then(async (res) => {
 			return res.json() as Promise<[{ id: Id; name: string; email?: string }]>;
 		}),
 	};

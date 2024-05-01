@@ -5,7 +5,7 @@ import type { PageLoad } from "./$types";
 
 export const load = (async ({ fetch }) => {
 	return {
-		events: fetch("/api/events")
+		events: await fetch("/api/events")
 			.then((res) => {
 				return (res.ok ? res.json() : []) as Event[];
 			})

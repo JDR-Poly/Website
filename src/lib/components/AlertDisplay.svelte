@@ -74,7 +74,7 @@
 		right: 0px;
 		bottom: 0px;
 		width: 25%;
-		z-index: 3;
+		z-index: 55;
 	}
 	.alert {
 		padding: 20px;

@@ -5,18 +5,19 @@
 	import { hasRolePermission, Role, Roles, UserPermission } from "$lib/userPermissions";
 	import { goto } from "$app/navigation";
 	import { error as messageError } from "$lib/stores";
-	import Button, { Label, Icon } from "@smui/button";
 	import type { User } from "$gtypes";
 	import Edit from "./Edit.svelte";
 	import { writable } from "svelte/store";
 	import ImageB64 from "$components/ImageB64.svelte";
 	import type { PageData } from "./$types";
-	import Dialog, { Actions, Content, Title } from "@smui/dialog";
 	import IconButton from "$components/IconButton.svelte";
+	import * as Dialog from "$lib/components/ui/dialog";
+	import Button from "$components/ui/button/button.svelte";
+
 
 	export let data: PageData;
 
-	let openDeleteConfirmDialog = false;
+	let openDeleteConfirmDialog = writable(false);
 	const openEditDialog = writable(false);
 	const { event_id } = $page.params;
 
@@ -318,7 +319,7 @@
 			<div class="admin-btn" style="right: 60px;">
 				<IconButton
 					icon="material-symbols:delete-outline"
-					action={() => (openDeleteConfirmDialog = true)}
+					action={() => ($openDeleteConfirmDialog = true)}
 					label={`Supprimer l'événement ${data.event.title}`}
 					inline={true}
 				/>
@@ -343,27 +344,25 @@
 			{/if}
 			<Edit event={data.event} open={openEditDialog} />
 
-			<Dialog open={openDeleteConfirmDialog}>
-				<Title id="simple-title">Supprimer ?</Title>
-				<Content id="simple-content">Êtes vous sûr de vouloir supprimer cet événement?</Content>
-				<Actions>
-					<Button
-						on:click={() => {
-							openDeleteConfirmDialog = false;
-						}}
-					>
-						<Label>Non</Label>
-					</Button>
-					<Button
-						on:click={() => {
-							openDeleteConfirmDialog = false;
+			<Dialog.Root open={$openDeleteConfirmDialog} onOutsideClick={() => ($openDeleteConfirmDialog = false)}>
+				<Dialog.Content>
+					<Dialog.Header>
+						<Dialog.Title>Supprimer ?</Dialog.Title>
+						<Dialog.Description>Êtes vous sûr de vouloir supprimer cet événement?</Dialog.Description>
+					</Dialog.Header>
+					<Dialog.Footer>
+						<Button
+							on:click={() => {
+								$openDeleteConfirmDialog = false;
+							}}>Annuler</Button
+						>
+						<Button on:click={() => {
+							$openDeleteConfirmDialog = false;
 							deleteEvent(data.event.id);
-						}}
-					>
-						<Label>Oui</Label>
-					</Button>
-				</Actions>
-			</Dialog>
+						}}>Oui</Button>
+					</Dialog.Footer>
+				</Dialog.Content>
+			</Dialog.Root>
 		{/if}
 	</div>
 </main>
