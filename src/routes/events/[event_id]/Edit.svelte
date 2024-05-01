@@ -137,7 +137,7 @@
 				<Select.Root 
 					selected={selectOption.find((v) => v.value == event.category)}
 					>
-					<Select.Trigger class="w-[180px] my-5 ml-2">
+					<Select.Trigger class="w-[180px] dialog-input-elem">
 					<Select.Value placeholder="Catégorie" />
 					</Select.Trigger>
 					<Select.Content>
@@ -147,27 +147,27 @@
 					</Select.Content>
 				</Select.Root>
 				
-				<div class="flex w-full max-w-sm flex-col gap-1.5 my-5 ml-2">
+				<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
 					<Label for="title">Titre</Label>
 					<Input type="text" id="title" bind:value={event.title} />
 				</div>
 
-				<div class="grid w-full gap-1.5 my-5 ml-2">
+				<div class="grid w-full gap-1.5 dialog-input-elem">
 					<Label for="description">Description</Label>
 					<Textarea id="description" bind:value={event.description} class="min-h-64"/>
 				</div>
 
-				<div class="flex w-full max-w-sm flex-col gap-1.5 my-5 ml-2">
+				<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
 					<Label for="date">Date</Label>
 					<DateInput bind:value={internal_date} min={new Date(Date.now())} timePrecision="minute" id="date" closeOnSelection/>
 				</div>
 
-				<div class="grid w-full max-w-sm items-center gap-1.5 my-5 ml-2">
+				<div class="grid w-full max-w-sm items-center gap-1.5 dialog-input-elem">
 					<Label for="image">Image</Label>
 					<Input id="image" type="file" on:change={handleImageChange}/>
 				</div>
 				
-				<div class="flex items-center space-x-2 my-5 ml-2">
+				<div class="flex items-center space-x-2 dialog-input-elem">
 					<Checkbox id="inscription-checkbox" bind:checked={event.inscription} />
 					<Label for="inscription-checkbox"
 					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -175,7 +175,7 @@
 				</div>
 
 				{#if event.inscription} 
-					<div class="grid w-full gap-1.5 my-5 ml-2">
+					<div class="grid w-full gap-1.5 dialog-input-elem">
 						<Label for="inscription-group">Rôle d'inscription</Label>
 						<Select.Root 
 							selected={event.inscription_group ? {label: getTranslatedRoleName(event.inscription_group), value: event.inscription_group} : undefined}
@@ -191,12 +191,12 @@
 						</Select.Root>
 					</div>	
 
-					<div class="flex w-full max-w-sm flex-col gap-1.5 my-5 ml-2">
+					<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
 						<Label for="inscription_start">Début d'inscription</Label>
 						<DateInput bind:value={internal_inscription_start} timePrecision="minute" id="inscription_start" closeOnSelection/>
 					</div>
 
-					<div class="flex items-center space-x-2 my-5 ml-2">
+					<div class="flex items-center space-x-2 dialog-input-elem">
 						<Checkbox id="inscription-limit-checkbox" 
 							bind:checked={hasInscriptionLimit} 
 							on:click={() => {
@@ -213,13 +213,13 @@
 					</div>
 
 					{#if hasInscriptionLimit}
-						<div class="flex w-full max-w-sm flex-col gap-1.5 my-5 ml-2">
+						<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
 							<Label for="inscription-limit">Nombre d'inscription</Label>
 							<Input type="number" id="inscription-limit" bind:value={event.inscription_limit} />
 						</div>
 					{/if}
 
-					<div class="flex items-center space-x-2 my-5 ml-2">
+					<div class="flex items-center space-x-2 dialog-input-elem">
 						<Checkbox id="inscription-stop-checkbox" 
 							bind:checked={hasInscriptionStop} 
 							on:click={() => {
@@ -236,7 +236,7 @@
 					</div>
 
 					{#if hasInscriptionStop}
-						<div class="flex w-full max-w-sm flex-col gap-1.5 my-5 ml-2">
+						<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
 							<Label for="inscription-stop">Date de fin d'inscription</Label>
 							<DateInput bind:value={internal_inscription_stop} timePrecision="minute" id="inscription-stop" closeOnSelection/>
 						</div>
@@ -263,5 +263,11 @@
 <style lang="scss">
 	:root {
 		--date-input-width: fit-content; //Makes date input take more width space
+	}
+
+	.dialog-input-elem {
+		margin-top: 1.25rem;
+		margin-bottom: 1.25rem;
+		margin-left: 0.5rem;
 	}
 </style>
