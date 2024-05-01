@@ -129,30 +129,32 @@
 	<!-- onOpenChange is here only because clicking on the 'x' button to close the dialog doesn't update the
 		store $open 
 	-->
-		<Dialog.Content class="!max-w-4xl">
+		<Dialog.Content class="!max-w-4xl h-[95%]">
 			<Dialog.Header>
 				<Dialog.Title>Editer l'événement</Dialog.Title>
 			</Dialog.Header>
-			<div id="scroll-component" class="max-h-[70vh] overflow-y-scroll">
-				<Select.Root 
-					selected={selectOption.find((v) => v.value == event.category)}
-					>
-					<Select.Trigger class="w-[180px] dialog-input-elem">
-					<Select.Value placeholder="Catégorie" />
-					</Select.Trigger>
-					<Select.Content>
-						{#each selectOption as selectCategory}
-							<Select.Item value={selectCategory.value}>{selectCategory.label}</Select.Item>
-						{/each}
-					</Select.Content>
-				</Select.Root>
-				
+			<div id="scroll-component" class="overflow-y-scroll overflow-x-clip">
+				<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
+					<Label for="category">Catégorie</Label>
+					<Select.Root 
+						selected={selectOption.find((v) => v.value == event.category)}
+						>
+						<Select.Trigger class="w-[180px] dialog-input-elem" id="category">
+						<Select.Value placeholder="Catégorie" />
+						</Select.Trigger>
+						<Select.Content>
+							{#each selectOption as selectCategory}
+								<Select.Item value={selectCategory.value}>{selectCategory.label}</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
+				</div>
 				<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
 					<Label for="title">Titre</Label>
 					<Input type="text" id="title" bind:value={event.title} />
 				</div>
 
-				<div class="grid w-full gap-1.5 dialog-input-elem">
+				<div class="grid w-11/12 gap-1.5 dialog-input-elem">
 					<Label for="description">Description</Label>
 					<Textarea id="description" bind:value={event.description} class="min-h-64"/>
 				</div>
