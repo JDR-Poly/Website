@@ -1,7 +1,8 @@
 <!-- @format -->
 <script lang="ts">
 	import { page } from "$app/stores";
-	import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions";
+	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+	import { getTranslatedRoleName } from "$utils";
 	import type { PageData } from "./$types";
 
 	const { id } = $page.params;

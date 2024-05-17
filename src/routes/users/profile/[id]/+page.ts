@@ -6,7 +6,7 @@ import type { PageLoad } from "./$types";
 
 export const load = (async ({ fetch, params }) => {
 	return {
-		profile: fetch(`/api/users/${params.id}`)
+		profile: await fetch(`/api/users/${params.id}`)
 			.then(async (res) => {
 				const body = await res.json();
 				if (!res.ok) throw error(res.status, body.message);
