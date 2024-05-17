@@ -15,7 +15,7 @@
 	let password = "";
 
 	enum form {
-		LOGIN = "Connection",
+		LOGIN = "Connexion",
 		REGISTER = "Inscription",
 		PASSWORD_LOST = "Récupération",
 	}
