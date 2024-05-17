@@ -43,7 +43,6 @@
 	<div id="scroll-component" class="max-h-[70vh] overflow-y-scroll">
 		<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
 			<Label for="title">Nom</Label>
-			<Icon icon="material-symbols:person" inline/>
 			<Input type="text" id="title" bind:value={honorMember.name} />
 		</div>
 

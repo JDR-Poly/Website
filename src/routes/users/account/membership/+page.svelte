@@ -1,10 +1,11 @@
 <!-- @format -->
 <script lang="ts">
 	import { error, info } from "$lib/stores";
-	import Textfield from "@smui/textfield";
 	import { applyAction, enhance } from "$app/forms";
 	import IconButton from "$components/IconButton.svelte";
 	import { page } from "$app/stores";
+	import Label from "$components/ui/label/label.svelte"; 
+	import { Input } from "$lib/components/ui/input";
 
 	let memberCode = "";
 
@@ -41,23 +42,20 @@
 				await applyAction(result);
 			};
 		}}
+		class="flex"
 	>
-		<Textfield
-			type="text"
-			input$name="validation_token"
-			bind:value={memberCode}
-			label="Code membre"
-			class="solo-input"
-			variant="outlined"
-		/>
+		<div class="flex w-full max-w-sm flex-col gap-1.5">
+			<Label for="title">Code membre</Label>
+			<Input type="text" id="title" bind:value={memberCode} name="validation_token"/>
+		</div>
+
 		<IconButton
 			action={validateForm}
 			icon="material-symbols:done"
 			disabled={memberCode === ""}
-			inline={true}
+			inline={false}
 			label="Submit"
 		/>
-		<!-- Validate form -->
 	</form>
 </main>
 

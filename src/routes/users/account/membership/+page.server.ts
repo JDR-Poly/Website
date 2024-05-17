@@ -21,10 +21,12 @@ type UserDb = {
  * @returns list of mails that are not found and who can't get emails
  */
 export const actions = {
-	default: async ({ request, locals }: RequestEvent) => {
+	default: async ({ request, locals }: RequestEvent) => {	
+		return fail(500, { error_message: "test", message: "Ce code n'est pas valide." });
+		
 		if (!locals.authenticated) throw error(401);
 		const form = await request.formData();
-
+		
 		return db
 			.one("SELECT validation_token, periods FROM members_code WHERE validation_token=$1", [
 				form.get("validation_token"),
