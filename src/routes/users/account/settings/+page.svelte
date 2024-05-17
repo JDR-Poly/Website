@@ -2,10 +2,11 @@
 <script lang="ts">
 	import { info, error } from "$lib/stores";
 	import { page } from "$app/stores";
-	import Textfield from "@smui/textfield";
-	import Button, { Label } from "@smui/button";
 	import { enhance } from "$app/forms";
 	import { invalidateAll } from "$app/navigation";
+	import { Input } from "$lib/components/ui/input/index.js";
+	import { Label } from "$lib/components/ui/label/index.js";
+	import { Button } from "$lib/components/ui/button";
 
 	let emailChangeEmail1 = "";
 	let emailChangeEmail2 = "";
@@ -56,33 +57,25 @@
 		}}
 	>
 		<h4>Changer de Mail</h4>
-		<Textfield
-			input$name="email"
-			type="text"
-			bind:value={emailChangeEmail1}
-			label="Nouveau mail"
-			style="width: 100%"
-		/>
-		<Textfield
-			type="text"
-			bind:value={emailChangeEmail2}
-			label="Copie du nouveau mail"
-			style="width: 100%"
-		/>
-		<Textfield
-			input$name="password"
-			type="password"
-			bind:value={emailChangePassword}
-			label="Mot de passe"
-			style="width: 100%"
-		/>
+		<div class="grid grid-cols-4 items-center gap-4">
+			<Label for="email1" class="text-right">Nouveau email</Label>
+			<Input type="email" id="email1" bind:value={emailChangeEmail1} class="col-span-3" />
+		</div>
+		<div class="grid grid-cols-4 items-center gap-4">
+			<Label for="email2" class="text-right">Copie du nouveau mail</Label>
+			<Input type="email" id="email2" bind:value={emailChangeEmail2} class="col-span-3" />
+		</div>
+		<div class="grid grid-cols-4 items-center gap-4">
+			<Label for="email-password" class="text-right">Mot de passe</Label>
+			<Input type="password" id="email-password" bind:value={emailChangePassword} class="col-span-3" />
+		</div>
+
 
 		<Button
-			touch
-			variant="unelevated"
+			type="submit"
 			disabled={!emailChangeEmail1 || !emailChangePassword || emailChangeEmail1 != emailChangeEmail2}
 		>
-			<Label>Changer</Label>
+			Changer
 		</Button>
 	</form>
 
@@ -103,16 +96,13 @@
 		}}
 	>
 		<h4>Changer de Nom</h4>
-		<Textfield
-			input$name="name"
-			type="text"
-			bind:value={nameChangeName}
-			label="Nouveau Nom Prénom"
-			style="width: 100%"
-		/>
+		<div class="grid grid-cols-4 items-center gap-4">
+			<Label for="new-name" class="text-right">Nouveau Nom Prénom</Label>
+			<Input type="text" id="new-name" bind:value={nameChangeName} class="col-span-3" />
+		</div>
 
-		<Button on:click={() => ""} touch variant="unelevated" disabled={!nameChangeName}>
-			<Label>Changer</Label>
+		<Button type="submit" disabled={!nameChangeName}>
+			Changer
 		</Button>
 	</form>
 
@@ -133,35 +123,26 @@
 		}}
 	>
 		<h4>Changer de mot de passe</h4>
-		<Textfield
-			input$name="oldPassword"
-			type="password"
-			bind:value={passwordChangeOldPassword}
-			label="Ancien mot de passe"
-			style="width: 100%"
-		/>
-		<Textfield
-			input$name="newPassword"
-			type="password"
-			bind:value={passwordChangeNewPassword1}
-			label="Nouveau mot de passe"
-			style="width: 100%"
-		/>
-		<Textfield
-			type="password"
-			bind:value={passwordChangeNewPassword2}
-			label="Copie du nouveau mot de passe"
-			style="width: 100%"
-		/>
+		<div class="grid grid-cols-4 items-center gap-4">
+			<Label for="old-password" class="text-right">Ancien mot de passe</Label>
+			<Input type="password" id="old-password" bind:value={passwordChangeOldPassword} class="col-span-3" />
+		</div>
+		<div class="grid grid-cols-4 items-center gap-4">
+			<Label for="new-password1" class="text-right">Nouveau mot de passe</Label>
+			<Input type="password" id="new-password1" bind:value={passwordChangeNewPassword1} class="col-span-3" />
+		</div>
+		<div class="grid grid-cols-4 items-center gap-4">
+			<Label for="new-password2" class="text-right">Copie du nouveau mot de passe</Label>
+			<Input type="password" id="new-password2" bind:value={passwordChangeNewPassword2} class="col-span-3" />
+		</div>
 
 		<Button
-			touch
-			variant="unelevated"
+			type="submit"
 			disabled={!passwordChangeOldPassword ||
 				!passwordChangeNewPassword1 ||
 				passwordChangeNewPassword1 != passwordChangeNewPassword2}
 		>
-			<Label>Changer</Label>
+			Changer
 		</Button>
 	</form>
 
@@ -176,16 +157,13 @@
 		}}
 	>
 		<h4>Supprimer son compte</h4>
-		<Textfield
-			input$name="password"
-			type="password"
-			bind:value={deleteAccountPassword}
-			label="Mot de passe"
-			style="width: 100%"
-		/>
+		<div class="grid grid-cols-4 items-center gap-4">
+			<Label for="delete-password" class="text-right">Mot de passe</Label>
+			<Input type="password" id="delete-password" bind:value={deleteAccountPassword} class="col-span-3" />
+		</div>
 
-		<Button on:click={() => ""} touch variant="unelevated" disabled={!deleteAccountPassword}>
-			<Label>SUPPRIMER</Label>
+		<Button type="submit" disabled={!deleteAccountPassword}>
+			SUPPRIMER
 		</Button>
 	</form>
 </main>
