@@ -8,21 +8,32 @@ import { readFile } from "fs";
 import { env } from "$env/dynamic/private";
 import { __envDir } from "$lib/utils";
 import { logger } from "./logger";
+import { building } from '$app/environment';
 
 let transporter: Transporter | undefined;
 let ethereal = false;
 
 async function preloadTransporter() {
 	if (import.meta.env.PROD) {
-		const testTransporter = createTransport({
-			host: env.MAIL_HOST,
-			port: parseInt(env.MAIL_PORT || "465"),
-			secure: env.MAIL_PORT === "465" || env.MAIL_PORT === undefined,
-			auth: {
-				user: env.MAIL_USER,
-				pass: env.MAIL_PASSWORD,
-			},
-		});
+		//The !building trick prevent call to env ($env/dynamic/private) while doing prerendering, thus preventing a crash.
+		const creditentials = !building ? 
+			{
+				host: env.MAIL_HOST,
+				port: parseInt(env.MAIL_PORT || "465"),
+				secure: env.MAIL_PORT === "465" || env.MAIL_PORT === undefined,
+				auth: {
+					user: env.MAIL_USER,
+					pass: env.MAIL_PASSWORD,
+				},
+			}
+			:
+			{
+				host: "",
+				port: 465,
+				secure: false
+			}
+
+		const testTransporter = createTransport(creditentials);
 		testTransporter.verify(async (error, _) => {
 			if (!error) {
 				transporter = testTransporter;
