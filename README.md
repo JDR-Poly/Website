@@ -17,7 +17,7 @@ The main language used is TypeScript, and the database is a **Postgresql databas
 3. Create .env file with all the appropriates settings
 
 ```
-BODY_SIZE_LIMIT=0
+BODY_SIZE_LIMIT=Infinity
 DB_IP=
 DB_PORT=
 DB_NAME=
