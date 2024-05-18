@@ -14,26 +14,17 @@ let transporter: Transporter | undefined;
 let ethereal = false;
 
 async function preloadTransporter() {
-	if (import.meta.env.PROD) {
-		//The !building trick prevent call to env ($env/dynamic/private) while doing prerendering, thus preventing a crash.
-		const creditentials = !building ? 
-			{
-				host: env.MAIL_HOST,
-				port: parseInt(env.MAIL_PORT || "465"),
-				secure: env.MAIL_PORT === "465" || env.MAIL_PORT === undefined,
-				auth: {
-					user: env.MAIL_USER,
-					pass: env.MAIL_PASSWORD,
-				},
-			}
-			:
-			{
-				host: "",
-				port: 465,
-				secure: false
-			}
-
-		const testTransporter = createTransport(creditentials);
+	//The !building trick prevent call to env ($env/dynamic/private) while doing prerendering, thus preventing a crash.
+	if (import.meta.env.PROD && !building) {
+		const testTransporter = createTransport({
+			host: env.MAIL_HOST,
+			port: parseInt(env.MAIL_PORT || "465"),
+			secure: env.MAIL_PORT === "465" || env.MAIL_PORT === undefined,
+			auth: {
+				user: env.MAIL_USER,
+				pass: env.MAIL_PASSWORD,
+			},
+		});
 		testTransporter.verify(async (error, _) => {
 			if (!error) {
 				transporter = testTransporter;
@@ -41,6 +32,7 @@ async function preloadTransporter() {
 			} else {
 				logger.error(error);
 				transporter = await generateEtheralTransporter();
+				logger.info("Etheral email transporter was linked after proper mail host could not be linked.");
 			}
 		});
 	} else {
