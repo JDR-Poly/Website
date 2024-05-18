@@ -165,6 +165,8 @@
 
 						{#if import.meta.env.PROD}
 							<Turnstile siteKey="0x4AAAAAAAE1uyTWfzpY2dHE" theme="light" />
+						{:else}
+							<Turnstile siteKey="1x00000000000000000000AA" theme="light" />
 						{/if}
 						{#if loading}
 							<InfiniteProgress />

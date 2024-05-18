@@ -44,6 +44,8 @@
 				</div>
 				{#if import.meta.env.PROD}
 					<Turnstile siteKey="0x4AAAAAAAE1uyTWfzpY2dHE" />
+				{:else}
+					<Turnstile siteKey="1x00000000000000000000AA" theme="light" />
 				{/if}
 				<button disabled={!(email && name && message && !isEmailInvalid)}>Envoyer</button>
 			</form>
