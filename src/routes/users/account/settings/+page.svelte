@@ -7,6 +7,7 @@
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { Label } from "$lib/components/ui/label/index.js";
 	import { Button } from "$lib/components/ui/button";
+	import { goto } from "$app/navigation";
 
 	let emailChangeEmail1 = "";
 	let emailChangeEmail2 = "";
@@ -145,6 +146,28 @@
 			Changer
 		</Button>
 	</form>
+
+	<!-- Link Discord -->
+	<form
+		method="POST"
+		action="?/linkDiscord"
+		use:enhance={({}) => {
+			return async ({ result }) => {
+				if (result.type == "redirect") {
+					window.location.href = result.location
+				} else if (result.type == "failure") {
+					$error = result.data?.message;
+				}
+				invalidateAll();
+			};
+		}}
+	>
+		<h4>Link son compte Discord</h4>
+		<Button type="submit">
+			LINK
+		</Button>
+	</form>
+	
 
 	<!-- Delete account -->
 	<form
