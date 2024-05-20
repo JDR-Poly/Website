@@ -59,7 +59,7 @@
 		<h4>Changer de Mail</h4>
 		<div class="grid grid-cols-4 items-center gap-4">
 			<Label for="email1" class="text-right">Nouveau email</Label>
-			<Input type="email" id="email1" bind:value={emailChangeEmail1} class="col-span-3" />
+			<Input type="email" id="email1" name="email" bind:value={emailChangeEmail1} class="col-span-3" />
 		</div>
 		<div class="grid grid-cols-4 items-center gap-4">
 			<Label for="email2" class="text-right">Copie du nouveau mail</Label>
@@ -67,7 +67,7 @@
 		</div>
 		<div class="grid grid-cols-4 items-center gap-4">
 			<Label for="email-password" class="text-right">Mot de passe</Label>
-			<Input type="password" id="email-password" bind:value={emailChangePassword} class="col-span-3" />
+			<Input type="password" id="email-password" name="password" bind:value={emailChangePassword} class="col-span-3" />
 		</div>
 
 
@@ -98,7 +98,7 @@
 		<h4>Changer de Nom</h4>
 		<div class="grid grid-cols-4 items-center gap-4">
 			<Label for="new-name" class="text-right">Nouveau Nom Prénom</Label>
-			<Input type="text" id="new-name" bind:value={nameChangeName} class="col-span-3" />
+			<Input type="text" id="new-name" name="name" bind:value={nameChangeName} class="col-span-3" />
 		</div>
 
 		<Button type="submit" disabled={!nameChangeName}>
@@ -125,11 +125,11 @@
 		<h4>Changer de mot de passe</h4>
 		<div class="grid grid-cols-4 items-center gap-4">
 			<Label for="old-password" class="text-right">Ancien mot de passe</Label>
-			<Input type="password" id="old-password" bind:value={passwordChangeOldPassword} class="col-span-3" />
+			<Input type="password" id="old-password" name="oldPassword" bind:value={passwordChangeOldPassword} class="col-span-3" />
 		</div>
 		<div class="grid grid-cols-4 items-center gap-4">
 			<Label for="new-password1" class="text-right">Nouveau mot de passe</Label>
-			<Input type="password" id="new-password1" bind:value={passwordChangeNewPassword1} class="col-span-3" />
+			<Input type="password" id="new-password1" name="newPassword" bind:value={passwordChangeNewPassword1} class="col-span-3" />
 		</div>
 		<div class="grid grid-cols-4 items-center gap-4">
 			<Label for="new-password2" class="text-right">Copie du nouveau mot de passe</Label>
@@ -159,7 +159,7 @@
 		<h4>Supprimer son compte</h4>
 		<div class="grid grid-cols-4 items-center gap-4">
 			<Label for="delete-password" class="text-right">Mot de passe</Label>
-			<Input type="password" id="delete-password" bind:value={deleteAccountPassword} class="col-span-3" />
+			<Input type="password" id="delete-password" name="password" bind:value={deleteAccountPassword} class="col-span-3" />
 		</div>
 
 		<Button type="submit" disabled={!deleteAccountPassword}>
