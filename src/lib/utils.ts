@@ -118,7 +118,6 @@ function getTranslatedRoleName(name: string): string {
 export {
 	getBase64,
 	__envDir,
-	getLocalDateStringOrNullFromString,
 	getByteArrayFromBase64,
 	parseToLocalDateStringWithoutMilis,
 	getTranslatedRoleName,
