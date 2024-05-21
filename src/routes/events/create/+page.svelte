@@ -1,30 +1,29 @@
 <!-- @format -->
 <script lang="ts">
 	import { error, info, warning } from "$lib/stores";
-	import Icon from "@smui/select/icon";
-	import Select, { Option } from "@smui/select";
-	import Textfield from "@smui/textfield";
-	import { goto } from "$app/navigation";
-	import Checkbox from "@smui/checkbox";
-	import FormField from "@smui/form-field";
-	import IB from "@smui/icon-button";
 	import { categories, returnJoinEventRoles } from "$lib/evenementsUtils";
 	import Compressor from "compressorjs";
-	import { getBase64, getLocalDateStringOrNullFromString } from "$lib/utils";
+	import { getBase64, getTranslatedRoleName } from "$lib/utils";
 	import { page } from "$app/stores";
+	import { goto } from "$app/navigation";
+	import * as Select from "$lib/components/ui/select";
+	import Label from "$components/ui/label/label.svelte"; 
+	import { Button } from "$lib/components/ui/button";
+	import { Input, type FormInputEvent } from "$lib/components/ui/input";
+	import { Textarea } from "$lib/components/ui/textarea/index.js";
+	import { DateInput } from 'date-picker-svelte';
+	import Checkbox from "$components/ui/checkbox/checkbox.svelte";
 
 	let title = "";
 	let description = "";
-	let date: string = "";
+	let date: Date = new Date(Date.now());
 	let category = categories[0];
+	let image: File | Blob | undefined;
 	let inscription = false;
-	let inscription_group = "MEMBER";
-	let inscription_limit: number = 16;
-	let inscription_start: string = "";
-	let inscription_stop: string = "";
-
-	let images: null | FileList = null;
-	let image: File | Blob;
+	let inscription_group: string = "MEMBER";
+	let inscription_limit: number | undefined = undefined;
+	let inscription_start: Date | undefined = undefined;
+	let inscription_stop: Date | undefined = undefined;
 
 	//Not actual stored values in the database
 	let isInscriptionStop = false;
@@ -46,14 +45,14 @@
 			body: JSON.stringify({
 				title,
 				category,
-				date: getLocalDateStringOrNullFromString(date),
+				date: date,
 				image: image ? await getBase64(image) : null,
 				description,
 				inscription,
 				inscription_group,
 				inscription_limit,
-				inscription_start: getLocalDateStringOrNullFromString(inscription_start),
-				inscription_stop: getLocalDateStringOrNullFromString(inscription_stop),
+				inscription_start: inscription_start,
+				inscription_stop: inscription_stop,
 			}),
 		}).then(async (res) => {
 			const body = await res.json();
@@ -65,8 +64,39 @@
 			}
 		});
 	}
-</script>
 
+
+	function handleImageChange(value: FormInputEvent) {
+		const images = (value.target as HTMLInputElement).files
+		if (images && images[0]) {
+			if (images[0].size > 4e6) {
+				$warning = "Image max 4MB";
+				(value.target as HTMLInputElement).value = ""
+				image = undefined;
+			} else {
+				isImageProcessing = true;
+				console.log("Processing image");
+
+				new Compressor(images[0], {
+					quality: 0.6,
+					mimeType: "image/webp",
+					maxWidth: 1536,
+					maxHeight: 864,
+					async success(result) {
+						console.log("Image processing finished.");
+						image = result;
+						isImageProcessing = false;
+					},
+					error(err) {
+						(value.target as HTMLInputElement).value = ""
+						$error = "An error occured, see console"
+						console.log(err.message);
+					},
+				});
+			}
+		}
+	}
+</script>
 <svelte:head>
 	<!-- Primary Meta Tags -->
 	<title>Créer un événement | JDRPoly</title>
@@ -94,155 +124,127 @@
 				})();
 			}}
 		>
-			<Select bind:value={category} label="Catégorie" class="small-field" required>
-				<Icon class="material-icons" slot="leadingIcon">event</Icon>
-				{#each categories as category}
-					<Option value={category}>{category}</Option>
-				{/each}
-			</Select>
-			<Textfield type="text" bind:value={title} label="Titre" style="width: 100%" required />
-			<Textfield
-				type="text"
-				bind:value={description}
-				label="Description"
-				style="width: 100%"
-				textarea
-			/>
 
-			<Textfield
-				bind:value={date}
-				type="datetime-local"
-				label="Date"
-				class="small-field"
-				required
-				input$min={new Date(Date.now()).toISOString().slice(0, -8)}
-			/>
-			<div class="hide-file-ui">
-				<Textfield
-					bind:files={images}
-					label="Image"
-					type="file"
-					on:change={async () => {
-						if (images && images[0]) {
-							if (images[0].size > 4e6) {
-								$warning = "Image max 4MB";
-								images = null;
-							} else {
-								isImageProcessing = true;
-								console.log("Processing image");
+		<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
+			<Label for="category">Catégorie</Label>
+			<Select.Root>
+				<Select.Trigger class="w-[180px] dialog-input-elem" id="category">
+				<Select.Value placeholder="Catégorie" />
+				</Select.Trigger>
+				<Select.Content>
+					{#each categories as selectCategory}
+						<Select.Item value={selectCategory}>{selectCategory}</Select.Item>
+					{/each}
+				</Select.Content>
+			</Select.Root>
+		</div>
+		<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
+			<Label for="title">Titre</Label>
+			<Input type="text" id="title" bind:value={title} />
+		</div>
 
-								new Compressor(images[0], {
-									quality: 0.6,
-									mimeType: "image/webp",
-									maxWidth: 1536,
-									maxHeight: 864,
-									async success(result) {
-										console.log("Image processing finished.");
-										image = result;
-										isImageProcessing = false;
-									},
-									error(err) {
-										console.log(err.message);
-									},
-								});
-							}
-						}
-					}}
-				/>
-				<IB
-					class="material-icons"
-					on:click={() => {
-						images = null;
-					}}>delete</IB
-				>
+		<div class="grid w-11/12 gap-1.5 dialog-input-elem">
+			<Label for="description">Description</Label>
+			<Textarea id="description" bind:value={description} class="min-h-64"/>
+		</div>
+
+		<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
+			<Label for="date">Date</Label>
+			<DateInput bind:value={date} min={new Date(Date.now())} timePrecision="minute" id="date" closeOnSelection/>
+		</div>
+
+		<div class="grid w-full max-w-sm items-center gap-1.5 dialog-input-elem">
+			<Label for="image">Image</Label>
+			<Input id="image" type="file" on:change={handleImageChange}/>
+		</div>
+		
+		<div class="flex items-center space-x-2 dialog-input-elem">
+			<Checkbox id="inscription-checkbox" bind:checked={inscription} />
+			<Label for="inscription-checkbox"
+			class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+			>Inscription</Label>
+		</div>
+
+		{#if inscription} 
+			<div class="grid w-full gap-1.5 dialog-input-elem">
+				<Label for="inscription-group">Rôle d'inscription</Label>
+				<Select.Root 
+					selected={{label: inscription_group, value: inscription_group}}
+					>
+					<Select.Trigger class="w-[180px]" id="inscription-group">
+					<Select.Value placeholder="Rôle d'inscription" />
+					</Select.Trigger>
+					<Select.Content>
+						{#each returnJoinEventRoles() as role}
+							<Select.Item value={role}>{getTranslatedRoleName(role)}</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
+			</div>	
+
+			<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
+				<Label for="inscription_start">Début d'inscription</Label>
+				<DateInput bind:value={inscription_start} timePrecision="minute" id="inscription_start" closeOnSelection/>
 			</div>
 
-			<FormField>
-				<Checkbox
-					bind:checked={inscription}
-					touch
-					on:change={() => {
-						if (!inscription) {
-							inscription_group = "MEMBER";
-							inscription_start = "";
-							inscription_stop = "";
-							isInscriptionStop = false;
-						} else {
-							inscription_start = new Date(Date.now()).toString();
+			<div class="flex items-center space-x-2 dialog-input-elem">
+				<Checkbox id="inscription-limit-checkbox" 
+					bind:checked={hasInscriptionLimit} 
+					on:click={() => {
+						if (hasInscriptionLimit) {
+							inscription_limit = 16;
+						} else if (!hasInscriptionLimit) {
+							inscription_limit = undefined;
 						}
 					}}
 				/>
-				<span slot="label">Inscription </span>
-			</FormField>
+				<Label for="inscription-limit-checkbox"
+				class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+				>Limite d'inscriptions</Label>
+			</div>
 
-			{#if inscription}
-				<Select
-					bind:value={inscription_group}
-					label="Rôle d'inscription"
-					class="small-field"
-					required
-				>
-					{#each returnJoinEventRoles() as role}
-						<Option value={role}>{role}</Option>
-					{/each}
-				</Select>
-
-				<Textfield
-					bind:value={inscription_start}
-					type="datetime-local"
-					label="Début d'inscription"
-					class="small-field"
-					required
-				/>
-
-				<FormField>
-					<Checkbox bind:checked={hasInscriptionLimit} touch />
-					<span slot="label">Limite d'inscriptions </span>
-				</FormField>
-
-				{#if hasInscriptionLimit}
-					<Textfield
-						type="number"
-						bind:value={inscription_limit}
-						label="Limite"
-						style="width: 100%"
-						required
-					/>
-				{/if}
-
-				<FormField>
-					<Checkbox
-						bind:checked={isInscriptionStop}
-						touch
-						on:change={() => {
-							if (!isInscriptionStop) {
-								inscription_stop = "";
-							} else {
-								inscription_stop = new Date(Date.now()).toString();
-							}
-						}}
-					/>
-					<span slot="label">Fin d'inscription </span>
-				</FormField>
-
-				{#if isInscriptionStop}
-					<Textfield
-						bind:value={inscription_stop}
-						type="datetime-local"
-						label="Fin d'inscription"
-						class="small-field"
-						required
-						input$min={new Date(Date.now()).toISOString().slice(0, -8)}
-					/>
-				{/if}
+			{#if hasInscriptionLimit}
+				<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
+					<Label for="inscription-limit">Nombre d'inscription</Label>
+					<Input type="number" id="inscription-limit" bind:value={inscription_limit} />
+				</div>
 			{/if}
 
-			<button disabled={submitDisabled} on:click={submit}>Créer l'événement</button>
+			<div class="flex items-center space-x-2 dialog-input-elem">
+				<Checkbox id="inscription-stop-checkbox" 
+					bind:checked={isInscriptionStop} 
+					on:click={() => {
+						if (!isInscriptionStop) {
+							inscription_stop = undefined;
+						} else {
+							inscription_stop = new Date(Date.now())
+						}
+					}}
+				/>
+				<Label for="inscription-stop-checkbox"
+				class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+				>Fin d'inscription</Label>
+			</div>
+
+			{#if isInscriptionStop}
+				<div class="flex w-full max-w-sm flex-col gap-1.5 dialog-input-elem">
+					<Label for="inscription-stop">Date de fin d'inscription</Label>
+					<DateInput bind:value={inscription_stop} timePrecision="minute" id="inscription-stop" closeOnSelection/>
+				</div>
+			{/if}
+
+		{/if}
+
+			<Button disabled={submitDisabled} on:click={submit}>Créer l'événement</Button>
 		</form>
 	</div>
 </main>
 
 <style lang="scss">
+
+	:root {
+			--date-input-width: fit-content; //Makes date input take more width space
+		}
 	main {
 		min-height: 90vh;
 		position: relative;
@@ -260,6 +262,12 @@
 			height: 100%;
 			width: 100%;
 		}
+
+		.dialog-input-elem {
+			margin-top: 1.25rem;
+			margin-bottom: 1.25rem;
+			margin-left: 0.5rem;
+		}
 	}
 
 	#wrapper {
@@ -270,27 +278,6 @@
 		padding: 72px 55px 90px;
 		z-index: 1;
 
-		form > {
-			:global(*:not(.mdc-form-field)) {
-				margin: 10px 5px;
-				width: 100%;
-			}
-
-			:global(.small-field) {
-				width: 50%;
-			}
-
-			:global(.mdc-form-field) {
-				display: flex;
-			}
-		}
 	}
 
-	.hide-file-ui :global(input[type="file"]::file-selector-button) {
-		display: none;
-	}
-
-	.hide-file-ui :global(:not(.mdc-text-field--label-floating) input[type="file"]) {
-		color: transparent;
-	}
 </style>
