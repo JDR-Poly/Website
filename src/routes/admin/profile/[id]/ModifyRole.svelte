@@ -89,7 +89,6 @@
 	>
 		{#each ["1 semestre", "2 semestres"] as option, i}
 			<div class="flex items-center space-x-2">
-				{i+1}
 				<RadioGroup.Item value={(i+1).toString()} id={option} name={option}/>
 				<Label for={option}>{option}</Label>
 			</div>
