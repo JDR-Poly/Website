@@ -14,8 +14,10 @@ let transporter: Transporter | undefined;
 let ethereal = false;
 
 async function preloadTransporter() {
-	//The !building trick prevent call to env ($env/dynamic/private) while doing prerendering, thus preventing a crash.
-	if (import.meta.env.PROD && !building) {
+	//The !building trick prevent call to env ($env/dynamic/private) while doing prerendering and building, thus preventing a crash.
+	if(building) return
+	
+	if (import.meta.env.PROD) {
 		const testTransporter = createTransport({
 			host: env.MAIL_HOST,
 			port: parseInt(env.MAIL_PORT || "465"),
