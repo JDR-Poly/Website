@@ -36,11 +36,12 @@
 		position: relative;
 		border-radius: 8px;
 		max-width: 20vw;
-		min-width: 260px;
+		min-width: 330px;
 		margin: 2em;
 		width: 18vw;
-		height: 55vh;
-		min-height: 500px;
+		height: 70vh;
+		min-height: 580px;
+		font-size: small;
 
 		.img {
 			width: 100%;
@@ -61,7 +62,7 @@
 		}
 
 		h3 {
-			margin: 15px 5px;
+			margin: 8px 5px 4px 5px;
 			letter-spacing: 0.025em;
 			font-size: 1.2rem;
 		}
@@ -71,7 +72,7 @@
 		}
 
 		p {
-			margin-top: 20px;
+			margin-top: 4px;
 			color: #827d7d;
 			-webkit-line-clamp: 8;
 			overflow: hidden;
