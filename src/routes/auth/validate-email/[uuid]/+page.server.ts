@@ -7,10 +7,10 @@ export const load = (async ({ params }) => {
 	const token = params.uuid;
 
 	return db
-		.one(`SELECT id FROM email_validation WHERE validation_token=$1`, [token], (a) => a.id)
+		.one(`SELECT user_id FROM email_validation WHERE validation_token=$1`, [token], (a) => a.user_id)
 		.then((id) => {
 			return db.none("UPDATE users SET is_email_validated=TRUE WHERE id=$1", [id]).then((res) => {
-				db.none("DELETE FROM email_validation WHERE id=$1", [id]);
+				db.none("DELETE FROM email_validation WHERE user_id=$1", [id]);
 				return {
 					success: true,
 				};

@@ -96,5 +96,5 @@ async function generateEtheralTransporter(): Promise<Transporter> {
 export { sendMailValidationToken, sendMail, preloadTransporter };
 
 const DB_EMAIL_VALIDATION_TOKEN =
-	"INSERT INTO $[table:name](id, validation_token) VALUES($[id],$[validation_token])" +
-	"ON CONFLICT (id) DO UPDATE SET validation_token=$[validation_token]";
+	"INSERT INTO $[table:name](user_id, validation_token) VALUES($[id],$[validation_token])" +
+	"ON CONFLICT (user_id) DO UPDATE SET validation_token=$[validation_token]";
