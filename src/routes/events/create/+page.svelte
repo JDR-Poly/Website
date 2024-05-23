@@ -21,9 +21,9 @@
 	let image: File | Blob | undefined;
 	let inscription = false;
 	let inscription_group: string = "MEMBER";
-	let inscription_limit: number | undefined = undefined;
-	let inscription_start: Date | undefined = undefined;
-	let inscription_stop: Date | undefined = undefined;
+	let inscription_limit: number | null = null;
+	let inscription_start: Date | null = null;
+	let inscription_stop: Date | null = null;
 
 	//Not actual stored values in the database
 	let isInscriptionStop = false;
@@ -194,7 +194,7 @@
 						if (hasInscriptionLimit) {
 							inscription_limit = 16;
 						} else if (!hasInscriptionLimit) {
-							inscription_limit = undefined;
+							inscription_limit = null;
 						}
 					}}
 				/>
@@ -215,7 +215,7 @@
 					bind:checked={isInscriptionStop} 
 					on:click={() => {
 						if (!isInscriptionStop) {
-							inscription_stop = undefined;
+							inscription_stop = null;
 						} else {
 							inscription_stop = new Date(Date.now())
 						}
