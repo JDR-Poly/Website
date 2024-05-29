@@ -40,6 +40,9 @@
 
 	<p>Nom Prénom : <strong>{$page.data.user.name}</strong></p>
 	<p>Email : <strong>{$page.data.user.email}</strong></p>
+	{#if $page.data.user.discord_username}
+		<p>Discord Username : <strong>{$page.data.user.discord_username}</strong></p>
+	{/if}
 
 	<!-- Mail Update -->
 	<form

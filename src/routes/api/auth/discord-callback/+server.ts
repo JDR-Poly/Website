@@ -47,6 +47,7 @@ export const GET = (async ({ url, cookies, locals }) => {
 	})
 
 	const discord_id = user_resp.data.id
+	const discord_username = user_resp.data.username
 
 	await axios.post('https://discord.com/api/oauth2/token/revoke',
 		new URLSearchParams({
@@ -59,7 +60,7 @@ export const GET = (async ({ url, cookies, locals }) => {
 		throw error(500, err.message)
 	})
 
-	db.none(`UPDATE users SET discord_id=$1 WHERE id=$2`, [discord_id, locals.user?.id])
+	db.none(`UPDATE users SET discord_id=$1, discord_username=$2 WHERE id=$3`, [discord_id, discord_username, locals.user?.id])
 		.catch((err) => {
 			throw error(500, err.message);
 		});
