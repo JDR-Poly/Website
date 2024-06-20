@@ -22,7 +22,7 @@ export const GET = (async ({ params, locals }) => {
 	return db
 		.one(
 			` SELECT 
-			id, ${mailSQLText}name, role, account_creation, discord_id, member_start, member_stop 
+			id, ${mailSQLText}name, role, account_creation, discord_id, member_start, member_stop, discord_username  
 			FROM users WHERE id = $1`,
 			[id],
 		)

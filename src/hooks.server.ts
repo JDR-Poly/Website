@@ -27,7 +27,7 @@ export const handle: Handle = async function ({ event, resolve }) {
 	//Get user
 	const user: User = await db
 		.one(
-			`SELECT id, email, name, role, account_creation, is_email_validated, member_start, member_stop
+			`SELECT id, email, name, role, account_creation, is_email_validated, member_start, member_stop, discord_username
 		FROM users WHERE id=$1`,
 			[id],
 		)
