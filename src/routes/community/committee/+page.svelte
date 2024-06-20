@@ -20,13 +20,13 @@
 	<!-- Primary Meta Tags -->
 	<title>Comité | JDRPoly</title>
 	<meta name="title" content="Comité | JDRPoly" />
-	<meta name="description" content="Comité de JDR-Poly, comission de l'Agepoly." />
+	<meta name="description" content="Comité de JDR-Poly, commission de l'Agepoly." />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.href} />
 	<meta property="og:title" content="Comité | JDRPoly" />
-	<meta property="og:description" content="Comité de JDR-Poly, comission de l'Agepoly." />
+	<meta property="og:description" content="Comité de JDR-Poly, commission de l'Agepoly." />
 </svelte:head>
 
 <main>
