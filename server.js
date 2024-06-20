@@ -8,10 +8,10 @@ import http from "http";
 import { handler } from "./build/handler.js";
 import { umzug } from "./migrator.js";
 
-let isHttp = false
+let isHttp = false;
 process.argv.slice(2).forEach(function (val, index, array) {
-	if(val === "--http" && val !== "--https") {
-		isHttp = true
+	if (val === "--http" && val !== "--https") {
+		isHttp = true;
 	}
 });
 
@@ -22,13 +22,12 @@ process.argv.slice(2).forEach(function (val, index, array) {
 
 //Launch express server
 const app = express();
-if(isHttp) {
-	const HTTP_PORT = 80
+if (isHttp) {
+	const HTTP_PORT = 80;
 	const httpServer = http.createServer(app);
 	httpServer.listen(HTTP_PORT, function () {
 		console.info("HTTP Server is running on: http://localhost:%s", HTTP_PORT);
 	});
-
 } else {
 	//SSL credentials
 	var key = fs.readFileSync("./ssl/privkey.pem");
@@ -45,7 +44,6 @@ if(isHttp) {
 		console.info("HTTPS Server is running on: https://localhost:%s", SSLPORT);
 	});
 }
-
 
 // let SvelteKit handle everything else, including serving prerendered pages and static assets
 app.use(handler);

@@ -10,7 +10,7 @@ export const load = (async ({ locals }) => {
 		throw redirect(307, "/auth/validate-email");
 	} else {
 		return {
-			user: locals.user!!
-		}
+			user: locals.user!!,
+		};
 	}
 }) satisfies LayoutServerLoad;

@@ -6,7 +6,7 @@ import { compare, hash } from "bcrypt";
 import { fail, redirect } from "@sveltejs/kit";
 import { sendMailValidationToken } from "$lib/server/mailClient";
 import { env as envpub } from "$env/dynamic/public";
-import {v4 as uuid} from "uuid";
+import { v4 as uuid } from "uuid";
 
 export const actions = {
 	/**
@@ -109,10 +109,10 @@ export const actions = {
 	linkDiscord: async ({ cookies, locals }) => {
 		if (!locals.authenticated) return fail(401, { message: "L'utilisateur n'est pas authentifié." });
 
-		const state = uuid()
-		const discord_url = `https://discord.com/oauth2/authorize?client_id=${envpub.PUBLIC_DISCORD_CLIENT_ID}&state=${state}&redirect_uri=${encodeURIComponent(envpub.PUBLIC_DISCORD_REDIRECT_URI)}&response_type=code&scope=identify`
-		cookies.set('oauth2_state', state, {path: '/api/auth/discord-callback'});
-		return redirect(303, discord_url)
+		const state = uuid();
+		const discord_url = `https://discord.com/oauth2/authorize?client_id=${envpub.PUBLIC_DISCORD_CLIENT_ID}&state=${state}&redirect_uri=${encodeURIComponent(envpub.PUBLIC_DISCORD_REDIRECT_URI)}&response_type=code&scope=identify`;
+		cookies.set("oauth2_state", state, { path: "/api/auth/discord-callback" });
+		return redirect(303, discord_url);
 	},
 	/**
 	 * Delete account

@@ -8,15 +8,15 @@ import { readFile } from "fs";
 import { env } from "$env/dynamic/private";
 import { __envDir } from "$lib/utils";
 import { logger } from "./logger";
-import { building } from '$app/environment';
+import { building } from "$app/environment";
 
 let transporter: Transporter | undefined;
 let ethereal = false;
 
 async function preloadTransporter() {
 	//The !building trick prevent call to env ($env/dynamic/private) while doing prerendering and building, thus preventing a crash.
-	if(building) return
-	
+	if (building) return;
+
 	if (import.meta.env.PROD) {
 		const testTransporter = createTransport({
 			host: env.MAIL_HOST,
@@ -34,7 +34,9 @@ async function preloadTransporter() {
 			} else {
 				logger.error(error);
 				transporter = await generateEtheralTransporter();
-				logger.info("Etheral email transporter was linked after proper mail host could not be linked.");
+				logger.info(
+					"Etheral email transporter was linked after proper mail host could not be linked.",
+				);
 			}
 		});
 	} else {
