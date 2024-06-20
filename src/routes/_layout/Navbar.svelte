@@ -3,10 +3,11 @@
 	import Icon from "@iconify/svelte";
 	import Dropdown from "./Dropdown.svelte";
 	import IconButton from "$components/IconButton.svelte";
-
-	import { page } from "$app/stores";
 	import { goto, invalidateAll } from "$app/navigation";
 	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+	import type { PageData } from "../$types";
+
+	export let data: PageData;
 
 	let responsive = false;
 
@@ -117,8 +118,8 @@
 		<p>Bibliothèque</p>
 	</a>
 
-	{#if $page.data.authenticated}
-		{#if hasRolePermission(UserPermission.ADMIN_PANEL, $page.data.user?.role)}
+	{#if data.authenticated}
+		{#if hasRolePermission(UserPermission.ADMIN_PANEL, data.user?.role)}
 			<Dropdown
 				{responsive}
 				{closeNavBar}
@@ -160,7 +161,7 @@
 				data={{
 					element: {
 						prefix_icon: "material-symbols:person	",
-						text: $page.data.user?.name ? $page.data.user?.name : "Utilisateur",
+						text: data.user?.name ? data.user.name : "Utilisateur",
 					},
 					links: [
 						{
@@ -168,7 +169,7 @@
 								prefix_icon: "material-symbols:person",
 								text: "Profil",
 							},
-							link: `/users/profile/${$page.data.user?.id}`,
+							link: `/users/profile/${data.user?.id}`,
 						},
 						{
 							element: {

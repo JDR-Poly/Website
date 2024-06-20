@@ -14,7 +14,6 @@
 		timeZone: "Europe/Paris",
 	});
 
-
 </script>
 
 <svelte:head>
@@ -43,16 +42,16 @@
 			Fin de membre: <strong>{dateFormater.format(Date.parse(data.profile.member_stop))}</strong>
 		</p>
 	{/if}
-	{#if $page.data.user.id == id && data.profile.discord_username}
+	{#if data.user?.id.toString() == id && data.profile.discord_username}
 		<p>
 			Discord Username: <strong>{data.profile.discord_username}</strong>
 		</p>
 	{/if}
 
-	{#if hasRolePermission(UserPermission.MODIFY_USERS_DATA, $page.data.user.role)}
+	{#if hasRolePermission(UserPermission.MODIFY_USERS_DATA, data.user?.role)}
 		<a href="/admin/profile/{id}">Modifier les données de cet utilisateur</a>
 	{/if}
-	{#if $page.data.user.id == id}
+	{#if data.user?.id.toString() == id}
 		<a href="/users/account/settings">Modifier vos données</a>
 	{/if}
 </main>

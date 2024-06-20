@@ -4,10 +4,13 @@
     import AlertDisplay from "$lib/components/AlertDisplay.svelte";
     import Navbar from "./_layout/Navbar.svelte";
     import Footer from "./_layout/Footer.svelte";
+	import type { PageData } from "./$types";
+
+    export let data: PageData;
 </script>
 
 <nav>
-	<Navbar></Navbar>
+	<Navbar {data}></Navbar>
 </nav>
 
 <slot></slot>

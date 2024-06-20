@@ -8,5 +8,9 @@ export const load = (async ({ locals }) => {
 		throw redirect(307, "/");
 	} else if (!locals.user?.is_email_validated) {
 		throw redirect(307, "/auth/validate-email");
+	} else {
+		return {
+			user: locals.user!!
+		}
 	}
 }) satisfies LayoutServerLoad;

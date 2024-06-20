@@ -77,7 +77,7 @@
 	}
 
 	let canSeeEmail =
-		$page.data.authenticated && hasRolePermission(UserPermission.SEE_MAIL, $page.data.user.role);
+		data.authenticated && hasRolePermission(UserPermission.SEE_MAIL, data.user.role);
 	let loaded = true;
 </script>
 

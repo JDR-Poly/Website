@@ -19,7 +19,7 @@
 		<DataTable {events}/>
 	</div>
 
-	{#if hasRolePermission(UserPermission.CREATE_EVENT, $page.data.user?.role)}
+	{#if hasRolePermission(UserPermission.CREATE_EVENT, data.user?.role)}
 		<div class="add-button-container">
 			<div class="add-button-container">
 				<IconButton

@@ -3,13 +3,14 @@
 	import * as Accordion from "$lib/components/ui/accordion/index.js";
 	import { error } from "$lib/stores";
 	import type { Committee } from "$gtypes";
-	import { page } from "$app/stores";
 	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 	import { onMount } from "svelte";
 	import ImageB64 from "$components/ImageB64.svelte";
 	import IconButton from "$components/IconButton.svelte";
-	import type { Readable, Writable } from "svelte/store";
+	import type { Writable } from "svelte/store";
+	import type { PageData } from "./$types";
 
+	export let data: PageData;
 	export let category: string;
 	export let openAccordions: Writable<string[]>
 
@@ -121,7 +122,7 @@
 					<div class="overlay">
 						<div class="text">{committee.description}</div>
 					</div>
-					{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
+					{#if hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, data.user?.role)}
 						<div class="itemorder">
 							<IconButton
 								icon="material-symbols:delete"
@@ -147,7 +148,7 @@
 			{/each}
 		</div>
 
-		{#if isAChange && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, $page.data.user?.role)}
+		{#if isAChange && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, data.user?.role)}
 			<div id="save-container">
 				<IconButton
 					action={() => updateOrders(committees)}

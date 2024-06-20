@@ -72,7 +72,8 @@
 	}
 
 	function eventHasUser(): Boolean {
-		return data.subscribed.map((v) => v.id).includes($page.data.user?.id);
+		if(!data.authenticated) return false
+		return data.subscribed.map((v) => v.id).includes(data.user!.id);
 	}
 
 	function copyMails() {
@@ -125,7 +126,7 @@
 		}
 	}
 
-	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, $page.data.user?.role);
+	const canSeeProfile = hasRolePermission(UserPermission.SEE_USERS_PROFILE, data.user?.role);
 	const dateFormater = new Intl.DateTimeFormat("fr-Fr", {
 		dateStyle: "medium",
 		timeStyle: "short",
@@ -174,7 +175,7 @@
 			</p>
 			<div id="inscription">
 				{#if data.event.inscription}
-					{#if $page.data.authenticated && hasRolePermission("JOIN_EVENT_" + data.event.inscription_group.toUpperCase(), $page.data?.user?.role)}
+					{#if data.authenticated && hasRolePermission("JOIN_EVENT_" + data.event.inscription_group.toUpperCase(), data.user?.role)}
 						{#if !data.event.inscription_limit || data.subscribed.length < data.event.inscription_limit}
 							{#if (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start)) && (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))}
 								<div id="subscribe">
@@ -228,7 +229,7 @@
 								<p>{user.name}</p>
 							{/if}
 
-							{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, $page.data.user?.role)}
+							{#if hasRolePermission(UserPermission.REMOVE_USER_FROM_EVENT, data.user?.role)}
 								<IconButton
 									icon="material-symbols:close"
 									action={() => {
@@ -255,7 +256,7 @@
 							{/if}
 						</div>
 					{/each}
-					{#if hasRolePermission(UserPermission.SUBSCRIBE_USER_TO_EVENT, $page.data.user?.role)}
+					{#if hasRolePermission(UserPermission.SUBSCRIBE_USER_TO_EVENT, data.user?.role)}
 						<div
 							id="addUser"
 							on:focusout={(event) => {
@@ -315,7 +316,7 @@
 				{/if}
 			</div>
 		</div>
-		{#if hasRolePermission(UserPermission.MODIFY_EVENT, $page.data.user?.role)}
+		{#if hasRolePermission(UserPermission.MODIFY_EVENT, data.user?.role)}
 			<div class="admin-btn" style="right: 60px;">
 				<IconButton
 					icon="material-symbols:delete-outline"
@@ -332,7 +333,7 @@
 					inline={true}
 				/>
 			</div>
-			{#if hasRolePermission(UserPermission.SEE_MAIL, $page.data.user?.role)}
+			{#if hasRolePermission(UserPermission.SEE_MAIL, data.user?.role)}
 				<div class="admin-btn" style="right: 180px;">
 					<IconButton
 						icon="material-symbols:mark-email-read"

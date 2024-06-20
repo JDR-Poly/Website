@@ -7,8 +7,8 @@
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { Label } from "$lib/components/ui/label/index.js";
 	import { Button } from "$lib/components/ui/button";
-	import { goto } from "$app/navigation";
-
+	import type { PageData } from "./$types";
+	
 	let emailChangeEmail1 = "";
 	let emailChangeEmail2 = "";
 	let emailChangePassword = "";
@@ -20,6 +20,8 @@
 	let nameChangeName = "";
 
 	let deleteAccountPassword = "";
+
+	export let data: PageData;
 </script>
 
 <svelte:head>
@@ -38,10 +40,10 @@
 <main>
 	<h2>Paramètres</h2>
 
-	<p>Nom Prénom : <strong>{$page.data.user.name}</strong></p>
-	<p>Email : <strong>{$page.data.user.email}</strong></p>
-	{#if $page.data.user.discord_username}
-		<p>Discord Username : <strong>{$page.data.user.discord_username}</strong></p>
+	<p>Nom Prénom : <strong>{data.user.name}</strong></p>
+	<p>Email : <strong>{data.user.email}</strong></p>
+	{#if data.user.discord_username}
+		<p>Discord Username : <strong>{data.user.discord_username}</strong></p>
 	{/if}
 
 	<!-- Mail Update -->
@@ -165,7 +167,7 @@
 			};
 		}}
 	>
-		{#if $page.data.user.discord_id}
+		{#if data.user.discord_id}
 			<h4>Mettre à jour son compte Discord</h4>
 			<Button type="submit">
 				Mettre à jour son compte discord

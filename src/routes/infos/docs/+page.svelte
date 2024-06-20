@@ -134,7 +134,7 @@
 		</div>
 	{/each}
 
-	{#if isAChange && hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
+	{#if isAChange && hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, data.user?.role)}
 		<div id="save-container">
 			<IconButton
 				action={() => updateOrders(data.honormembers)}
@@ -147,7 +147,7 @@
 	{/if}
 </main>
 
-{#if hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, $page.data.user?.role)}
+{#if hasRolePermission(UserPermission.GRANT_ROLE_HONORARY_MEMBER, data.user?.role)}
 	<Add open={openAddDialog} />
 	{#if editedHonorMember}
 		<Edit open={openEditDialog} honorMember={editedHonorMember} />

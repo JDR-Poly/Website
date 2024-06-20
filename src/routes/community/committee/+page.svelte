@@ -33,7 +33,7 @@
 	<h2>Comité :</h2>
 	<Accordion.Root  class="w-full" value={$openAccordions}>
 		{#each data.categories as category}
-			<Category {category} {openAccordions}/>
+			<Category {category} {openAccordions} {data}/>
 		{/each}
 	</Accordion.Root>
 </main>
