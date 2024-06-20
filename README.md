@@ -28,6 +28,9 @@ MAIL_PORT=
 MAIL_USER=
 MAIL_PASSWORD=
 TURNSTILE_SECRET="1x0000000000000000000000000000000AA"
+PUBLIC_DISCORD_CLIENT_ID=
+DISCORD_CLIENT_SECRET=
+PUBLIC_DISCORD_REDIRECT_URI=
 ```
 
 `In a DEV environment, MAIL_HOST, MAIL_PORT, MAIL_USER and MAIL_PASSWORD are optional`
@@ -39,8 +42,8 @@ TURNSTILE_SECRET="1x0000000000000000000000000000000AA"
 ## How to build and run
 
 1. run `npm run build`
-2. (Optional) edit .env and .env.local
-3. Serve with `npm run start` (or `node -r dotenv/config build` if you don't want https)
+2. (Optional) edit .env
+3. Serve with `npm run start` (or `npm run start -- --http` if you don't want https)
 
 https use express server under the hood (https://kit.svelte.dev/docs/adapter-node#custom-server),
 you will need to modify server.js to set your own certificate.
