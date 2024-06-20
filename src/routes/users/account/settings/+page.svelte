@@ -165,10 +165,18 @@
 			};
 		}}
 	>
-		<h4>Link son compte Discord</h4>
-		<Button type="submit">
-			LINK
-		</Button>
+		{#if $page.data.user.discord_id}
+			<h4>Mettre à jour son compte Discord</h4>
+			<Button type="submit">
+				Mettre à jour son compte discord
+			</Button>
+		{:else}
+			<h4>Lier son compte Discord</h4>
+			<Button type="submit">
+				Lier son compte
+			</Button>
+		{/if}
+		
 	</form>
 	
 
