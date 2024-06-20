@@ -62,7 +62,7 @@ export const actions = {
 				return fail(401, { message: err.message });
 			});
 	},
-	register: async ({ request, cookies, url }: RequestEvent) => {
+	register: async ({ request, cookies, url, fetch }: RequestEvent) => {
 		const form = await request.formData();
 		const email = form.get("email")?.toString().trim();
 		const lastName = form.get("lastname")?.toString()?.trim();

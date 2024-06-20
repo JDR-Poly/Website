@@ -9,7 +9,7 @@ import { handler } from "./build/handler.js";
 import { umzug } from "./migrator.js";
 
 let isHttp = false;
-process.argv.slice(2).forEach(function (val, index, array) {
+process.argv.slice(2).forEach(function (val) {
 	if (val === "--http" && val !== "--https") {
 		isHttp = true;
 	}

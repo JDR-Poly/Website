@@ -24,7 +24,7 @@ function updateMemberPeriod(user: { id: Id; email: string; role: Role }, period:
 
 	//Define if the member period already started
 	const now = new Date(Date.now());
-	const newRole = period.start && period.start! <= now ? "MEMBER" : "USER";
+	const newRole = period.start && period.start <= now ? "MEMBER" : "USER";
 
 	db.none(
 		"UPDATE $[table:name] SET role=$[role], member_start=$[member_start], member_stop=$[member_stop] WHERE id=$[id]",
@@ -38,7 +38,7 @@ function updateMemberPeriod(user: { id: Id; email: string; role: Role }, period:
 	);
 	readFile(__envDir + "mails/updateMemberPeriod.html", function (err, data) {
 		let html = data.toString();
-		let formater = new Intl.DateTimeFormat("fr-Fr", {
+		const formater = new Intl.DateTimeFormat("fr-Fr", {
 			dateStyle: "medium",
 			timeStyle: "short",
 			timeZone: "Europe/Paris",

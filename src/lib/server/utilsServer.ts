@@ -20,15 +20,15 @@ interface ChallengeResponse {
  * @param fetch fetch function of sveltekit to use
  * @returns the challenge result
  */
-async function validateToken(token: string, fetch: any): Promise<ChallengeResponse> {
-	const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+async function validateToken(token: string, svelteFetch: typeof fetch): Promise<ChallengeResponse> {
+	const response = await svelteFetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
 		method: "POST",
 		headers: {
 			"content-type": "application/json",
 		},
 		body: JSON.stringify({
 			response: token,
-			secret: env.TURNSTILE_SECRET!,
+			secret: env.TURNSTILE_SECRET,
 		}),
 	});
 

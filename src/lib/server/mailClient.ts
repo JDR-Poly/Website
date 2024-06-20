@@ -9,8 +9,9 @@ import { env } from "$env/dynamic/private";
 import { __envDir } from "$lib/utils";
 import { logger } from "./logger";
 import { building } from "$app/environment";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
-let transporter: Transporter | undefined;
+let transporter: Transporter<SMTPTransport.SentMessageInfo>;
 let ethereal = false;
 
 async function preloadTransporter() {
@@ -27,7 +28,7 @@ async function preloadTransporter() {
 				pass: env.MAIL_PASSWORD,
 			},
 		});
-		testTransporter.verify(async (error, _) => {
+		testTransporter.verify(async (error) => {
 			if (!error) {
 				transporter = testTransporter;
 				logger.info("Email transporter is correctly linked");
@@ -47,9 +48,9 @@ async function preloadTransporter() {
 	}
 }
 
-async function sendMail(to: string, subject: string, html: string): Promise<any> {
+async function sendMail(to: string, subject: string, html: string): Promise<SMTPTransport.SentMessageInfo | Error> {
 	try {
-		const result = await transporter!.sendMail({
+		const result = await transporter.sendMail({
 			from: '"JDRPoly Info" <informatique@jdrpoly.ch>',
 			to: to,
 			subject: subject,
@@ -83,7 +84,7 @@ async function sendMailValidationToken(userId: Id, mail: string, origin: string)
 }
 
 async function generateEtheralTransporter(): Promise<Transporter> {
-	let testAccount = await createTestAccount(); //Generate email using ethereal
+	const testAccount = await createTestAccount(); //Generate email using ethereal
 	transporter = createTransport({
 		host: "smtp.ethereal.email",
 		port: 587,
