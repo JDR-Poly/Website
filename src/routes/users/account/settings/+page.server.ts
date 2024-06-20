@@ -3,8 +3,10 @@
 import { db } from "$lib/server/postgresClient";
 import type { Actions } from "./$types";
 import { compare, hash } from "bcrypt";
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import { sendMailValidationToken } from "$lib/server/mailClient";
+import { env as envpub } from "$env/dynamic/public";
+import {v4 as uuid} from "uuid";
 
 export const actions = {
 	/**
@@ -100,6 +102,17 @@ export const actions = {
 		} catch (err: any) {
 			return fail(500, { message: err.message });
 		}
+	},
+	/**
+	 * Link discord
+	 */
+	linkDiscord: async ({ cookies, locals }) => {
+		if (!locals.authenticated) return fail(401, { message: "L'utilisateur n'est pas authentifié." });
+
+		const state = uuid()
+		const discord_url = `https://discord.com/oauth2/authorize?client_id=${envpub.PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${envpub.PUBLIC_DISCORD_REDIRECT_URI}&state=${state}&response_type=code&scope=identify`
+		cookies.set('oauth2_state', state, {path: '/api/auth/discord-callback'});
+		return redirect(303, discord_url)
 	},
 	/**
 	 * Delete account

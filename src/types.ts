@@ -35,6 +35,7 @@ type User = {
 	discord_id?: string;
 	member_start?: DateString;
 	member_stop?: DateString;
+	discord_username?: string;
 };
 
 /**
