@@ -138,6 +138,10 @@
 					<Label for="category">Catégorie</Label>
 					<Select.Root 
 						selected={selectOption.find((v) => v.value == event.category)}
+						onSelectedChange={ (v) => {
+								if(v) {event.category = v.value}
+							}
+						}
 						>
 						<Select.Trigger class="w-[180px] dialog-input-elem" id="category">
 						<Select.Value placeholder="Catégorie" />
