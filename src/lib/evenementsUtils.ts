@@ -1,6 +1,6 @@
 /** @format */
 
-import { UserPermission } from "./userPermissions";
+import { Roles, UserPermission } from "./userPermissions";
 
 //List of hard-coded categories that can be assigned to evenenements
 const categories = [
@@ -21,7 +21,7 @@ function returnJoinEventRoles(): string[] {
 	const res = [];
 	for (const permission in UserPermission) {
 		if (permission.includes("JOIN_EVENT_")) {
-			res.push(permission.split("JOIN_EVENT_")[1]);
+			res.push(Roles[permission.split("JOIN_EVENT_")[1]].name);
 		}
 	}
 	return res;

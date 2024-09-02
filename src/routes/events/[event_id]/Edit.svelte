@@ -26,6 +26,7 @@
 
 	let image: File | Blob | undefined;
 	let isImageProcessing = false;
+
 	async function handleImageChange(value: FormInputEvent) {
 		const images = (value.target as HTMLInputElement).files
 		if (images && images[0]) {
@@ -61,7 +62,7 @@
 		if (isImageProcessing) {
 			$warning = "L'image est en cours de traitement. Attendez 5 secondes et recommencez.";
 			return;
-		}
+		}		
 
 		fetch(`/api/events/${event.id}`, {
 			method: "PATCH",
@@ -185,6 +186,9 @@
 						<Label for="inscription-group">Rôle d'inscription</Label>
 						<Select.Root 
 							selected={event.inscription_group ? {label: getTranslatedRoleName(event.inscription_group), value: event.inscription_group} : undefined}
+							onSelectedChange={(v) => {
+								if(v) {event.inscription_group = v.value}
+							}}
 							>
 							<Select.Trigger class="w-[180px]" id="inscription-group">
 							<Select.Value placeholder="Rôle d'inscription" />
