@@ -22,6 +22,7 @@
 
 		:global(svg) {
 			color: white;
+			display: inline-block;
 		}
 	}
 </style>
