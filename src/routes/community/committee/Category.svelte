@@ -223,6 +223,8 @@
 			height: 0;
 			transition: 0.5s ease;
 
+			overflow-y: scroll;
+			
 			.text {
 				color: white;
 				font-size: 15px;
@@ -231,7 +233,7 @@
 				text-align: center;
 				white-space: pre-line;
 			}
-			overflow-y: scroll;
+			
 		}
 
 		&:hover {
