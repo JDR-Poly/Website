@@ -210,9 +210,11 @@
 						<Checkbox id="inscription-limit-checkbox" 
 							bind:checked={hasInscriptionLimit} 
 							on:click={() => {
-								if (hasInscriptionLimit && !event.inscription_limit) {
+								const newValue = !hasInscriptionLimit
+								
+								if (newValue && !event.inscription_limit) {
 									event.inscription_limit = 16;
-								} else if (!hasInscriptionLimit) {
+								} else if (!newValue) {									
 									event.inscription_limit = undefined;
 								}
 							}}
