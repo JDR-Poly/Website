@@ -1,16 +1,36 @@
 <!-- @format -->
 <script lang="ts">
-	import { error, info } from "$lib/stores";
+	import { error, info, warning } from "$lib/stores";
 	import { applyAction, enhance } from "$app/forms";
 	import IconButton from "$components/IconButton.svelte";
 	import { page } from "$app/stores";
 	import Label from "$components/ui/label/label.svelte"; 
 	import { Input } from "$lib/components/ui/input";
+	import { redirect, type ActionResult } from "@sveltejs/kit";
 
 	let memberCode = "";
 
 	function validateForm(event: MouseEvent) {
 		(event.target as any).parentElement.parentElement.submit();
+	}
+
+	type UpdateFunction = (options?: {
+		reset?: boolean;
+		invalidateAll?: boolean;
+	}) => Promise<void>
+
+	async function resultCallback({result, update}: {result: ActionResult, update: UpdateFunction}) {
+		
+		if (result.type == "success") {
+			$info = `${result.data?.periodNumber} semestre(s) ajouté(s)`;
+			redirect(300, "/")
+			return
+		} else if (result.type === "failure" && result.data?.message) {
+			$warning = result.data.message
+		} else if (result.type === "error" && result.error.message) {
+			$error = result.error.message;
+		}
+		update()
 	}
 </script>
 
@@ -32,15 +52,7 @@
 	<form
 		method="POST"
 		use:enhance={({}) => {
-			return async ({ result, update }) => {
-				if (result.type == "success") {
-					$info = `${result.data?.periodNumber} semestre(s) ajouté(s)`;
-					update();
-				} else if (result.type === "error" && result.error.message) {
-					$error = result.error.message;
-				}
-				await applyAction(result);
-			};
+			return resultCallback
 		}}
 		class="flex"
 	>

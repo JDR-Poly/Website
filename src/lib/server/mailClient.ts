@@ -48,7 +48,11 @@ async function preloadTransporter() {
 	}
 }
 
-async function sendMail(to: string, subject: string, html: string): Promise<SMTPTransport.SentMessageInfo | Error> {
+async function sendMail(
+	to: string,
+	subject: string,
+	html: string,
+): Promise<SMTPTransport.SentMessageInfo | Error> {
 	try {
 		const result = await transporter.sendMail({
 			from: '"JDRPoly Info" <informatique@jdrpoly.ch>',
