@@ -29,14 +29,14 @@
 
 <svelte:head>
 	<!-- Primary Meta Tags -->
-	<title>{formType} | JDRPoly</title>
-	<meta name="title" content={`${formType} | JDRPoly`} />
+	<title>{formType} | JDR-Poly</title>
+	<meta name="title" content={`${formType} | JDR-Poly`} />
 	<meta name="description" content={formType} />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.href} />
-	<meta property="og:title" content={`${formType} | JDRPoly`} />
+	<meta property="og:title" content={`${formType} | JDR-Poly`} />
 	<meta property="og:description" content={formType} />
 </svelte:head>
 
@@ -44,8 +44,8 @@
 	<img src="/images/events/banner.webp" alt="banner" width="1920" height="300" />
 	<div id="form-wrapper">
 		<div id="logo">
-			<object type="image/svg+xml" data="/images/logo-black.svg" title="Logo jdrpoly">
-				<h3>Logo jdrpoly</h3>
+			<object type="image/svg+xml" data="/images/logo-black.svg" title="Logo JDR-Poly">
+				<h3>Logo JDR-Poly</h3>
 			</object>
 		</div>
 

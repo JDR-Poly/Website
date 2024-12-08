@@ -12,15 +12,15 @@
 
 <svelte:head>
 	<!-- Primary Meta Tags -->
-	<title>Événements | JDRPoly</title>
-	<meta name="title" content="Événements | JDRPoly" />
-	<meta name="description" content={`Liste des événements de JDRPoly, Catégories: ${categories}`} />
+	<title>Événements | JDR-Poly</title>
+	<meta name="title" content="Événements | JDR-Poly" />
+	<meta name="description" content={`Liste des événements de JDR-Poly, Catégories: ${categories}`} />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.href} />
-	<meta property="og:title" content="Événements | JDRPoly" />
-	<meta property="og:description" content={`Liste des événements de JDRPoly, Catégories: ${categories}`} />
+	<meta property="og:title" content="Événements | JDR-Poly" />
+	<meta property="og:description" content={`Liste des événements de JDR-Poly, Catégories: ${categories}`} />
 </svelte:head>
 
 <main>

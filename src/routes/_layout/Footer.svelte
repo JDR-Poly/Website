@@ -65,7 +65,7 @@
 	</div>
 	<div id="bottom">
 		<p>
-			© JDRpoly 2015-2024. All rights reserved. | Home page design: Inspired by <a
+			© JDR-Poly 2015-2025. All rights reserved. | Home page design: Inspired by <a
 				href="http://html5up.net/"
 				target="_blank"
 				rel="noreferrer">HTML5 UP</a

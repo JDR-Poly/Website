@@ -148,7 +148,7 @@ export const actions = {
 			.then(async () => {
 				let text = await readFile(__envDir + "mails/resetPassword.html", "utf-8");
 				text = text.replace("%PASSWORD%", newPassword);
-				const res = await sendMail(email, "JDRPoly : Mot de passe réinitialisé", text);
+				const res = await sendMail(email, "JDR-Poly : Mot de passe réinitialisé", text);
 				if (res instanceof Error) return fail(400, { message: "Mail couldn't be sent" });
 				return { success: true };
 			})

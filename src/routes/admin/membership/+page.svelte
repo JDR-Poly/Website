@@ -15,7 +15,7 @@
 </script>
 
 <svelte:head>
-	<title>Mails | JDRPoly</title>
+	<title>Mails | JDR-Poly</title>
 </svelte:head>
 
 <main>

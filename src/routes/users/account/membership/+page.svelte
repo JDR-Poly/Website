@@ -36,14 +36,14 @@
 
 <svelte:head>
 	<!-- Primary Meta Tags -->
-	<title>Entrer un code | JDRPoly</title>
-	<meta name="title" content="Entrer un code | JDRPoly" />
+	<title>Entrer un code | JDR-Poly</title>
+	<meta name="title" content="Entrer un code | JDR-Poly" />
 	<meta name="description" content="Activer son code pour devenir membre." />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.href} />
-	<meta property="og:title" content="Entrer un code | JDRPoly" />
+	<meta property="og:title" content="Entrer un code | JDR-Poly" />
 	<meta property="og:description" content="Activer son code pour devenir membre." />
 </svelte:head>
 

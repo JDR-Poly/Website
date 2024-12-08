@@ -82,7 +82,7 @@
 </script>
 
 <svelte:head>
-	<title>Utilisateurs | JDRPoly</title>
+	<title>Utilisateurs | JDR-Poly</title>
 </svelte:head>
 
 <main>

@@ -24,28 +24,28 @@
 
 <svelte:head>
 	<!-- Primary Meta Tags -->
-	<title>Accueil | JDRPoly</title>
-	<meta name="title" content="Accueil | JDRPoly" />
+	<title>Accueil | JDR-Poly</title>
+	<meta name="title" content="Accueil | JDR-Poly" />
 	<meta
 		name="description"
-		content="JDRPoly est la commission de jeux de rôle de l'AGEPoly. Elle promeut les jeux de rôle à l'EPFL."
+		content="JDR-Poly est la commission de jeux de rôle de l'AGEPoly. Elle promeut les jeux de rôle à l'EPFL."
 	/>
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.href} />
-	<meta property="og:title" content="Accueil | JDRPoly" />
+	<meta property="og:title" content="Accueil | JDR-Poly" />
 	<meta
 		property="og:description"
-		content="JDRPoly est la commission de jeux de rôle de l'AGEPoly. Elle promeut les jeux de rôle à l'EPFL."
+		content="JDR-Poly est la commission de jeux de rôle de l'AGEPoly. Elle promeut les jeux de rôle à l'EPFL."
 	/>
 </svelte:head>
 
 <main>
 	<div id="banner">
-		<img src="/images/main/banner.webp" alt="banière jdrpoly" />
+		<img src="/images/main/banner.webp" alt="banière jdr-poly" />
 		<div id="banner-text" in:fade>
-			<h2>JDRPoly</h2>
+			<h2>JDR-Poly</h2>
 			<p>Le jeu de rôle <br /> à l'<strong>EPFL</strong></p>
 			<footer>
 				<a href="#main" id="button">Découvrir</a>
@@ -57,7 +57,7 @@
 			<div class="double-lines" />
 			<Icon icon="material-symbols:polymer" style="font-size: 32px;" class="icon" />
 			<div class="double-lines" />
-			<h2>Qu'est-ce que JDRPoly ?</h2>
+			<h2>Qu'est-ce que JDR-Poly ?</h2>
 			<p>
 				JDR-Poly est une commission de l'AGEPoly, l'association générale des étudiants de l'EPFL.
 				Notre but est avant tout de promouvoir le jeu de rôle et d'organiser divers événements au
