@@ -45,7 +45,7 @@ function updateMemberPeriod(user: { id: Id; email: string; role: Role }, period:
 		});
 		html = html.replace("%START%", formater.format(period.start));
 		html = html.replace("%STOP%", formater.format(period.stop));
-		sendMail(user.email, "JDRPoly: Tu es membre !", html);
+		sendMail(user.email, "JDR-Poly: Tu es membre !", html);
 	});
 }
 
