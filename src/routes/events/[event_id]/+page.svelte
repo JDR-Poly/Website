@@ -176,7 +176,7 @@
 			<div id="inscription">
 				{#if data.event.inscription}
 					{#if data.authenticated && hasRolePermission("JOIN_EVENT_" + data.event.inscription_group.toUpperCase(), data.user?.role)}
-						{#if !data.event.inscription_limit || data.subscribed.length < data.event.inscription_limit}
+						{#if !data.event.inscription_limit || data.subscribed.length < data.event.inscription_limit || eventHasUser()}
 							{#if (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start)) && (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))}
 								<div id="subscribe">
 									{#if eventHasUser()}
