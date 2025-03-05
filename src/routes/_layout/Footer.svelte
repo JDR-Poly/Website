@@ -57,10 +57,23 @@
 				</h3>
 				<a href="mailto:comite@jdrpoly.ch">comite@jdrpoly.ch</a>
 			</section>
-			<section>
-				<!-- Social media -->
-				<!-- TODO -->
+
+			<section class="pt-5 pl-8">
+				<h3 class="md-3">
+					<Icon icon="mdi:telegram" inline={true} class="inline-block mr-2" />Telegram
+				</h3>
+				<a href="https://t.me/+XJqT8pjC3RQwNzFk" target="_blank" rel="noopener noreferrer">@jdrpoly</a>
 			</section>
+
+			<section class="pt-5 pl-8">
+				<h3 class="md-3">
+					<Icon icon="mdi:discord" inline={true} class="inline-block mr-2" />Discord
+				</h3>
+				<a href="https://discord.gg/FaRaH6Jwq2" target="_blank" rel="noopener noreferrer">
+					Rejoignez notre Discord
+				</a>
+			</section>
+
 		</div>
 	</div>
 	<div id="bottom">
