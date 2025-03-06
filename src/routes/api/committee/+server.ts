@@ -46,3 +46,37 @@ export const PATCH = (async ({ request, locals }) => {
 			throw error(500, err.message);
 		});
 }) satisfies RequestHandler;
+
+export const PUT: RequestHandler = async ({ request, locals }) => {
+    if (!locals.authenticated) throw error(401, "User not authenticated");
+
+    const committee: Committee = await request.json();
+
+    // Ensure user has permission
+    if (!hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, locals.user?.role))
+        throw error(403, "User doesn't have permission to edit a committee");
+
+    // Validate input
+    if (!committee.id) throw error(400, "Committee ID is required");
+
+    console.log("📡 Editing committee:", committee);
+
+    return db
+        .none(
+            `UPDATE committee_info SET
+                category = COALESCE($[category], category),
+                title = COALESCE($[title], title),
+                name = COALESCE($[name], name),
+                description = COALESCE($[description], description)
+             WHERE id = $[id]`,
+            committee
+        )
+        .then(() => {
+            console.log("✅ Committee updated successfully!");
+            return new Response(JSON.stringify({ success: true }), { status: 200 });
+        })
+        .catch((err) => {
+            console.error("❌ Database error:", err);
+            throw error(500, `Database error: ${err.message}`);
+        });
+};

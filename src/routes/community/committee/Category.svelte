@@ -9,6 +9,8 @@
 	import IconButton from "$components/IconButton.svelte";
 	import type { Writable } from "svelte/store";
 	import type { PageData } from "./$types";
+	import EditCommittee from "./EditCommittee.svelte";
+	import { writable } from "svelte/store";
 
 	export let data: PageData;
 	export let category: string;
@@ -18,7 +20,19 @@
 	let hasFetched = false; //Prevent fetching every time the category is opened
 	let hasBeenMounted = false;
 
+	
+
 	let committees: Committee[] = [];
+
+	let openEditDialog = writable(false);
+	let committeeToEdit: Writable<Committee | null> = writable(null);
+
+
+	function editCommittee(committee: Committee) {
+		committeeToEdit.set(committee);
+		openEditDialog.set(true);
+	}
+
 
 	onMount(() => {
 		hasBeenMounted = true;
@@ -133,6 +147,11 @@
 								label={`Supprimer le comité ${committee.name} de l'année ${committee.category}`}
 							/>
 							<IconButton
+								icon="material-symbols:edit"
+								action={() => editCommittee(committee)}
+								label={`Modifier le comité ${committee.name} de l'année ${committee.category}`}
+							/>
+							<IconButton
 								icon="material-symbols:remove"
 								action={() => removeOneToOrder(committees, committee)}
 								label="Augmenter l'ordre de ce comité"
@@ -147,6 +166,7 @@
 				</div>
 			{/each}
 		</div>
+		<EditCommittee openEditDialog={openEditDialog} committeeToEdit={committeeToEdit} />
 
 		{#if isAChange && hasRolePermission(UserPermission.MODIFY_COMMITTEE_PAGE, data.user?.role)}
 			<div id="save-container">

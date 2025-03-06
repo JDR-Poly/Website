@@ -18,17 +18,32 @@
 	let isImageProcessing = false;
 
 
-	function submit() {
-		const form = document.getElementById("addFormButton") as HTMLFormElement
-		console.log(new FormData(form));
-		
-		if(!isImageProcessing) {
-			form.submit()
-			$open = false
-		} else {
-			$warning = "Image has not finished being compressed."
-		}
-	}
+	function submit(event: Event) {
+    event.preventDefault(); // Prevent default browser form submission
+    console.log("Submit function called!");
+
+    const form = document.getElementById("addFormButton") as HTMLFormElement;
+    console.log("Form found:", form);
+
+    if (!form) {
+        console.error("Form not found!");
+        return;
+    }
+
+    const formData = new FormData(form);
+    console.log("Form Data:", [...formData.entries()]); // Log all form fields
+
+    if (!isImageProcessing) {
+        console.log("Submitting form...");
+        form.submit();  // Ensure it's only submitted once
+        $open = false;
+    } else {
+        console.warn("Image is still processing!");
+        $warning = "Image has not finished being compressed.";
+    }
+}
+
+
 
 	function postData(data: { formData: FormData }) {
 		console.log(data);
