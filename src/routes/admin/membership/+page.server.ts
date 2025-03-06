@@ -100,7 +100,7 @@ async function createAndSendMemberCodes(emails: string[], periodsNumber: number)
 
 			const promise = (async () => {
 				let userContent = mailContent.replace("%CODE%", code);
-				const res = await sendMail(email, "JDRPoly: Code de membre", userContent);
+				const res = await sendMail(email, "JDR-Poly: Code de membre", userContent);
 				if (res instanceof Error) return email;
 				else return "";
 			})();

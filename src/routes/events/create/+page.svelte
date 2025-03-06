@@ -99,14 +99,14 @@
 </script>
 <svelte:head>
 	<!-- Primary Meta Tags -->
-	<title>Créer un événement | JDRPoly</title>
-	<meta name="title" content="Créer un événement | JDRPoly" />
+	<title>Créer un événement | JDR-Poly</title>
+	<meta name="title" content="Créer un événement | JDR-Poly" />
 	<meta name="description" content="Créer un événement." />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.href} />
-	<meta property="og:title" content="Créer un événement | JDRPoly" />
+	<meta property="og:title" content="Créer un événement | JDR-Poly" />
 	<meta property="og:description" content="Créer un événement." />
 </svelte:head>
 

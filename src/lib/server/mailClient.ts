@@ -48,10 +48,14 @@ async function preloadTransporter() {
 	}
 }
 
-async function sendMail(to: string, subject: string, html: string): Promise<SMTPTransport.SentMessageInfo | Error> {
+async function sendMail(
+	to: string,
+	subject: string,
+	html: string,
+): Promise<SMTPTransport.SentMessageInfo | Error> {
 	try {
 		const result = await transporter.sendMail({
-			from: '"JDRPoly Info" <informatique@jdrpoly.ch>',
+			from: '"JDR-Poly Info" <informatique@jdrpoly.ch>',
 			to: to,
 			subject: subject,
 			html: html,
@@ -79,7 +83,7 @@ async function sendMailValidationToken(userId: Id, mail: string, origin: string)
 		let html = data.toString();
 		html = html.replace("%ORIGIN%", origin);
 		html = html.replace("%TOKEN%", emailValidationToken);
-		sendMail(mail, "JDRPoly: Validez votre mail", html);
+		sendMail(mail, "JDR-Poly: Validez votre mail", html);
 	});
 }
 

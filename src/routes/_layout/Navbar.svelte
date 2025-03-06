@@ -24,7 +24,7 @@
 
 <div class="topnav" class:responsive>
 	<a href="/" on:click={closeNavBar}>
-		<img src="/images/logo-white.svg" alt="Logo jdrpoly" id="svg" width="150" height="64" />
+		<img src="/images/logo-white.svg" alt="Logo JDR-Poly" id="svg" width="150" height="64" />
 	</a>
 
 	<div id="close-icon">

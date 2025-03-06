@@ -136,8 +136,8 @@
 
 <svelte:head>
 	<!-- Primary Meta Tags -->
-	<title>{data.event.title} | JDRPoly</title>
-	<meta name="title" content={`${data.event.title} | JDRPoly`} />
+	<title>{data.event.title} | JDR-Poly</title>
+	<meta name="title" content={`${data.event.title} | JDR-Poly`} />
 	<meta
 		name="description"
 		content={`Un événement de ${data.event.category} le ${dateFormater.format(
@@ -148,7 +148,7 @@
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.href} />
-	<meta property="og:title" content={`${data.event.title} | JDRPoly`} />
+	<meta property="og:title" content={`${data.event.title} | JDR-Poly`} />
 	<meta
 		property="og:description"
 		content={`Un événement de ${data.event.category} le ${dateFormater.format(
@@ -176,7 +176,7 @@
 			<div id="inscription">
 				{#if data.event.inscription}
 					{#if data.authenticated && hasRolePermission("JOIN_EVENT_" + data.event.inscription_group.toUpperCase(), data.user?.role)}
-						{#if !data.event.inscription_limit || data.subscribed.length < data.event.inscription_limit}
+						{#if !data.event.inscription_limit || data.subscribed.length < data.event.inscription_limit || eventHasUser()}
 							{#if (!data.event.inscription_start || Date.now() >= Date.parse(data.event.inscription_start)) && (!data.event.inscription_stop || Date.now() < Date.parse(data.event.inscription_stop))}
 								<div id="subscribe">
 									{#if eventHasUser()}

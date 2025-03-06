@@ -26,14 +26,14 @@
 
 <svelte:head>
 	<!-- Primary Meta Tags -->
-	<title>Paramètres | JDRPoly</title>
-	<meta name="title" content="Paramètres | JDRPoly" />
+	<title>Paramètres | JDR-Poly</title>
+	<meta name="title" content="Paramètres | JDR-Poly" />
 	<meta name="description" content="Changer ses paramètres." />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.href} />
-	<meta property="og:title" content="Paramètres | JDRPoly" />
+	<meta property="og:title" content="Paramètres | JDR-Poly" />
 	<meta property="og:description" content="Changer ses paramètres." />
 </svelte:head>
 

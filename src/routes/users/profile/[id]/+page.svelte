@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.profile.name} | JDRPoly</title>
+	<title>{data.profile.name} | JDR-Poly</title>
 </svelte:head>
 
 <main>

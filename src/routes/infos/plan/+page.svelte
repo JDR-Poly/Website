@@ -5,14 +5,14 @@
 <!-- @format -->
 <svelte:head>
 	<!-- Primary Meta Tags -->
-	<title>Accès | JDRPoly</title>
-	<meta name="title" content="Accès | JDRPoly" />
+	<title>Accès | JDR-Poly</title>
+	<meta name="title" content="Accès | JDR-Poly" />
 	<meta name="description" content="Instruction accèder aux salles des événéments." />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.href} />
-	<meta property="og:title" content="Accès | JDRPoly" />
+	<meta property="og:title" content="Accès | JDR-Poly" />
 	<meta property="og:description" content="Instruction accèder aux salles des événéments." />
 </svelte:head>
 

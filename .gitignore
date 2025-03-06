@@ -1,6 +1,6 @@
 static/data/*
 build/*
-.env
+.env*
 
 # Logs
 logs

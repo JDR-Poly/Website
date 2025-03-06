@@ -2,7 +2,7 @@
 
 # JDRPolyWeb
 
-The goal of this project, it to create a new website for JDRPoly : a commission of the AGEPoly. AGEPoly is an association of the EPFL
+The goal of this project, it to create a new website for JDR-Poly : a commission of the AGEPoly. AGEPoly is an association of the EPFL
 
 ## Framework and technologies
 
