@@ -115,6 +115,22 @@ export const actions = {
 		return redirect(303, discord_url);
 	},
 	/**
+	 * UnLink discord
+	 */
+	unLinkDiscord: async ({ cookies, locals }) => {
+		if (!locals.authenticated) return fail(401, { message: "L'utilisateur n'est pas authentifié." });
+
+		try {
+			return await db
+			.none(`UPDATE users SET discord_id = NULL, discord_username = NULL WHERE id=$1;`, [locals.user?.id])
+			.then(() => {
+				return { sucess: true };
+			});
+		} catch (err: any) {
+			return fail(500, { message: err.message });
+		}
+	},
+	/**
 	 * Delete account
 	 * @param {string} request.password password of the user
 	 */
