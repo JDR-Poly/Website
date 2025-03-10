@@ -7,6 +7,7 @@
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { Label } from "$lib/components/ui/label/index.js";
 	import { Button } from "$lib/components/ui/button";
+	import DiscordLogo from "$lib/components/DiscordLogo.svelte";
 	import type { PageData } from "./$types";
 	
 	let emailChangeEmail1 = "";
@@ -43,7 +44,52 @@
 	<p>Nom Prénom : <strong>{data.user.name}</strong></p>
 	<p>Email : <strong>{data.user.email}</strong></p>
 	{#if data.user.discord_username}
-		<p>Discord Username : <strong>{data.user.discord_username}</strong></p>
+		<p>
+			Discord Username : <strong>{data.user.discord_username}</strong>
+		</p>
+	{/if}
+
+
+	{#if data.user.discord_username}
+	<!-- UnLink Discord -->
+	<form
+		method="POST"
+		action="?/unLinkDiscord"
+		use:enhance={({}) => {
+			return async ({ result }) => {
+				if (result.type == "redirect") {
+					window.location.href = result.location
+				} else if (result.type == "failure") {
+					$error = result.data?.message;
+				}
+				invalidateAll();
+			};
+		}}
+	>
+		<Button type="submit">
+			<DiscordLogo/> &nbsp; Délier son compte discord
+		</Button>
+	</form>
+	{:else}
+	<!-- Link Discord -->
+	<form
+		method="POST"
+		action="?/linkDiscord"
+		use:enhance={({}) => {
+			return async ({ result }) => {
+				if (result.type == "redirect") {
+					window.location.href = result.location
+				} else if (result.type == "failure") {
+					$error = result.data?.message;
+				}
+				invalidateAll();
+			};
+		}}
+	>
+		<Button type="submit">
+			<DiscordLogo/> &nbsp; Lier son compte discord
+		</Button>
+	</form>
 	{/if}
 
 	<!-- Mail Update -->
@@ -150,35 +196,6 @@
 		>
 			Changer
 		</Button>
-	</form>
-
-	<!-- Link Discord -->
-	<form
-		method="POST"
-		action="?/linkDiscord"
-		use:enhance={({}) => {
-			return async ({ result }) => {
-				if (result.type == "redirect") {
-					window.location.href = result.location
-				} else if (result.type == "failure") {
-					$error = result.data?.message;
-				}
-				invalidateAll();
-			};
-		}}
-	>
-		{#if data.user.discord_id}
-			<h4>Mettre à jour son compte Discord</h4>
-			<Button type="submit">
-				Mettre à jour son compte discord
-			</Button>
-		{:else}
-			<h4>Lier son compte Discord</h4>
-			<Button type="submit">
-				Lier son compte
-			</Button>
-		{/if}
-		
 	</form>
 	
 
