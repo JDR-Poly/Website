@@ -56,11 +56,20 @@
 			links: [
 				{
 					element: {
+						prefix_icon: "mdi:comment-question-outline",
+						text: "Q&A",
+					},
+					link: "/infos/faq",
+				},
+
+				{
+					element: {
 						prefix_icon: "mdi:map-marker-outline",
 						text: "Accès",
 					},
 					link: "/infos/plan",
 				},
+				
 				{
 					element: {
 						prefix_icon: "material-symbols:description-outline",
@@ -229,7 +238,7 @@
 		align-content: center;
 		align-items: center;
 	}
-
+	
 	.topnav {
 		background-color: #030528;
 		overflow: hidden;

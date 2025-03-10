@@ -19,6 +19,13 @@
 			id="form"
 			class="max-md:border-b-2 max-md:pb-8 md:border-r-2 border-cprimary w-full md:w-3/5 md:pr-12"
 		>
+			<!-- Nouveau paragraphe avec le lien Q&A -->
+			<p class="questions-link">
+				Vous avez des questions ? 
+				<a href="/infos/faq" target="_blank" rel="noopener noreferrer">Consulter notre Q&A</a>
+			  </p>
+			  
+			  
 			<form
 				method="POST"
 				action="/contact?/sendMail"
@@ -51,29 +58,35 @@
 			</form>
 		</div>
 		<div id="links" class="w-full md:w-2/5">
+			<!-- Catégorie "Social" -->
 			<section class="pt-5 pl-8">
-				<h3 class="md-3">
-					<Icon icon="material-symbols:mail-outline" inline={true} class="inline-block mr-2" />Email
-				</h3>
-				<a href="mailto:comite@jdrpoly.ch">comite@jdrpoly.ch</a>
+				<h3 class="md-3">Social</h3>
+				<!-- Email -->
+				<div class="mb-3">
+					<Icon
+						icon="material-symbols:mail-outline"
+						inline={true}
+						class="inline-block mr-2 icon-bigger"
+					/>
+					<a href="mailto:comite@jdrpoly.ch">comite@jdrpoly.ch</a>
+				</div>
+				<!-- Telegram -->
+				<div class="mb-3">
+					<Icon icon="mdi:telegram" inline={true} class="inline-block mr-2 icon-bigger" />
+					<a href="https://t.me/+XJqT8pjC3RQwNzFk" target="_blank" rel="noopener noreferrer">@jdrpoly</a>
+				</div>
+				<!-- Discord -->
+				<div>
+					<Icon
+						icon="mdi:discord"
+						inline={true}
+						class="inline-block mr-2 icon-bigger"
+					/>
+					<a href="https://discord.gg/FaRaH6Jwq2" target="_blank" rel="noopener noreferrer">
+						Rejoignez notre Discord
+					</a>
+				</div>
 			</section>
-
-			<section class="pt-5 pl-8">
-				<h3 class="md-3">
-					<Icon icon="mdi:telegram" inline={true} class="inline-block mr-2" />Telegram
-				</h3>
-				<a href="https://t.me/+XJqT8pjC3RQwNzFk" target="_blank" rel="noopener noreferrer">@jdrpoly</a>
-			</section>
-
-			<section class="pt-5 pl-8">
-				<h3 class="md-3">
-					<Icon icon="mdi:discord" inline={true} class="inline-block mr-2" />Discord
-				</h3>
-				<a href="https://discord.gg/FaRaH6Jwq2" target="_blank" rel="noopener noreferrer">
-					Rejoignez notre Discord
-				</a>
-			</section>
-
 		</div>
 	</div>
 	<div id="bottom">
@@ -86,6 +99,7 @@
 		</p>
 	</div>
 </footer>
+
 
 <style lang="scss">
 	footer {
@@ -118,29 +132,46 @@
 		}
 	}
 
-	#links {
-		section {
-			height: 30%;
-			position: relative;
-			color: $primary;
+	.questions-link {
+		/* Slightly bigger font, all in one line */
+		font-size: 1.3rem;
+		font-weight: bold;
+		color: black;           /* Text in black */
+		margin-bottom: 1rem;    /* Space below the line */
 
-			h3 {
-				color: inherit;
-				font-weight: 600;
-				line-height: 1.65;
-				font-size: 27px;
-				letter-spacing: 0.025em;
-			}
+		a {
+			color: blue;          /* Link in blue */
+			text-decoration: underline;
+			font-weight: normal;  /* Regular weight for the link text */
 
-			a {
-				border-bottom: dotted 1px;
-				color: inherit;
-				text-decoration: none;
-				letter-spacing: 0.1em;
-				font-size: 18px;
+			&:hover {
+			color: darkblue;    /* Slightly darker blue on hover */
 			}
 		}
 	}
+
+
+
+	#links {
+	section {
+			margin-bottom: 2em; // Adds space between sections
+
+			h3 {
+			font-weight: 600;
+			line-height: 1.65;
+			font-size: 27px;
+			letter-spacing: 0.025em;
+			}
+
+			a {
+			border-bottom: dotted 1px;
+			text-decoration: none;
+			letter-spacing: 0.1em;
+			font-size: 18px;
+			}
+		}
+	}
+
 
 	#bottom {
 		text-align: center;
@@ -151,4 +182,9 @@
 			color: #777;
 		}
 	}
+
+	:global(.icon-bigger) {
+		font-size: 35px;
+	}
+
 </style>
