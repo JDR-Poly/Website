@@ -6,6 +6,9 @@
 	import Icon from "@iconify/svelte";
 	import { Textarea } from "$lib/components/ui/textarea";
 	import Input from "$components/ui/input/input.svelte";
+	import {
+		PUBLIC_TURNSTILE_KEY,
+	} from '$env/static/public';
 
 	let isEmailInvalid = true;
 	let email = "";
@@ -49,11 +52,9 @@
 				<div id="textarea" class="h-fit mb-3">
 					<Textarea name="text" bind:value={message} placeholder="Message" class="h-40" />
 				</div>
-				{#if import.meta.env.PROD}
-					<Turnstile siteKey="0x4AAAAAAAE1uyTWfzpY2dHE" />
-				{:else}
-					<Turnstile siteKey="1x00000000000000000000AA" theme="light" />
-				{/if}
+
+				<Turnstile siteKey={PUBLIC_TURNSTILE_KEY} theme="light" />
+
 				<button disabled={!(email && name && message && !isEmailInvalid)}>Envoyer</button>
 			</form>
 		</div>

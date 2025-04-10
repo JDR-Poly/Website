@@ -4,7 +4,7 @@
 	"scripts": {
 		"dev": "env-cmd vite dev",
 		"start": "NODE_OPTIONS='-r dotenv/config' node server.js",
-		"build": "env-cmd vite build",
+		"build": "env-cmd -f build.env vite build",
 		"package": "vite package",
 		"preview": "env-cmd vite preview",
 		"migrator": "node -r dotenv/config migrator.js",
