@@ -22,9 +22,10 @@ services:
   
   jdrpoly:
     container_name: jdrpoly
-    image: jdrpoly-web
+    build:
+      context: ..
     restart: always
-    env_file: ../.env
+    env_file: .env
     environment:
       - DB_IP=db
       - ORIGIN=http://localhost:3000
