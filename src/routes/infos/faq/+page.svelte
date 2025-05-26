@@ -4,20 +4,33 @@
 	// Liste de questions / réponses
 	const qnaItems = [
 		{
-			question: "Comment devevnir membre JDRPoly ?",
-			answer:
-				"Vous pouvez venir à une nocturne et payer 5 CHF. Vous devrez donner une adresse mail et créer un compte sur ce site avec cette même adresse mail.\n Une fois ceci fait, vous serez ajouté en tant que membre quelques jours plus tard et vous pourrez vous inscrire aux soirées membres."
-		},
-		{
-			question: "Est-ce que je peux participer aux nocturnes même si je ne suis pas membre ?",
-			answer:
-				"OUI ! Vous pouvez absolument venir. Que vous n'ayez jamais fait de JDR ou que vous soyez un vétéran, tout le monde est le bienvenu"
-		},
-		{
-			question: "Où ce passent ces nocturnes ?",
-			answer:
-				"Elles se passent en INM 202 un mercredi sur deux. Vous pouvez voir comment y accéder dans Informations, puis dans Accès."
-		}
+            question: "Comment se passe une nocturne ?",
+            answer: "Une Nocturne est une soirée où plusieurs tables de Jeu de Rôle sont proposées.  La soirée commence par une courte introduction de JDR-Poly puis chaque Maître de Jeu (MJ) présente alors, devant les participants, son scénario. Les participants choisissent ensuite le scénario et maître de jeu qui les intéresse puis sont répartis dans différentes salles sur le campus pour pouvoir jouer. Le temps estimé des parties est d'environ 3h."
+        },
+        {
+            question: "Puis-je participer aux Nocturnes même si je ne suis pas étudiant•e ?",
+            answer: "Bien sûr ! Nos Nocturnes sont ouvertes à toutes et tous, peu importe votre formation ou votre âge."
+        },
+        {
+            question: "Ai-je besoin de connaître des systèmes de règles de jeux de rôle pour venir aux nocturnes ?",
+            answer: "Non, aucune préparation n'est nécessaire pour participer à nos soirées Jeu de Rôle. Les systèmes de jeux sont souvent des créations originales concoctées avec soin par nos maîtres de jeu."
+        },
+        {
+            question: "Ai-je besoin d'apporter un certain matériel en nocturne ?",
+            answer: "Non, nous fournissons tout le matériel nécessaire. Cependant, il peut être pratique d'apporter de quoi écrire et du papier."
+        },
+        {
+            question: "Les parties proposées durant les Nocturnes sont-elles des one-shots ou des campagnes ?",
+            answer: "Durant nos Nocturnes, nous proposons une variété de one-shots, c'est-à-dire de courts scénarios de jeu de rôle d'environ 3 heures qui se terminent en une seule soirée.\nConcernant les campagnes, il est tout à fait possible de s'organiser avec les autres membres de JDR-Poly via notre serveur Discord."
+        },
+        {
+            question: "Puis-je proposer une partie en tant que maître de jeu ?",
+            answer: "Oui, vous pouvez évidemment proposer votre one-shot lors de nos Nocturnes ! Il vous suffira d'écrire un titre pour votre partie sur le tableau et de faire une courte présentation en même temps que les autres maîtres de jeu."
+        },
+        {
+            question: "Can I come as an English speaker?",
+            answer: "Yes, you can come even if you don't speak French. However, as our game masters are volunteers, we can't guarantee that there will always be a game in English."
+        }
 	];
 
 	// Indices des questions ouvertes
