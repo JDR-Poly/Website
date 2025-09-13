@@ -19,5 +19,5 @@ COPY package.json .
 
 EXPOSE 3000
 ENV NODE_ENV=production
-entrypoint [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
 
