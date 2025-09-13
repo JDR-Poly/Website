@@ -1,0 +1,7 @@
+.env
+dev/
+build/
+logs/
+node_modules/
+.vscode
+Dockerfile

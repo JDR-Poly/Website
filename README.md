@@ -12,9 +12,8 @@ The main language used is TypeScript, and the database is a **Postgresql databas
 
 ## How to help
 
-1. Create a postgresql database
-2. Clone the project and run `npm install`
-3. Create .env file with all the appropriates settings
+1. Clone the project and run `npm install`
+2. Create .env file with all the appropriates settings
 
 ```
 BODY_SIZE_LIMIT=Infinity
@@ -36,6 +35,7 @@ PUBLIC_DISCORD_REDIRECT_URI=
 `In a DEV environment, MAIL_HOST, MAIL_PORT, MAIL_USER and MAIL_PASSWORD are optional`
 `TURNSTILE_SECRET is the secret for cloudflare turnstile`
 
+3. Create a postgresql database (can be done with though docker with `make db` and stopped with `make db_down`)
 4. Manually run the migration using `npm run migrator up`
 5. Run using `npm run dev`
 

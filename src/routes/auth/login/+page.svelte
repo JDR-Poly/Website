@@ -8,6 +8,9 @@
 	import { page } from "$app/stores";
 	import { Button } from "$lib/components/ui/button";
 	import InfiniteProgress from "$components/InfiniteProgress.svelte";
+	import {
+		PUBLIC_TURNSTILE_KEY,
+	} from '$env/static/public';
 
 	let lastName = "";
 	let firstName = "";
@@ -163,11 +166,8 @@
 							class="my-4 py-6 bg-inherit border-slate-400 focus:border-transparent focus-visible:ring-1"
 						/>
 
-						{#if import.meta.env.PROD}
-							<Turnstile siteKey="0x4AAAAAAAE1uyTWfzpY2dHE" theme="light" />
-						{:else}
-							<Turnstile siteKey="1x00000000000000000000AA" theme="light" />
-						{/if}
+						<Turnstile siteKey={PUBLIC_TURNSTILE_KEY} theme="light" />
+						
 						{#if loading}
 							<InfiniteProgress />
 						{/if}
