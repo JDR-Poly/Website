@@ -55,7 +55,7 @@ async function sendMail(
 ): Promise<SMTPTransport.SentMessageInfo | Error> {
 	try {
 		const result = await transporter.sendMail({
-			from: '"JDR-Poly Info" <informatique@jdrpoly.ch>',
+			from: '"JDR-Poly Info" <no-reply@jdrpoly.ch>',
 			to: to,
 			subject: subject,
 			html: html,
