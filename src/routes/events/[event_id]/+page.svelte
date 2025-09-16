@@ -213,7 +213,7 @@
 					{:else}
 						<p class="inscriptionInfo" style="color: darkred;">
 							Vous devez être {translateRole(Roles[data.event.inscription_group])} pour pouvoir vous
-							inscrire à cette événement
+							inscrire à cet événement
 						</p>
 					{/if}
 					<h5>
