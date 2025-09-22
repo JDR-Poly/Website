@@ -2,7 +2,7 @@
 	"name": "jdrpolyweb",
 	"version": "2.1",
 	"scripts": {
-		"dev": "env-cmd vite dev",
+		"dev": "env-cmd -f dev.env vite dev",
 		"start": "NODE_OPTIONS='-r dotenv/config' node server.js",
 		"build": "env-cmd -f build.env vite build",
 		"package": "vite package",
