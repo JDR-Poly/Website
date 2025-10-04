@@ -8,6 +8,7 @@
 	import Input from "$components/ui/input/input.svelte";
 	import {
 		PUBLIC_TURNSTILE_KEY,
+		PUBLIC_WEBSITE_VERSION,
 	} from '$env/static/public';
 
 	let isEmailInvalid = true;
@@ -88,6 +89,13 @@
 					</a>
 				</div>
 			</section>
+			<!-- Catégorie "Social" -->
+			<section class="pt-5 pl-8">
+				<h3 class="md-3">Bugs ou améliorations</h3>
+				Si vous rencontrez un bug ou avez une améliorations à proposer, n'hesitez pas
+				à nous contacter par issue sur notre
+				<a href="https://github.com/JDR-Poly/Website/issues" target="_blank" rel="noopener noreferrer">github</a>.
+			</section>
 		</div>
 	</div>
 	<div id="bottom">
@@ -97,6 +105,9 @@
 				target="_blank"
 				rel="noreferrer">HTML5 UP</a
 			>
+		</p>
+		<p class="font-bold">
+			version: {PUBLIC_WEBSITE_VERSION}
 		</p>
 	</div>
 </footer>

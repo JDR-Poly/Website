@@ -24,8 +24,7 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=schedule
+            type=raw,value=latest,enable={{is_default_branch}},priority=0
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
@@ -47,3 +46,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            "WEBSITE_VERSION=${{ steps.meta.outputs.version }}"
