@@ -21,6 +21,9 @@ COPY server.js .
 COPY migrator.js .
 COPY package.json .
 
+HEALTHCHECK  --interval=30s --timeout=3s \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:80 || exit 1
+
 EXPOSE 3000
 ENV NODE_ENV=production
 ENTRYPOINT [ "/entrypoint.sh" ]
