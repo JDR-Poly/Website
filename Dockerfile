@@ -6,6 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+RUN echo "PUBLIC_WEBSITE_VERSION="$WEBSITE_VERSION >> build.env
 RUN npm run build
 RUN npm prune --production
 
