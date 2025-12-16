@@ -15,15 +15,14 @@ services:
     networks:
       - db_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -p 5432"]
       interval: 1s
       timeout: 5s
       retries: 10
   
   jdrpoly:
     container_name: jdrpoly
-    build:
-      context: ..
+    image: jdrpoly
     restart: always
     env_file: .env
     environment:
