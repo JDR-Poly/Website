@@ -3,7 +3,6 @@
 	import type { PageData } from "./$types";
 	import type { MembershipCode } from "$gtypes";
 	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
-	import IconButton from "$components/IconButton.svelte";
 	import DataTable from "./data-table.svelte";
 	import * as Dialog from "$lib/components/ui/dialog";
 	import * as Select from "$lib/components/ui/select";
@@ -83,19 +82,16 @@
 <main>
 	<div class="container mx-auto py-10">
 		<h2>Codes Membres :</h2>
-		<DataTable {codes} />
+		<DataTable {codes}>
+			<div slot="actions">
+				{#if hasRolePermission(UserPermission.ADMIN_PANEL, data.user?.role)}
+					<Button on:click={openCreateModal}>
+						Créer un code
+					</Button>
+				{/if}
+			</div>
+		</DataTable>
 	</div>
-
-	{#if hasRolePermission(UserPermission.ADMIN_PANEL, data.user?.role)}
-		<div class="add-button-container">
-			<IconButton
-				action={openCreateModal}
-				icon="material-symbols:add"
-				inline={true}
-				label="Créer un code"
-			/>
-		</div>
-	{/if}
 </main>
 
 <!-- Create Code Modal -->

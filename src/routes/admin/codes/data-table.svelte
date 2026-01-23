@@ -137,13 +137,13 @@
 	}
 </script>
 
-<div class="flex items-center py-4">
-	<Input
-		class="max-w-md"
-		placeholder="Filtrer par email..."
-		type="text"
-		bind:value={$filterValue}
-	/>
+<div class="flex items-center py-4 justify-between">
+	<div class="flex items-center">
+		<Input class="max-w-md" placeholder="Filtrer par email..." type="text" bind:value={$filterValue} />
+	</div>
+	<div>
+		<slot name="actions"></slot>
+	</div>
 </div>
 <div class="rounded-md border">
 	<Table.Root {...$tableAttrs}>
