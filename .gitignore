@@ -112,3 +112,6 @@ dist
 #VsCode/Idea
 .vscode/
 .idea/
+
+# My friend CLAUDE
+CLAUDE.md

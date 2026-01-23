@@ -159,6 +159,13 @@
 							},
 							link: "/admin/users",
 						},
+						{
+							element: {
+								prefix_icon: "material-symbols:build",
+								text: "Codes Membres",
+							},
+							link: "/admin/codes",
+						},
 					],
 				}}
 			/>
