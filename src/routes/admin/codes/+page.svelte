@@ -84,7 +84,7 @@
 		<h2>Codes Membres :</h2>
 		<DataTable {codes}>
 			<div slot="actions">
-				{#if hasRolePermission(UserPermission.ADMIN_PANEL, data.user?.role)}
+				{#if hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, data.user?.role)}
 					<Button on:click={openCreateModal}>
 						Créer un code
 					</Button>
