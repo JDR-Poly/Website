@@ -9,6 +9,8 @@
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
 	import { Label } from "$lib/components/ui/label";
+	import { error, info } from "$lib/stores";
+	import { invalidateAll } from "$app/navigation";
 
 	export let data: PageData;
 
@@ -39,7 +41,7 @@
 
 	async function handleCreateCode() {
 		if (!email || !selectedPeriod) {
-			alert("Veuillez remplir tous les champs");
+			$error = "Veuillez remplir tous les champs";
 			return;
 		}
 
@@ -60,14 +62,15 @@
 
 			if (!response.ok) {
 				const errorData = await response.json();
-				alert(`Erreur: ${errorData.message || "Échec de la création"}`);
+				$error = `Erreur: ${errorData.message || "Échec de la création"}`;
 			} else {
 				dialogOpen = false;
 				// Reload the page to show the new code
-				window.location.reload();
+				invalidateAll();
+				$info = "Code créé avec succès!"
 			}
 		} catch (err) {
-			alert("Erreur lors de la création du code");
+			$error = "Erreur lors de la création du code";
 		} finally {
 			isSubmitting = false;
 		}
