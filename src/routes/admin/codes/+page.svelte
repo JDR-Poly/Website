@@ -14,7 +14,7 @@
 
 	export let data: PageData;
 
-	let codes: MembershipCode[] = data.codes;
+	$: codes = data.codes;
 
 	// Modal state
 	let dialogOpen = false;
@@ -84,15 +84,17 @@
 <main>
 	<div class="container mx-auto py-10">
 		<h2>Codes Membres :</h2>
-		<DataTable {codes}>
-			<div slot="actions">
-				{#if hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, data.user?.role)}
-					<Button on:click={openCreateModal}>
-						Créer un code
-					</Button>
-				{/if}
-			</div>
-		</DataTable>
+		{#key codes}
+			<DataTable {codes}>
+				<div slot="actions">
+					{#if hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, data.user?.role)}
+						<Button on:click={openCreateModal}>
+							Créer un code
+						</Button>
+					{/if}
+				</div>
+			</DataTable>
+		{/key}
 	</div>
 </main>
 

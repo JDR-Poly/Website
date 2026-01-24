@@ -15,7 +15,7 @@ export const GET = (async ({ locals }) => {
 	if (!hasRolePermission(UserPermission.ADMIN_PANEL, locals.user?.role)) throw error(403);
 
 	return db
-		.any(`SELECT validation_token, email, period, year, email_sent FROM membership_code ORDER BY email_sent DESC;`)
+		.any(`SELECT email, period, year, email_sent FROM membership_code ORDER BY email_sent DESC;`)
 		.then((result) => {
 			return json(result);
 		})
@@ -52,12 +52,12 @@ export const POST = (async ({ request, locals }) => {
 		.one(
 			`INSERT INTO membership_code (validation_token, email, period, year, email_sent)
 			VALUES ($[validation_token], $[email], $[period], $[year], CURRENT_TIMESTAMP)
-			RETURNING validation_token;`,
+			RETURNING email_sent;`,
 			{ validation_token, email: data.email, period: data.period, year: data.year },
-			(a) => a.validation_token,
+			(a) => a.email_sent,
 		)
-		.then((token) => {
-			return json({ validation_token: token });
+		.then((ts) => {
+			return json({ email_sent: ts });
 		})
 		.catch((err) => {
 			throw error(500, err.message);

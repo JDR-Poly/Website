@@ -13,6 +13,8 @@
 	import { Button } from "$lib/components/ui/button";
 	import { ArrowUpDown, RotateCw } from "lucide-svelte";
 	import { Input } from "$lib/components/ui/input";
+	import { error, info } from "$lib/stores";
+	import { invalidateAll } from "$app/navigation";
 
 	export let codes: MembershipCode[];
 
@@ -93,9 +95,9 @@
 			},
 		}),
 		table.column({
-			accessor: "validation_token",
+			accessor: "email",
+			id: "resend_email",
 			header: "Actions",
-			cell: () => "", // Will render custom content
 			plugins: {
 				sort: {
 					disable: true,
@@ -111,30 +113,37 @@
 	const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
 	const { filterValue } = pluginStates.filter;
 
-	async function handleResend(token: string) {
+	async function handleResend(email: string) {
 		resendingTokens.update((set) => {
-			set.add(token);
+			set.add(email);
 			return new Set(set);
 		});
+		
 
 		try {
-			const response = await fetch(`/api/codes/${token}/resend`, {
+			const response = await fetch(`/api/codes/resend`, {
 				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					email
+				}),
 			});
 
 			if (!response.ok) {
 				const errorData = await response.json();
-				alert(`Erreur: ${errorData.message || "Échec de l'envoi"}`);
+				$error = `Erreur: ${errorData.message || "Échec de l'envoi"}`;
 			} else {
-				alert("Code renvoyé avec succès!");
 				// Reload the page to show updated email_sent date
-				window.location.reload();
+				invalidateAll();
+				$info = "Code renvoyé avec succès!";
 			}
 		} catch (err) {
-			alert("Erreur lors de l'envoi du code");
+			$error = "Erreur lors de l'envoi du code";
 		} finally {
 			resendingTokens.update((set) => {
-				set.delete(token);
+				set.delete(email);
 				return new Set(set);
 			});
 		}
@@ -180,15 +189,15 @@
 						{#each row.cells as cell (cell.id)}
 							<Subscribe attrs={cell.attrs()} let:attrs>
 								<Table.Cell {...attrs}>
-									{#if cell.id === "validation_token"}
-										{@const token = cell.render()}
+									{#if cell.id === "resend_email"}
+										{@const email = cell.render()}
 										<Button
 											variant="outline"
 											size="sm"
-											disabled={$resendingTokens.has(String(token))}
-											on:click={() => handleResend(String(token))}
+											disabled={$resendingTokens.has(String(email))}
+											on:click={() => handleResend(String(email))}
 										>
-											<RotateCw class={`mr-2 h-4 w-4 ${$resendingTokens.has(String(token)) ? "animate-spin" : ""}`} />
+											<RotateCw class={`mr-2 h-4 w-4 ${$resendingTokens.has(String(email)) ? "animate-spin" : ""}`} />
 											Renvoyer
 										</Button>
 									{:else}
