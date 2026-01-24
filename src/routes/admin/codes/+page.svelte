@@ -32,7 +32,7 @@
 	function openCreateModal() {
 		// Reset form
 		email = "";
-		selectedPeriod = undefined;
+		selectedPeriod = periodOptions[2];
 		year = new Date().getFullYear();
 		dialogOpen = true;
 	}
@@ -62,7 +62,6 @@
 				const errorData = await response.json();
 				alert(`Erreur: ${errorData.message || "Échec de la création"}`);
 			} else {
-				alert("Code créé avec succès!");
 				dialogOpen = false;
 				// Reload the page to show the new code
 				window.location.reload();
@@ -119,7 +118,7 @@
 				<div class="col-span-3">
 					<Select.Root bind:selected={selectedPeriod}>
 						<Select.Trigger class="w-full">
-							<Select.Value placeholder="Sélectionner une période" />
+							<Select.Value placeholder="Sélectionner une période"/>
 						</Select.Trigger>
 						<Select.Content>
 							{#each periodOptions as option}

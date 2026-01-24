@@ -78,7 +78,7 @@ type MembershipCode = {
 	email: string;
 	period: 'autumn' | 'spring' | 'all';
 	year: number;
-	email_sent: DateString;
+	email_sent: Date;
 };
 
 type Id = number;

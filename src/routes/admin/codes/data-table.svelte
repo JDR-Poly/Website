@@ -36,7 +36,8 @@
 	});
 
 	const dateFormater = new Intl.DateTimeFormat("fr-FR", {
-		dateStyle: "medium",
+		dateStyle: "long",
+    	timeStyle: "short",
 		timeZone: "Europe/Paris",
 	});
 
@@ -76,10 +77,13 @@
 				filter: {
 					exclude: true,
 				},
+				sort: {
+					disable: true,
+				},
 			},
 		}),
 		table.column({
-			accessor: ({ email_sent }) => Date.parse(email_sent),
+			accessor: "email_sent",
 			header: "Date d'envoi",
 			cell: ({ value }) => dateFormater.format(value),
 			plugins: {
@@ -154,7 +158,7 @@
 						{#each headerRow.cells as cell (cell.id)}
 							<Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
 								<Table.Head {...attrs}>
-									{#if cell.id === "year" || cell.id === "Date d'envoi"}
+									{#if cell.id === "email_sent"}
 										<Button variant="ghost" on:click={props.sort.toggle}>
 											<Render of={cell.render()} />
 											<ArrowUpDown class={"ml-2 h-4 w-4"} />

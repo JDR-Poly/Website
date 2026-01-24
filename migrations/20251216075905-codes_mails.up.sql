@@ -7,5 +7,5 @@ CREATE TABLE public.membership_code(
     email VARCHAR(255) NOT NULL,
     period semester NOT NULL,
 	year INTEGER NOT NULL,
-    email_sent DATE NOT NULL DEFAULT CURRENT_DATE
+    email_sent TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

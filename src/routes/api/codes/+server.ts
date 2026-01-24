@@ -33,7 +33,7 @@ export const GET = (async ({ locals }) => {
  */
 export const POST = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401);
-	if (!hasRolePermission(UserPermission.ADMIN_PANEL, locals.user?.role)) throw error(403);
+	if (!hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role)) throw error(403);
 
 	const data = await request.json();
 
@@ -51,7 +51,7 @@ export const POST = (async ({ request, locals }) => {
 	return db
 		.one(
 			`INSERT INTO membership_code (validation_token, email, period, year, email_sent)
-			VALUES ($[validation_token], $[email], $[period], $[year], CURRENT_DATE)
+			VALUES ($[validation_token], $[email], $[period], $[year], CURRENT_TIMESTAMP)
 			RETURNING validation_token;`,
 			{ validation_token, email: data.email, period: data.period, year: data.year },
 			(a) => a.validation_token,

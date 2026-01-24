@@ -20,11 +20,8 @@ export const load = (async ({ fetch }) => {
 			})
 			.then((codes: MembershipCode[]) => {
 				return codes.sort((a, b) => {
-					const dateA = new Date(Date.parse(a.email_sent));
-					const dateB = new Date(Date.parse(b.email_sent));
-
-					if (dateA < dateB) return 1;
-					else if (dateA.getTime() == dateB.getTime()) return 0;
+					if (a.email_sent < b.email_sent) return 1;
+					else if (a.email_sent.getTime() == b.email_sent.getTime()) return 0;
 					else return -1;
 				});
 			}),
