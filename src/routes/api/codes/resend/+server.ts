@@ -11,26 +11,26 @@ import type { RequestHandler } from "./$types";
  *
  * Note: Actual email sending logic to be implemented later
  *
- * @param {string} email the email associated to a validation token
+ * @param {string} id the public id associated to a validation token
  */
 export const POST = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401);
 	if (!hasRolePermission(UserPermission.ADMIN_PANEL, locals.user?.role)) throw error(403);
 
 	const data = await request.json();
-	const email: string = data.email;
+	const id: number = data.id;
 
-	if (!email) {
-		throw error(400, "Missing token parameter");
+	if (!id) {
+		throw error(400, "Missing id parameter");
 	}
 
 	return db
 		.one(
 			`UPDATE membership_code
 			SET email_sent = CURRENT_TIMESTAMP
-			WHERE email = $[email]
+			WHERE id = $[id]
 			RETURNING email_sent;`,
-			{ email },
+			{ id },
 		)
 		.then((result) => {
 			// TODO: Implement actual email sending logic here

@@ -74,7 +74,8 @@ type Book = {
  * to validate their membership for a given period.
  */
 type MembershipCode = {
-	validation_token: string;
+	id?: number;
+	validation_token?: string;
 	email: string;
 	period: 'autumn' | 'spring' | 'all';
 	year: number;

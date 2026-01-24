@@ -19,7 +19,7 @@
 	export let codes: MembershipCode[];
 
 	// Track which tokens are currently being resent
-	let resendingTokens = writable<Set<string>>(new Set());
+	let resendingTokens = writable<Set<number>>(new Set());
 
 	const table = createTable(readable(codes), {
 		page: addPagination({ initialPageSize: 15 }),
@@ -95,7 +95,7 @@
 			},
 		}),
 		table.column({
-			accessor: "email",
+			accessor: "id",
 			id: "resend_email",
 			header: "Actions",
 			plugins: {
@@ -113,9 +113,9 @@
 	const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
 	const { filterValue } = pluginStates.filter;
 
-	async function handleResend(email: string) {
+	async function handleResend(id: number) {
 		resendingTokens.update((set) => {
-			set.add(email);
+			set.add(id);
 			return new Set(set);
 		});
 		
@@ -127,7 +127,7 @@
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					email
+					id
 				}),
 			});
 
@@ -143,7 +143,7 @@
 			$error = "Erreur lors de l'envoi du code";
 		} finally {
 			resendingTokens.update((set) => {
-				set.delete(email);
+				set.delete(id);
 				return new Set(set);
 			});
 		}
@@ -190,14 +190,14 @@
 							<Subscribe attrs={cell.attrs()} let:attrs>
 								<Table.Cell {...attrs}>
 									{#if cell.id === "resend_email"}
-										{@const email = cell.render()}
+										{@const id = cell.render()}
 										<Button
 											variant="outline"
 											size="sm"
-											disabled={$resendingTokens.has(String(email))}
-											on:click={() => handleResend(String(email))}
+											disabled={$resendingTokens.has(Number(id))}
+											on:click={() => handleResend(Number(id))}
 										>
-											<RotateCw class={`mr-2 h-4 w-4 ${$resendingTokens.has(String(email)) ? "animate-spin" : ""}`} />
+											<RotateCw class={`mr-2 h-4 w-4 ${$resendingTokens.has(Number(id)) ? "animate-spin" : ""}`} />
 											Renvoyer
 										</Button>
 									{:else}
