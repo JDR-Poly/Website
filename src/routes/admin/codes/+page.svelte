@@ -9,8 +9,9 @@
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
 	import { Label } from "$lib/components/ui/label";
-	import { error, info } from "$lib/stores";
+	import { error, info, warning } from "$lib/stores";
 	import { invalidateAll } from "$app/navigation";
+	import { validateEmail } from "$lib/validate";
 
 	export let data: PageData;
 
@@ -41,7 +42,12 @@
 
 	async function handleCreateCode() {
 		if (!email || !selectedPeriod) {
-			$error = "Veuillez remplir tous les champs";
+			$warning = "Veuillez remplir tous les champs";
+			return;
+		}
+
+		if (!validateEmail(email)) {
+			$warning = "Veuillez rentrez un email valide";
 			return;
 		}
 
@@ -55,7 +61,7 @@
 				},
 				body: JSON.stringify({
 					email,
-					period: selectedPeriod.value,
+					semesters: selectedPeriod.value,
 					year,
 				}),
 			});
@@ -67,7 +73,10 @@
 				dialogOpen = false;
 				// Reload the page to show the new code
 				invalidateAll();
-				$info = "Code créé avec succès!"
+				if (response.status === 201)
+					$info = "Code envoyé avec succès!";
+				else
+					$info = "Statut membre octroyé directement!";
 			}
 		} catch (err) {
 			$error = "Erreur lors de la création du code";
@@ -119,11 +128,11 @@
 				/>
 			</div>
 			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="period" class="text-right">Période</Label>
+				<Label for="period" class="text-right">Semestres</Label>
 				<div class="col-span-3">
 					<Select.Root bind:selected={selectedPeriod}>
 						<Select.Trigger class="w-full">
-							<Select.Value placeholder="Sélectionner une période"/>
+							<Select.Value placeholder="Sélectionner les semestres"/>
 						</Select.Trigger>
 						<Select.Content>
 							{#each periodOptions as option}

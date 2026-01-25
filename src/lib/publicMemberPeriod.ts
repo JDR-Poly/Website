@@ -1,6 +1,6 @@
 /** @format */
 
-import type { DateString } from "$gtypes";
+import type { DateString, Semesters } from "$gtypes";
 
 /**
  * A period represent the time between which
@@ -44,12 +44,30 @@ class Period {
 		return this;
 	}
 
+	overlaps(period: Period): boolean {
+		if (this.stop < period.start || period.stop < this.start)
+			return false;
+		return true;
+	}
+
+	combineWith(period: Period): Period {
+		this.start = new Date(Math.min(this.start.getTime(), period.start.getTime()));
+		this.stop = new Date(Math.max(this.stop.getTime(), period.stop.getTime()));
+		return this;
+	}
+
 	/**
 	 * Do a deep clone of the object
 	 */
 	clone(): Period {
 		return new Period(new Date(this.start.getTime()), new Date(this.stop.getTime()));
 	}
+}
+
+export function periodFromYearSemesters(year: number, semesters: Semesters): Period {
+	const start = semesters === 'spring' ? new Date((year+1), 0, 0) : new Date(year, 7, 0);
+	const stop = semesters === 'autumn' ? new Date((year+1), 0, 30) : new Date((year+1), 8, 0);
+	return new Period(start, stop);
 }
 
 export { Period };

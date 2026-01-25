@@ -43,7 +43,7 @@
 		timeZone: "Europe/Paris",
 	});
 
-	const periodLabels: Record<string, string> = {
+	const semestersLabels: Record<string, string> = {
 		autumn: "Automne",
 		spring: "Printemps",
 		all: "Année complète",
@@ -60,9 +60,9 @@
 			},
 		}),
 		table.column({
-			accessor: "period",
-			header: "Période",
-			cell: ({ value }) => periodLabels[value] || value,
+			accessor: "semesters",
+			header: "Semestres",
+			cell: ({ value }) => semestersLabels[value] || value,
 			plugins: {
 				sort: {
 					disable: true,

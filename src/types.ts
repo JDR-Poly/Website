@@ -77,12 +77,13 @@ type MembershipCode = {
 	id?: number;
 	validation_token?: string;
 	email: string;
-	period: 'autumn' | 'spring' | 'all';
+	semesters: Semesters;
 	year: number;
 	email_sent: Date;
 };
 
+type Semesters = 'autumn' | 'spring' | 'all'; // semesters of an academic year
 type Id = number;
 type DateString = string; //A date stored as string
 
-export type { User, Event, Id, DateString, Committee, HonorMember, Book, MembershipCode };
+export type { User, Event, Id, Semesters, DateString, Committee, HonorMember, Book, MembershipCode };

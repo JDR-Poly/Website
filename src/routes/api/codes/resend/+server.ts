@@ -15,7 +15,7 @@ import type { RequestHandler } from "./$types";
  */
 export const POST = (async ({ request, locals }) => {
 	if (!locals.authenticated) throw error(401);
-	if (!hasRolePermission(UserPermission.ADMIN_PANEL, locals.user?.role)) throw error(403);
+	if (!hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role)) throw error(403);
 
 	const data = await request.json();
 	const id: number = data.id;

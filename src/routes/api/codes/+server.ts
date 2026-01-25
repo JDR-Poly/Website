@@ -1,10 +1,12 @@
 /** @format */
 
 import { db } from "$lib/server/postgresClient";
-import { hasRolePermission, UserPermission } from "$lib/userPermissions";
+import { hasRolePermission, isRoleMember, Roles, UserPermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import crypto from "crypto";
+import { v4 as uuid } from "uuid";
+import { Period, periodFromYearSemesters } from "$lib/publicMemberPeriod";
+import { updateMemberPeriod } from "$lib/server/memberPeriod";
 
 /**
  * Get all membership codes
@@ -15,7 +17,7 @@ export const GET = (async ({ locals }) => {
 	if (!hasRolePermission(UserPermission.ADMIN_PANEL, locals.user?.role)) throw error(403);
 
 	return db
-		.any(`SELECT id, email, period, year, email_sent FROM membership_code ORDER BY email_sent DESC;`)
+		.any(`SELECT id, email, period AS semesters, year, email_sent FROM membership_code ORDER BY email_sent DESC;`)
 		.then((result) => {
 			return json(result);
 		})
@@ -28,7 +30,7 @@ export const GET = (async ({ locals }) => {
  * Create a new membership code
  *
  * @param {string} email the email to send the code to
- * @param {string} period the membership period ('autumn', 'spring', 'all')
+ * @param {string} semesters the membership semesters ('autumn', 'spring', 'all')
  * @param {number} year the membership year
  */
 export const POST = (async ({ request, locals }) => {
@@ -37,26 +39,56 @@ export const POST = (async ({ request, locals }) => {
 
 	const data = await request.json();
 
-	if (!data.email || !data.period || !data.year) {
-		throw error(400, "Missing required fields: email, period, year");
+	if (!data.email || !data.semesters || !data.year) {
+		throw error(400, "Missing required fields: email, semesters, year");
 	}
 
-	if (!["autumn", "spring", "all"].includes(data.period)) {
-		throw error(400, "period must be 'autumn', 'spring', or 'all'");
+	if (!["autumn", "spring", "all"].includes(data.semesters)) {
+		throw error(400, "semesters must be 'autumn', 'spring', or 'all'");
+	}
+	data.year = Number(data.year);
+
+	const userResult = await db.any(
+        "SELECT id, email, role, member_start, member_stop FROM users WHERE email = $[email];",
+        { email: data.email },
+    ).then(
+		(res) => res.map((user) => {user.role = Roles[user.role]; return user})
+	);
+	if (userResult && userResult.length > 0) {
+		const user = userResult[0];
+
+		let new_period = periodFromYearSemesters(data.year, data.semesters);
+		console.log(new_period);
+		if (user.member_start && user.member_stop) {
+			const old_period = new Period(user.member_start, user.member_stop);
+			console.log(old_period);
+			if (new_period.overlaps(old_period))
+				new_period = new_period.combineWith(old_period);
+			else {
+				throw error(400, "New membership period must overlap with existing one");
+			}
+		}
+		console.log(new_period);
+
+		
+		updateMemberPeriod(user, new_period);
+		return new Response();
 	}
 
 	// Generate a random validation token
-	const validation_token = crypto.randomBytes(32).toString("hex");
+	const validation_token = uuid();
+
+	// TODO send mail for code
 
 	return db
 		.one(
 			`INSERT INTO membership_code (validation_token, email, period, year, email_sent)
-			VALUES ($[validation_token], $[email], $[period], $[year], CURRENT_TIMESTAMP)
+			VALUES ($[validation_token], $[email], $[semesters], $[year], CURRENT_TIMESTAMP)
 			RETURNING id, email_sent;`,
-			{ validation_token, email: data.email, period: data.period, year: data.year },
+			{ validation_token, email: data.email, semesters: data.semesters, year: data.year },
 		)
 		.then((res) => {
-			return json(res);
+			return json(res, { status: 201 });
 		})
 		.catch((err) => {
 			throw error(500, err.message);
