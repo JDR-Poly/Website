@@ -1,7 +1,7 @@
 <!-- @format -->
 <script lang="ts">
 	import type { PageData } from "./$types";
-	import type { MembershipCode } from "$gtypes";
+	import type { MembershipCode, Semesters } from "$gtypes";
 	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 	import DataTable from "./data-table.svelte";
 	import * as Dialog from "$lib/components/ui/dialog";
@@ -12,6 +12,7 @@
 	import { error, info, warning } from "$lib/stores";
 	import { invalidateAll } from "$app/navigation";
 	import { validateEmail } from "$lib/validate";
+	import { Period, periodFromYearSemesters } from "$lib/publicMemberPeriod";
 
 	export let data: PageData;
 
@@ -21,22 +22,37 @@
 	let dialogOpen = false;
 	let isSubmitting = false;
 
+	// Are we in start or end of year
+	const now = new Date(Date.now());
+	const is_first_year_half: boolean = now.getMonth() <= 6;
+	const show_1_period: boolean = is_first_year_half && now.getMonth() > 0;
+
 	// Form fields
 	let email = "";
-	let selectedPeriod: { value: string; label: string } | undefined = undefined;
-	let year = new Date().getFullYear();
+	let selectedPeriod: { value: number, label: string } | undefined = undefined;
 
-	const periodOptions = [
-		{ value: "autumn", label: "Automne" },
-		{ value: "spring", label: "Printemps" },
-		{ value: "all", label: "Année complète" },
+	//Post parameters
+	const year = now.getFullYear() + (is_first_year_half ? -1 : 0);
+	let semesters: Semesters;
+	$: semesters = show_1_period ? 'spring' : (selectedPeriod?.value === 2 ? 'all' : 'autumn');
+	$: period_dates = periodFromYearSemesters(year, semesters);
+
+	const dateFormater = new Intl.DateTimeFormat("fr-FR", {
+		dateStyle: "short",
+		timeZone: "Europe/Paris",
+	});
+
+	const periodOptions = show_1_period ? [
+		{ value: 1, label: "1 Semestre" }
+	] : [
+		{ value: 1, label: "1 Semestre" },
+		{ value: 2, label: "2 Semestres" },
 	];
 
 	function openCreateModal() {
 		// Reset form
 		email = "";
-		selectedPeriod = periodOptions[2];
-		year = new Date().getFullYear();
+		selectedPeriod = periodOptions[periodOptions.length - 1];
 		dialogOpen = true;
 	}
 
@@ -47,7 +63,7 @@
 		}
 
 		if (!validateEmail(email)) {
-			$warning = "Veuillez rentrez un email valide";
+			$warning = "Veuillez rentrer un email valide";
 			return;
 		}
 
@@ -61,7 +77,7 @@
 				},
 				body: JSON.stringify({
 					email,
-					semesters: selectedPeriod.value,
+					semesters,
 					year,
 				}),
 			});
@@ -98,7 +114,7 @@
 				<div slot="actions">
 					{#if hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, data.user?.role)}
 						<Button on:click={openCreateModal}>
-							Créer un code
+							Envoyez un code membre
 						</Button>
 					{/if}
 				</div>
@@ -111,9 +127,9 @@
 <Dialog.Root bind:open={dialogOpen}>
 	<Dialog.Content class="sm:max-w-[425px]">
 		<Dialog.Header>
-			<Dialog.Title>Créer un nouveau code</Dialog.Title>
+			<Dialog.Title>Envoyez un nouveau code</Dialog.Title>
 			<Dialog.Description>
-				Entrez les informations pour créer un nouveau code membre.
+				Entrez les informations pour envoyer un nouveau code membre.
 			</Dialog.Description>
 		</Dialog.Header>
 		<div class="grid gap-4 py-4">
@@ -136,22 +152,16 @@
 						</Select.Trigger>
 						<Select.Content>
 							{#each periodOptions as option}
-								<Select.Item value={option.value} label={option.label}>
-									{option.label}
-								</Select.Item>
+							<Select.Item value={option.value} label={option.label}>
+								{option.label}
+							</Select.Item>
 							{/each}
 						</Select.Content>
 					</Select.Root>
 				</div>
 			</div>
-			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="year" class="text-right">Année</Label>
-				<Input
-					id="year"
-					type="number"
-					bind:value={year}
-					class="col-span-3"
-				/>
+			<div class="flex items-center justify-end space-x-4 py-4">
+				<Label class="text-right">{dateFormater.format(period_dates.start)} - {dateFormater.format(period_dates.stop)}</Label>
 			</div>
 		</div>
 		<Dialog.Footer>

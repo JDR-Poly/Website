@@ -58,17 +58,14 @@ export const POST = (async ({ request, locals }) => {
 		const user = userResult[0];
 
 		let new_period = periodFromYearSemesters(data.year, data.semesters);
-		console.log(new_period);
 		if (user.member_start && user.member_stop) {
 			const old_period = new Period(user.member_start, user.member_stop);
-			console.log(old_period);
 			if (new_period.overlaps(old_period))
 				new_period = new_period.combineWith(old_period);
 			else {
 				throw error(400, "New membership period must overlap with existing one");
 			}
 		}
-		console.log(new_period);
 
 		
 		updateMemberPeriod(user, new_period);
