@@ -33,7 +33,7 @@ export const GET = (async ({ url, locals }) => {
 	return db
 		.any(
 			`SELECT id, ${mailSQLText}name, role 
-		FROM users WHERE name ~~* $1 OR email ~~* $1
+		FROM users_memberships_view WHERE name ~~* $1 OR email ~~* $1
 		ORDER BY id ${sortSQL}
 		LIMIT $2 OFFSET $3;`,
 			[searchText, number, index],
