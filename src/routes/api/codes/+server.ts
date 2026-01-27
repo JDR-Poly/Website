@@ -7,6 +7,7 @@ import type { RequestHandler } from "./$types";
 import { v4 as uuid } from "uuid";
 import { Period, periodFromYearSemesters } from "$lib/publicMemberPeriod";
 import { updateMemberPeriod } from "$lib/server/memberPeriod";
+import { send_membership_code } from "$lib/server/membership";
 
 /**
  * Get all membership codes
@@ -77,8 +78,7 @@ export const POST = (async ({ request, locals }) => {
 
 	// TODO send mail for code
 
-	return db
-		.one(
+	let res =  db.one(
 			`INSERT INTO membership_code (validation_token, email, period, year, email_sent)
 			VALUES ($[validation_token], $[email], $[semesters], $[year], CURRENT_TIMESTAMP)
 			RETURNING id, email_sent;`,
@@ -90,4 +90,6 @@ export const POST = (async ({ request, locals }) => {
 		.catch((err) => {
 			throw error(500, err.message);
 		});
+	send_membership_code(data.email, validation_token);
+	return res;
 }) satisfies RequestHandler;

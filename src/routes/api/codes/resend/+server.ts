@@ -4,6 +4,7 @@ import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { send_membership_code } from "$lib/server/membership";
 
 /**
  * Resend a membership code email
@@ -29,16 +30,14 @@ export const POST = (async ({ request, locals }) => {
 			`UPDATE membership_code
 			SET email_sent = CURRENT_TIMESTAMP
 			WHERE id = $[id]
-			RETURNING email_sent;`,
+			RETURNING validation_token, email, email_sent;`,
 			{ id },
 		)
-		.then((result) => {
-			// TODO: Implement actual email sending logic here
-			// For now, just update the date and return success
+		.then(({validation_token, email, email_sent}) => {
+			send_membership_code(email, validation_token)
+
 			return json({
-				success: true,
-				message: "Code resend triggered (email logic not yet implemented)",
-				code: result
+				email_sent: email_sent
 			});
 		})
 		.catch((err) => {
