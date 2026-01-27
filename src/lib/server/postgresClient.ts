@@ -35,6 +35,9 @@ schedule("0 1 * * *", () => {
 	db.none(
 		`UPDATE users SET role='USER', member_start=NULL, member_stop=NULL WHERE NOW() >= member_stop AND role='MEMBER'`,
 	);
+	db.none(
+		`UPDATE users SET role='MEMBER' WHERE NOW() >= member_start AND NOW() < member_stop AND role='USER'`,
+	);
 	db.none(`DELETE FROM email_validation e USING users u WHERE e.user_id = u.id AND u.is_email_validated`);
 	db.none(`DELETE FROM sessions WHERE NOW() > expiration_date`);
 	logger.info(`Cleaned database for expired data at ${new Date(Date.now()).toLocaleDateString()}`);

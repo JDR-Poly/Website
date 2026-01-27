@@ -18,3 +18,4 @@ DROP TABLE public.event_inscription;
 DROP TABLE public.committee_info;
 DROP TABLE public.books;
 DROP TABLE public.honor_members;
+DROP TABLE public.membership_code;

@@ -69,7 +69,21 @@ type Book = {
 	status?: string;
 };
 
+/**
+ * A membership code that can be sent to a user
+ * to validate their membership for a given period.
+ */
+type MembershipCode = {
+	id?: number;
+	validation_token?: string;
+	email: string;
+	semesters: Semesters;
+	year: number;
+	email_sent: Date;
+};
+
+type Semesters = 'autumn' | 'spring' | 'all'; // semesters of an academic year
 type Id = number;
 type DateString = string; //A date stored as string
 
-export type { User, Event, Id, DateString, Committee, HonorMember, Book };
+export type { User, Event, Id, Semesters, DateString, Committee, HonorMember, Book, MembershipCode };
