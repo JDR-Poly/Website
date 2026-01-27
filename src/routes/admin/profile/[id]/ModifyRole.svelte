@@ -2,9 +2,9 @@
 <script lang="ts">
 	import { error } from "$lib/stores";
 	import { Role, Roles } from "$lib/userPermissions";
-	import type { User } from "$gtypes";
+	import type { Semesters, User } from "$gtypes";
 	import { onMount } from "svelte";
-	import { Period } from "$lib/publicMemberPeriod";
+	import { Period, periodFromYearSemesters } from "$lib/publicMemberPeriod";
 	import * as RadioGroup from "$lib/components/ui/radio-group";
 	import { Label } from "$lib/components/ui/label";
 	import { Button } from "$lib/components/ui/button";
@@ -13,22 +13,25 @@
 
 	let roleName = user.role?.name;
 
-	let userPeriod = new Period(user.member_start, user.member_stop);
+	const userPeriod = new Period(user.member_start, user.member_stop);
 
-	let period = userPeriod.clone();
+	let member_stop = user.member_stop ? new Date(Date.parse(user.member_stop)) : new Date(Date.now());
+	// member_stop.setDate(member_stop.getDate() - 1);
+	const is_first_year_half: boolean = member_stop.getMonth() <= 6;
+	console.log(member_stop);
+	console.log(is_first_year_half);
+	const year = member_stop.getFullYear() + (is_first_year_half ? -1 : 0);
+	const options = is_first_year_half ? [
+		"1 semestre"
+	] : [
+		"1 semestre", "2 semestres"
+	];
 
 	let periodsNumber = "1";
-	updatePeriod(periodsNumber);
 
-	function updatePeriod(periodsString: string) {
-		const nbr = parseInt(periodsString) || 1;
-		period = userPeriod.clone();
-		period.addSemesters(nbr);
-	
-		if (roleName == Roles.MEMBER.name) {
-			period.start = new Date(Date.now());
-		}
-	}
+	let semesters: Semesters;
+	$: semesters = is_first_year_half ? 'spring' : (periodsNumber === "2" ? 'all' : 'autumn');
+	$: period_dates = periodFromYearSemesters(year, semesters).combineWith(userPeriod);
 
 	let roleList: Role[] = [];
 
@@ -43,7 +46,8 @@
 			method: "PATCH",
 			body: JSON.stringify({
 				role: roleName,
-				periodsNumber: roleName == Roles.MEMBER.name ? periodsNumber : 0,
+				semesters: roleName == Roles.MEMBER.name ? semesters : undefined,
+				year: roleName == Roles.MEMBER.name ? year : undefined,
 			}),
 			headers: { "Content-Type": "application/json" },
 		});
@@ -62,7 +66,7 @@
 </script>
 
 <!-- Role change -->
-<select bind:value={roleName} disabled={roleList.length <= 1} on:change={() => updatePeriod(periodsNumber)}>
+<select bind:value={roleName} disabled={roleList.length <= 1}>
 	{#if roleList.length === 0}
 		<option value={roleName}>{roleName}</option>
 	{:else}
@@ -75,19 +79,18 @@
 <br />
 
 {#if roleName == Roles.MEMBER.name}
-	{#if period.start}
-		<p>Membre à partir de: <strong>{dateFormater.format(period.start)}</strong></p>
+	{#if period_dates.start}
+		<p>Membre à partir de: <strong>{dateFormater.format(period_dates.start)}</strong></p>
 	{/if}
-	{#if period.stop}
-		<p>Fin de membre: <strong>{dateFormater.format(period.stop)}</strong></p>
+	{#if period_dates.stop}
+		<p>Fin de membre: <strong>{dateFormater.format(period_dates.stop)}</strong></p>
 	{/if}
 	<br />
 	Ajouter :
 	<RadioGroup.RadioGroup 
 		bind:value={periodsNumber}
-		onValueChange={() => updatePeriod(periodsNumber)}
 	>
-		{#each ["1 semestre", "2 semestres"] as option, i}
+		{#each options as option, i}
 			<div class="flex items-center space-x-2">
 				<RadioGroup.Item value={(i+1).toString()} id={option} name={option}/>
 				<Label for={option}>{option}</Label>

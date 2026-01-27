@@ -66,7 +66,7 @@ class Period {
 
 export function periodFromYearSemesters(year: number, semesters: Semesters): Period {
 	const start = semesters === 'spring' ? new Date((year+1), 0, 0) : new Date(year, 7, 0);
-	const stop = semesters === 'autumn' ? new Date((year+1), 0, 30) : new Date((year+1), 8, 0);
+	const stop = semesters === 'autumn' ? new Date((year+1), 0, 30) : new Date((year+1), 7, 30);
 	return new Period(start, stop);
 }
 

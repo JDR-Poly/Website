@@ -117,7 +117,7 @@ CREATE AGGREGATE sum_membership (DATE[2])
 -- Returns data as users table, but with member_start/stop and role computed
 CREATE VIEW users_memberships_view AS
 WITH aggregated_memberships AS (
-    SELECT user_id
+    SELECT u.id
     , combine_intervals(
         ARRAY[u.member_start, u.member_stop],
         sum_membership(
@@ -125,12 +125,12 @@ WITH aggregated_memberships AS (
             ORDER BY semester_start(period, year)
         ) FILTER (WHERE semester_end(period, year) >= CURRENT_DATE)
     ) AS interval
-    FROM membership
-    LEFT JOIN users u
+    FROM users u
+    LEFT JOIN membership
         ON u.id = user_id
-    GROUP BY user_id, u.member_start, u.member_stop
+    GROUP BY u.id, u.member_start, u.member_stop
 )
-SELECT id
+SELECT u.id
 , email
 , is_email_validated
 , name
@@ -149,4 +149,4 @@ END AS role
 , am.interval[2] AS member_stop
 FROM users u
 LEFT JOIN aggregated_memberships am
-    ON u.id = am.user_id;
+    ON u.id = am.id;

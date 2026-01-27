@@ -56,14 +56,15 @@ export const POST = (async ({ request, locals }) => {
 	if (userResult && userResult.length > 0) {
 		const user = userResult[0];
 
-		await extend_membership(user.id, data.email, data.semesters, data.year)
+		return extend_membership(user.id, data.email, data.semesters, data.year)
+			.then((res) => {
+				return json(res, { status: 200 });
+			})
 			.catch((err) => {
 				if (err.constraint && err.constraint === 'membership_pkey')
-					throw error(500, "Ce mail est déjà membre!")
+					throw error(400, "Ce mail est déjà membre!")
 				throw error(500, err.message);
-		});
-
-		return new Response();
+			});
 	}
 
 	// Generate a random validation token

@@ -41,6 +41,8 @@ export async function extend_membership(
         html = html.replace("%STOP%", formater.format(member_stop));
         sendMail(email, "JDR-Poly: Tu es membre !", html);
 	});
+
+    return { member_start, member_stop }
 }
 
 async function extend_membership_from_code(id: Id, code: string) {
