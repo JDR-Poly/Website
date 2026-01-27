@@ -106,6 +106,7 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- This aggregate computes the first continous span of date intervals
 CREATE AGGREGATE sum_membership (DATE[2])
 (
     sfunc = combine_intervals,
@@ -113,6 +114,7 @@ CREATE AGGREGATE sum_membership (DATE[2])
     initcond = '{NULL,NULL}'
 );
 
+-- Returns data as users table, but with member_start/stop and role computed
 CREATE VIEW users_memberships_view AS
 WITH aggregated_memberships AS (
     SELECT user_id
