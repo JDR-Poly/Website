@@ -51,12 +51,11 @@ export const PATCH = (async ({ request, locals, url }) => {
 
 	const body = await request.json();
 	body.role = body.role.toUpperCase();
-	const periodsNumber = body.periodsNumber ? body.periodsNumber : 0;
 
 	//Check if user can change roles
 	if (!hasRolePermission(`GRANT_ROLE_${body.role}`, locals.user?.role))
 		throw error(403, { message: "You don't have the rights to grand this role." });
-	if (body.periodsNumber > 0 && !hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role))
+	if (body.semesters > 0 && !hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role))
 		throw error(403, { message: "You don't have the rights to give memberships." });
 
 	return db
@@ -67,17 +66,24 @@ export const PATCH = (async ({ request, locals, url }) => {
 				throw error(403, { message: "This user has a protected role." });
 
 			// Update period of user
-			const {member_start, member_stop} = await extend_membership(
-				user.id, user.email,
-				body.semesters,
-				body.year
-			);
+			let member_start, member_stop;
+			if (body.semesters) {
+				const res = await extend_membership(
+					user.id, user.email,
+					body.semesters,
+					body.year
+				);
+				member_start = res.member_start;
+				member_stop = res.member_stop;
+			}
 
 			//Update role if the user just became a member
 			if (roleModified) {
 				db.none(`UPDATE users SET role=$1 WHERE id=$2`, [body.role, userId]);
-				if (body.role != Roles.MEMBER.name)
+				if (body.role === Roles.USER.name) {
 					db.none(`UPDATE users SET member_start=NULL, member_stop=NULL WHERE id=$1`, [user.id]);
+					db.none(`DELETE FROM membership WHERE user_id = $1`, [user.id]);
+				}
 			}
 
 			//Return new period
