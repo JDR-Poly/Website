@@ -114,31 +114,37 @@ CREATE AGGREGATE sum_membership (DATE[2])
 );
 
 CREATE VIEW users_memberships_view AS
-WITH md AS (
+WITH aggregated_memberships AS (
     SELECT user_id
-    , semester_start(period, year) as sdate
-    , semester_end(period, year) as edate
+    , combine_intervals(
+        ARRAY[u.member_start, u.member_stop],
+        sum_membership(
+            ARRAY[semester_start(period, year), semester_end(period, year)]
+            ORDER BY semester_start(period, year)
+        ) FILTER (WHERE semester_end(period, year) >= CURRENT_DATE)
+    ) AS interval
     FROM membership
-    WHERE semester_end(period, year) >= CURRENT_DATE
+    LEFT JOIN users u
+        ON u.id = user_id
+    GROUP BY user_id, u.member_start, u.member_stop
 )
 SELECT id
 , email
 , is_email_validated
 , name
 , password
-, role
+, CASE
+    WHEN u.role = 'USER'
+     AND CURRENT_DATE >= am.interval[1]
+     AND CURRENT_DATE < am.interval[2]
+    THEN 'MEMBER'
+    ELSE u.role
+END AS role
 , account_creation
 , discord_id
 , discord_username
-, (combine_intervals(
-    ARRAY[u.member_start, u.member_stop],
-    (sum_membership(ARRAY[md.sdate, md.edate] ORDER BY md.sdate))
- ))[1] AS member_start
-, (combine_intervals(
-    ARRAY[u.member_start, u.member_stop],
-    (sum_membership(ARRAY[md.sdate, md.edate] ORDER BY md.sdate))
- ))[2] AS member_stop
+, am.interval[1] AS member_start
+, am.interval[2] AS member_stop
 FROM users u
-LEFT JOIN md
-    ON md.user_id = u.id
-GROUP BY id;
+LEFT JOIN aggregated_memberships am
+    ON u.id = am.user_id;
