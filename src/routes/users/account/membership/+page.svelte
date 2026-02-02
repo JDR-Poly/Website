@@ -34,10 +34,6 @@
 
 <main>
 	<h2>Valider un semestre de membre</h2>
-	<div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
-		<p class="font-bold">Attention!</p>
-		<p>Du aux modifications du système de membres (DB), ce form n'est plus garanti de fonctionner correctement.</p>
-	</div>
 	<form
 		method="POST"
 		class="flex"

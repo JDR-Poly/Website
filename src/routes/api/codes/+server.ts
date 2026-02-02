@@ -1,12 +1,10 @@
 /** @format */
 
 import { db } from "$lib/server/postgresClient";
-import { hasRolePermission, isRoleMember, Roles, UserPermission } from "$lib/userPermissions";
+import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { v4 as uuid } from "uuid";
-import { Period, periodFromYearSemesters } from "$lib/publicMemberPeriod";
-import { updateMemberPeriod } from "$lib/server/memberPeriod";
 import { extend_membership, send_membership_code } from "$lib/server/membership";
 
 /**
