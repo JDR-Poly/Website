@@ -44,7 +44,3 @@ export async function extend_membership(
 
     return { member_start, member_stop }
 }
-
-async function extend_membership_from_code(id: Id, code: string) {
-
-}

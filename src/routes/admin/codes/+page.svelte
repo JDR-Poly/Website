@@ -186,19 +186,4 @@
 			margin-bottom: 5px;
 		}
 	}
-
-	.add-button-container {
-		position: fixed;
-		bottom: 40px;
-		right: 40px;
-		z-index: 3;
-		:global(button) {
-			background-color: limegreen;
-			border-radius: 200px;
-		}
-
-		:global(svg) {
-			font-size: 60px;
-		}
-	}
 </style>
