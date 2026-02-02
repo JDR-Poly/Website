@@ -21,17 +21,20 @@ CREATE TABLE public.membership(
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- This trigger merges memberships if in the same year but not overlapping
+-- This trigger merges memberships if in the same year
 CREATE OR REPLACE FUNCTION membership_extend_trigger()
 RETURNS TRIGGER AS
 $$
 DECLARE
     s semester;
 BEGIN
-    IF NEW.period <> 'all'
+    SELECT period INTO s FROM membership WHERE NEW.user_id = user_id AND NEW.year = year AND period <> 'all';
+    IF s IS NOT NULL
     THEN
-        SELECT period INTO s FROM membership WHERE NEW.user_id = user_id AND NEW.year = year AND period <> 'all';
-        IF s IS NOT NULL AND s <> NEW.period
+        IF NEW.period = 'all'
+        THEN
+            DELETE FROM membership WHERE NEW.user_id = user_id AND NEW.year = year;
+        ELSIF s <> NEW.period
         THEN
             DELETE FROM membership WHERE NEW.user_id = user_id AND NEW.year = year;
             NEW.period := 'all';
