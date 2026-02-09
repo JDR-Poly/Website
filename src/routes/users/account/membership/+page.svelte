@@ -1,36 +1,21 @@
 <!-- @format -->
 <script lang="ts">
 	import { error, info, warning } from "$lib/stores";
-	import { applyAction, enhance } from "$app/forms";
-	import IconButton from "$components/IconButton.svelte";
 	import { page } from "$app/stores";
 	import Label from "$components/ui/label/label.svelte"; 
 	import { Input } from "$lib/components/ui/input";
-	import { redirect, type ActionResult } from "@sveltejs/kit";
+	import Button from "$components/ui/button/button.svelte";
+	import type { ActionData } from "./$types";
 
 	let memberCode = "";
 
-	function validateForm(event: MouseEvent) {
-		(event.target as any).parentElement.parentElement.submit();
+	export let form: ActionData;
+
+	if (form?.success) {
+		$info = "Code validé!";
 	}
-
-	type UpdateFunction = (options?: {
-		reset?: boolean;
-		invalidateAll?: boolean;
-	}) => Promise<void>
-
-	async function resultCallback({result, update}: {result: ActionResult, update: UpdateFunction}) {
-		
-		if (result.type == "success") {
-			$info = `${result.data?.periodNumber} semestre(s) ajouté(s)`;
-			redirect(300, "/")
-			return
-		} else if (result.type === "failure" && result.data?.message) {
-			$warning = result.data.message
-		} else if (result.type === "error" && result.error.message) {
-			$error = result.error.message;
-		}
-		update()
+	if (form?.invalid) {
+		$warning = form.message;
 	}
 </script>
 
@@ -51,23 +36,15 @@
 	<h2>Valider un semestre de membre</h2>
 	<form
 		method="POST"
-		use:enhance={({}) => {
-			return resultCallback
-		}}
 		class="flex"
 	>
 		<div class="flex w-full max-w-sm flex-col gap-1.5">
 			<Label for="title">Code membre</Label>
-			<Input type="text" id="title" bind:value={memberCode} name="validation_token"/>
+			<div class="flex">
+				<Input type="text" id="title" bind:value={memberCode} name="validation_token"/>
+				<Button type="submit">valider</Button>
+			</div>
 		</div>
-
-		<IconButton
-			action={validateForm}
-			icon="material-symbols:done"
-			disabled={memberCode === ""}
-			inline={false}
-			label="Submit"
-		/>
 	</form>
 </main>
 
@@ -97,12 +74,12 @@
 		}
 		:global(button) {
 			margin-left: 10px;
-			transform: translateY(20%);
 			padding: 5px;
-			border-radius: 200px;
+			border-radius: 10px;
 
 			&:hover {
 				background-color: lightgray;
+				color: black;
 			}
 		}
 	}

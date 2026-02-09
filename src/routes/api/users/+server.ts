@@ -17,7 +17,7 @@ export const GET = (async ({ locals }) => {
 		.any(
 			` SELECT 
 			id, ${mailSQLText}name, role, account_creation, discord_id, member_start, member_stop 
-			FROM users`,
+			FROM users_memberships_view`,
 		)
 		.then((res) => {
 			return json(

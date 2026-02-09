@@ -28,7 +28,7 @@ export const handle: Handle = async function ({ event, resolve }) {
 	const user: User = await db
 		.one(
 			`SELECT id, email, name, role, account_creation, is_email_validated, member_start, member_stop, discord_username
-		FROM users WHERE id=$1`,
+		FROM users_memberships_view WHERE id=$1`,
 			[id],
 		)
 		.then((user) => {

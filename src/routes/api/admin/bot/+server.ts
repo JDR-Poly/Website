@@ -37,7 +37,7 @@ export const GET = (async ({ locals, url }) => {
 	const sqlMatcher = discordId ? ["discord_id", discordId] : email ? ["email", email] : ["id", id];
 
 	return db
-		.one(`SELECT id, email, role, member_stop, discord_id FROM users WHERE $1~ = $2`, sqlMatcher)
+		.one(`SELECT id, email, role, member_stop, discord_id FROM users_memberships_view WHERE $1~ = $2`, sqlMatcher)
 		.then((res) => {
 			let isMember = isRoleMember(Roles[res.role]);
 			let data: UserInformationForBot = {

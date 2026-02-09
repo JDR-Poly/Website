@@ -10,8 +10,6 @@ import { send_membership_code } from "$lib/server/membership";
  * Resend a membership code email
  * Updates the email_sent date to current date
  *
- * Note: Actual email sending logic to be implemented later
- *
  * @param {string} id the public id associated to a validation token
  */
 export const POST = (async ({ request, locals }) => {
