@@ -6,6 +6,9 @@
 
 	import { fade } from "svelte/transition";
 	import type { Event } from "$gtypes";
+	import { error, info, warning } from "$lib/stores";
+	import { onMount } from "svelte";
+	import { goto, invalidateAll, replaceState } from "$app/navigation";
 
 	async function loadEvents() {
 		return fetch("/api/events?limit=3")
@@ -20,6 +23,48 @@
 				return [] as Event[];
 			});
 	}
+
+	// adds membership based on code
+	async function validate_code(code: string) {
+		await fetch("/api/codes/validate", {
+			method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					code
+				}),
+		})
+			.then((res) => {
+				if (res.ok)
+					$info = "Code membre validé !";
+				else {
+					switch (res.status) {
+						case 404:
+							$error = "Erreur validation, code invalide";
+							break;
+						case 409:
+							$warning = "Vous êtes déjà membre";
+							break;
+						default:
+							$error = "Erreur validation, veuillez valider code à la main";
+							break;
+					};
+				}
+			})
+			.catch(() => {
+				$error = "Erreur validation de code";
+			})
+	}
+
+	onMount(() => {
+		const code = $page.url.searchParams.get("code");
+		if (code) {
+			validate_code(code);
+			$page.url.searchParams.delete("code");
+			replaceState($page.url, {})
+		}
+	})
 </script>
 
 <svelte:head>

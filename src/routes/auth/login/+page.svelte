@@ -1,7 +1,7 @@
 <!-- @format -->
 <script lang="ts">
 	import { applyAction, enhance } from "$app/forms";
-	import { warning, info } from "$lib/stores";
+	import { warning, info, error } from "$lib/stores";
 	import { goto, invalidateAll } from "$app/navigation";
 	import { Input } from "$lib/components/ui/input";
 	import { Turnstile } from "svelte-turnstile";
@@ -70,8 +70,11 @@
 									$warning = `${result.data?.message}`;
 									applyAction(result);
 								} else if (result.type == "success") {
-									goto("/");
-									invalidateAll();
+									const code = $page.url.searchParams.get("code");
+									if (code)
+										goto(`/?code=${code}`, { invalidateAll: true });
+									else
+										goto("/", { invalidateAll: true });
 								}
 							};
 						}}
@@ -122,8 +125,11 @@
 									$warning = `${result.data?.message}`;
 									applyAction(result);
 								} else if (result.type == "success") {
-									invalidateAll();
-									goto("/");
+									const code = $page.url.searchParams.get("code");
+									if (code)
+										goto(`/?code=${code}`, { invalidateAll: true });
+									else
+										goto("/", { invalidateAll: true });
 								}
 							};
 						}}

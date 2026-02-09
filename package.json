@@ -10,7 +10,7 @@
 		"migrator": "node -r dotenv/config migrator.js",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "prettier --check --plugin-search-dir=. . && eslint .",
+		"lint": "prettier --check src && eslint src",
 		"format": "prettier --write --plugin-search-dir=. ."
 	},
 	"devDependencies": {
