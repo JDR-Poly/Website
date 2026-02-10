@@ -5,6 +5,7 @@ import { schedule } from "node-cron";
 import { logger } from "./logger";
 import { building } from "$app/environment";
 import { google } from "googleapis";
+import { send_or_extend_membership } from "./membership";
 
 //The !building trick prevent call to env ($env/dynamic/private) while doing prerendering, thus preventing a crash.
 const auth_options = !building
@@ -53,12 +54,20 @@ async function send_member_codes() {
             const semester = s1 ? (s2 ? 'all' : 'autumn') : 'spring';
             const range = `G${i+1}`
             if (code_status === 'non') {
-                logger.info(`Sent code to ${email} for ${semester} ${year}`);
-                //TODO send code if needed
-                update_ranges.push({
-                    range: range,
-                    values: [['oui']]
-                })
+                await send_or_extend_membership(email, semester, year)
+                    .then((res) => {
+                        if ('code' in res)
+                            logger.info(`Sent code to ${email} for ${semester} ${year}`);
+                        else
+                            logger.info(`Extended membership automagically for ${email}`);
+                        update_ranges.push({
+                            range: range,
+                            values: [['oui']]
+                        })
+                    })
+                    .catch((err) => {
+                        logger.warning(`Could not extend membership for ${email} over ${semester} ${year}: ${err.message}`);
+                    });
             }
         }
     }
