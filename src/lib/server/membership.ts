@@ -5,6 +5,15 @@ import { sendMail } from "./mailClient";
 import { db } from "./postgresClient";
 import { readFile } from "fs";
 
+export class MembershipError extends Error {};
+export class AlreadyMemberError extends MembershipError {};
+export class InvalidMemberCodeError extends MembershipError {};
+
+/**
+ * Send a membership code to an email
+ * @param email email to send code to
+ * @param code valid code
+ */
 export function send_membership_code(email: string, code: string) {
     readFile(__envDir + "mails/newMemberCode.html", function (err, data) {
 		let html = data.toString();
@@ -13,6 +22,57 @@ export function send_membership_code(email: string, code: string) {
 	});
 }
 
+/**
+ * If user with email exists, add membership directly, otherwise send a new code to given email
+ * @param email email to send code or notification to
+ * @param semesters semesters to add ('autumn' | 'spring' | 'all')
+ * @param year year of membership
+ */
+export async function send_or_extend_membership(email: string, semesters: Semesters, year: number) {
+
+}
+
+/**
+ * Add membership to a user for a given code. Notifies the user by email
+ * @param user_id id of the user
+ * @param email email to send notification to
+ * @param code valid code
+ */
+export async function validate_code(user_id: Id, email: string, code: string) {
+    return await db
+        .one("SELECT id, validation_token, period, year FROM membership_code WHERE validation_token=$1", [
+        code,
+    ])
+        .then(async (res) => {
+            return extend_membership(user_id, email, res.period, res.year, true)
+                .then(async (period) => {
+                    await db.none("DELETE FROM membership_code WHERE id=$1", res.id); //Delete now invalid token
+                    return period
+                })
+                .catch((err) => {
+                    if (err.constraint && err.constraint === 'membership_pkey')
+                        throw new AlreadyMemberError();
+                    throw err;
+                });
+        })
+        .catch((err) => {
+            if ( err instanceof MembershipError )
+                throw err;
+            else
+                throw new InvalidMemberCodeError();
+        });
+}
+
+
+/**
+ * Add membership to a user for a given year and semester. Notifies the user by email
+ * @param user_id id of the user
+ * @param email email to send notification to
+ * @param semesters semesters to add ('autumn' | 'spring' | 'all')
+ * @param year year of membership
+ * @param from_code is it obtained from a code or not
+ * @returns 
+ */
 export async function extend_membership(
     user_id: Id, email: string, semesters: Semesters, year: number,
     from_code = false
