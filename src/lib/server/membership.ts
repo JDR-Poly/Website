@@ -1,9 +1,9 @@
 import type { Id, Semesters } from "$gtypes";
 import { __envDir } from "$utils";
-import type { Period } from "../publicMemberPeriod";
 import { sendMail } from "./mailClient";
 import { db } from "./postgresClient";
 import { readFile } from "fs";
+import { v4 as uuid } from "uuid";
 
 export class MembershipError extends Error {};
 export class AlreadyMemberError extends MembershipError {};
@@ -29,7 +29,33 @@ export function send_membership_code(email: string, code: string) {
  * @param year year of membership
  */
 export async function send_or_extend_membership(email: string, semesters: Semesters, year: number) {
+const userResult = await db.any(
+        "SELECT id FROM users WHERE email = $[email];",
+        { email },
+    );
+    if (userResult && userResult.length > 0) {
+        const user = userResult[0];
 
+        return extend_membership(user.id, email, semesters, year)
+            .then((period) => {
+                return { period };
+            });
+    }
+
+    // Generate a random validation token
+    const validation_token = uuid();
+
+    let res = db.one(
+            `INSERT INTO membership_code (validation_token, email, period, year, email_sent)
+            VALUES ($[validation_token], $[email], $[semesters], $[year], CURRENT_TIMESTAMP)
+            RETURNING id, email_sent;`,
+            { validation_token, email: email, semesters: semesters, year: year },
+        )
+        .then((code) => {
+            return { code };
+        })
+    send_membership_code(email, validation_token);
+    return res;
 }
 
 /**
@@ -48,11 +74,6 @@ export async function validate_code(user_id: Id, email: string, code: string) {
                 .then(async (period) => {
                     await db.none("DELETE FROM membership_code WHERE id=$1", res.id); //Delete now invalid token
                     return period
-                })
-                .catch((err) => {
-                    if (err.constraint && err.constraint === 'membership_pkey')
-                        throw new AlreadyMemberError();
-                    throw err;
                 });
         })
         .catch((err) => {
@@ -83,6 +104,11 @@ export async function extend_membership(
         VALUES ($[id], $[semesters], $[year], $[from_code])`,
         { id: user_id, semesters: semesters, year: year, from_code: from_code }
     )
+        .catch((err) => {
+            if (err.constraint && err.constraint === 'membership_pkey')
+                throw new AlreadyMemberError();
+            throw err;
+        });
 
     const { member_start, member_stop } = await db.one(
         `SELECT member_start, member_stop FROM users_memberships_view

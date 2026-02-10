@@ -1,9 +1,9 @@
 /** @format */
 
 import { db } from "$lib/server/postgresClient";
-import { error, fail, isHttpError, json } from "@sveltejs/kit";
+import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { AlreadyMemberError, extend_membership, InvalidMemberCodeError, MembershipError, validate_code } from "$lib/server/membership";
+import { AlreadyMemberError, InvalidMemberCodeError, MembershipError, validate_code } from "$lib/server/membership";
 
 /**
  * Validate membership code

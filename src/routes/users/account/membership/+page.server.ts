@@ -7,8 +7,7 @@ import { updateMemberPeriod } from "$lib/server/memberPeriod";
 import { Period } from "$lib/publicMemberPeriod";
 import { Role, Roles } from "$lib/userPermissions";
 import type { Id } from "$gtypes";
-import { AlreadyMemberError, extend_membership, InvalidMemberCodeError, validate_code } from "$lib/server/membership";
-import pgPromise from "pg-promise";
+import { AlreadyMemberError, InvalidMemberCodeError, validate_code } from "$lib/server/membership";
 
 type UserDb = {
 	id: Id;
