@@ -68,8 +68,6 @@ export const POST = (async ({ request, locals }) => {
 	// Generate a random validation token
 	const validation_token = uuid();
 
-	// TODO send mail for code
-
 	let res = db.one(
 			`INSERT INTO membership_code (validation_token, email, period, year, email_sent)
 			VALUES ($[validation_token], $[email], $[semesters], $[year], CURRENT_TIMESTAMP)
