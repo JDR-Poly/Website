@@ -170,6 +170,12 @@
 				}}
 			/>
 		{/if}
+		{#if hasRolePermission(UserPermission.SETTINGS_PANEL, data.user?.role)}
+			<a href="/admin/settings" class="nav-link nav-button" on:click={closeNavBar}>
+				<Icon icon="material-symbols:build" style="font-size: 24px;margin-right: 2px;" />
+				<p>Settings</p>
+			</a>
+		{/if}
 		<div id="user-div">
 			<Dropdown
 				{responsive}
