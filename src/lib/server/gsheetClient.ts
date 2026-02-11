@@ -36,7 +36,8 @@ async function send_member_codes() {
         spreadsheetId,
         range: "C:G"
     }).catch(() => {
-        logger.warning("Could not get code data from spreadsheet");
+        console.error("Could not get code data from spreadsheet");
+        // logger.warning("Could not get code data from spreadsheet"); //logger undefined black magic
         return Error("");
     });
 
@@ -67,7 +68,8 @@ async function send_member_codes() {
                         })
                     })
                     .catch((err) => {
-                        logger.warning(`Could not extend membership for ${email} over ${semester} ${year}: ${err.message}`);
+                        console.error(`Could not extend membership for ${email} over ${semester} ${year}: ${err.message}`);
+                        // logger.warning(`Could not extend membership for ${email} over ${semester} ${year}: ${err.message}`); //logger undefined black magic
                     });
             }
         }
@@ -82,7 +84,8 @@ async function send_member_codes() {
         spreadsheetId,
         requestBody: resource,
     }).catch(() => {
-        logger.warning("Could not update codes to sent ('oui') in spreadsheet")
+        console.error("Could not update codes to sent ('oui') in spreadsheet");
+        // logger.warning("Could not update codes to sent ('oui') in spreadsheet");
     });
 
     return update_ranges.length;
