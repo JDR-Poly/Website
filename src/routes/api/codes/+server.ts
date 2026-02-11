@@ -5,7 +5,7 @@ import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { v4 as uuid } from "uuid";
-import { extend_membership, send_membership_code } from "$lib/server/membership";
+import { AlreadyMemberError, extend_membership, send_membership_code, send_or_extend_membership } from "$lib/server/membership";
 
 /**
  * Get all membership codes
@@ -47,41 +47,21 @@ export const POST = (async ({ request, locals }) => {
 	}
 	data.year = Number(data.year);
 
-	const userResult = await db.any(
-        "SELECT id FROM users WHERE email = $[email];",
-        { email: data.email },
-    );
-	if (userResult && userResult.length > 0) {
-		const user = userResult[0];
-
-		return extend_membership(user.id, data.email, data.semesters, data.year)
-			.then((res) => {
-				return json(res, { status: 200 });
-			})
-			.catch((err) => {
-				if (err.constraint && err.constraint === 'membership_pkey')
-					throw error(400, "Ce mail est déjà membre!")
-				throw error(500, err.message);
-			});
-	}
-
-	// Generate a random validation token
-	const validation_token = uuid();
-
-	// TODO send mail for code
-
-	let res = db.one(
-			`INSERT INTO membership_code (validation_token, email, period, year, email_sent)
-			VALUES ($[validation_token], $[email], $[semesters], $[year], CURRENT_TIMESTAMP)
-			RETURNING id, email_sent;`,
-			{ validation_token, email: data.email, semesters: data.semesters, year: data.year },
-		)
+	return await send_or_extend_membership(
+		data.email, data.semesters, data.year
+	)
 		.then((res) => {
-			return json(res, { status: 201 });
+			if ('period' in res)
+				return json(res.period, {status: 200});
+			else
+				return json(res.code, {status: 201});
 		})
 		.catch((err) => {
-			throw error(500, err.message);
+			switch (err.constructor) {
+				case AlreadyMemberError:
+					throw error(409, "Ce mail est déjà membre");
+				default:
+					throw error(500);
+			}
 		});
-	send_membership_code(data.email, validation_token);
-	return res;
 }) satisfies RequestHandler;

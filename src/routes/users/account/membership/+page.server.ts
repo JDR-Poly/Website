@@ -7,8 +7,7 @@ import { updateMemberPeriod } from "$lib/server/memberPeriod";
 import { Period } from "$lib/publicMemberPeriod";
 import { Role, Roles } from "$lib/userPermissions";
 import type { Id } from "$gtypes";
-import { extend_membership } from "$lib/server/membership";
-import pgPromise from "pg-promise";
+import { AlreadyMemberError, InvalidMemberCodeError, validate_code } from "$lib/server/membership";
 
 type UserDb = {
 	id: Id;
@@ -27,7 +26,7 @@ export const actions = {
 		if (!locals.authenticated) throw error(401);
 		const form = await request.formData();
 
-		const token = form.get("validation_token");
+		const token: string = form.get("validation_token") as string;
 		if (!locals.user) { throw error(500, { message: "user not found"}) }
 		if (!locals.user.email) { throw error(500, "email missing in user found") }
 
@@ -58,24 +57,19 @@ export const actions = {
 			}
 		}
 
-		return await db
-			.one("SELECT id, validation_token, period, year FROM membership_code WHERE validation_token=$1", [
-			token,
-		])
-			.then(async (res) => {
-				return extend_membership(user.id, user.email, res.period, res.year, true)
-					.then(async (period) => {
-						await db.none("DELETE FROM membership_code WHERE id=$1", res.id); //Delete now invalid token
-						return { success: true, period }
-					})
-					.catch((err) => {
-						if (err.constraint && err.constraint === 'membership_pkey')
-							return fail(409, { invalid: true, message: "Vous êtes déjà membre!" });
-						throw error(500, err.message);
-					});
+		return await validate_code(locals.user.id, locals.user.email, token)
+			.then((period) => {
+				return {period, success: true};
 			})
-			.catch((err: pgPromise.errors.QueryResultError) => {
-				return fail(404, { invalid: true, message: "Ce code n'est pas valide." })
-			});
+			.catch((err) => {
+				switch (err.constructor) {
+					case AlreadyMemberError:
+						return fail(409, { invalid: true, message: "Vous êtes déjà membre!" });
+					case InvalidMemberCodeError:
+						return fail(404, { invalid: true, message: "Ce code n'est pas valide." });
+					default:
+						throw error(500);
+				}
+			})
 	},
 } satisfies Actions;

@@ -3,6 +3,7 @@
 import { format, createLogger, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 import { preloadTransporter } from "./mailClient";
+import { preloadGSheet } from "./gsheetClient";
 
 const { combine, timestamp, align, colorize, printf, errors } = format;
 
@@ -37,6 +38,8 @@ const logger = createLogger({
 });
 
 logger.info(`Started at ${new Date(Date.now()).toISOString()}`);
-preloadTransporter();
 
 export { logger };
+
+preloadTransporter();
+preloadGSheet();
