@@ -86,4 +86,13 @@ type Semesters = 'autumn' | 'spring' | 'all'; // semesters of an academic year
 type Id = number;
 type DateString = string; //A date stored as string
 
-export type { User, Event, Id, Semesters, DateString, Committee, HonorMember, Book, MembershipCode };
+/**
+ * Global settings 
+ */
+type GlobalSettings = {
+	gsheet_id: string,
+	gsheet_sync_enabled: boolean,
+	code_validity_days: number
+}
+
+export type { User, Event, Id, Semesters, DateString, Committee, HonorMember, Book, MembershipCode, GlobalSettings };
