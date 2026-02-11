@@ -141,9 +141,9 @@
 						{
 							element: {
 								prefix_icon: "material-symbols:outgoing-mail-outline",
-								text: "Envoyer un code",
+								text: "Codes Membres",
 							},
-							link: "/admin/membership",
+							link: "/admin/codes",
 						},
 						{
 							element: {
@@ -158,13 +158,6 @@
 								text: "Utilisateurs",
 							},
 							link: "/admin/users",
-						},
-						{
-							element: {
-								prefix_icon: "material-symbols:build",
-								text: "Codes Membres",
-							},
-							link: "/admin/codes",
 						},
 					],
 				}}
