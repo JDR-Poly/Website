@@ -36,8 +36,7 @@ async function send_member_codes() {
         spreadsheetId,
         range: "C:G"
     }).catch(() => {
-        console.error("Could not get code data from spreadsheet");
-        // logger.warning("Could not get code data from spreadsheet"); //logger undefined black magic
+        logger.warn("Could not get code data from spreadsheet");
         return Error("");
     });
 
@@ -68,8 +67,7 @@ async function send_member_codes() {
                         })
                     })
                     .catch((err) => {
-                        console.error(`Could not extend membership for ${email} over ${semester} ${year}: ${err.message}`);
-                        // logger.warning(`Could not extend membership for ${email} over ${semester} ${year}: ${err.message}`); //logger undefined black magic
+                        logger.warn(`Could not extend membership for ${email} over ${semester} ${year}: ${err.name}`);
                     });
             }
         }
@@ -84,8 +82,7 @@ async function send_member_codes() {
         spreadsheetId,
         requestBody: resource,
     }).catch(() => {
-        console.error("Could not update codes to sent ('oui') in spreadsheet");
-        // logger.warning("Could not update codes to sent ('oui') in spreadsheet");
+        logger.warn("Could not update codes to sent ('oui') in spreadsheet");
     });
 
     return update_ranges.length;
@@ -100,7 +97,7 @@ async function preloadGSheet() {
 
 
     logger.info("Setting up ghsheet sync");
-    cron.schedule('7 0 * * *', async () => {
+    cron.schedule('* * * * *', async () => {
 
         if (global_settings.gsheet_sync_enabled) {
             logger.info("Checking for new members...");
