@@ -60,6 +60,10 @@ async function update_settings(new_settings: GlobalSettings) {
     const query = insert(to_update, cs) + onConflict;
 
     await db.none(query);
+
+    // Update the in-memory global_settings to reflect changes immediately
+    global_settings = { ...new_settings };
+
     logger.info(`updated the following settings: ${JSON.stringify(to_update)}`);
 }
 
