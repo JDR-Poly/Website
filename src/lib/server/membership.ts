@@ -36,7 +36,7 @@ const userResult = await db.any(
     if (userResult && userResult.length > 0) {
         const user = userResult[0];
 
-        return extend_membership(user.id, email, semesters, year)
+        return await extend_membership(user.id, email, semesters, year)
             .then((period) => {
                 return { period };
             });

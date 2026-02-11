@@ -1,11 +1,11 @@
 /** @format */
 
 import { env } from "$env/dynamic/private";
-import { schedule } from "node-cron";
-import { logger } from "./logger";
+import cron from "node-cron";
 import { building } from "$app/environment";
 import { google } from "googleapis";
 import { send_or_extend_membership } from "./membership";
+import { logger } from "./logger";
 
 //The !building trick prevent call to env ($env/dynamic/private) while doing prerendering, thus preventing a crash.
 const auth_options = !building
@@ -87,9 +87,23 @@ async function send_member_codes() {
     return update_ranges.length;
 }
 
-schedule("1 0 * * *", async () => {
-    const sent = await send_member_codes();
-    logger.info(`Sent ${sent} codes at ${new Date(Date.now()).toLocaleDateString()}`);
-});
+async function preloadGSheet() {
+    if (building) return;
+    if (!env.GSHEETS_EMAIL){
+        logger.info("/!\\ gsheet sync not set up");
+        return;
+    }
 
-export { gsheet };
+
+    logger.info("Setting up ghsheet sync");
+    cron.schedule('7 0 * * *', async () => {
+        logger.info("Checking for new members...");
+        const sent = await send_member_codes();
+        if (sent === 0)
+            logger.info(`No codes to send at ${new Date(Date.now()).toLocaleDateString()}`)
+        else
+            logger.info(`Sent ${sent} codes at ${new Date(Date.now()).toLocaleDateString()}`);
+    });
+}
+
+export { preloadGSheet };
