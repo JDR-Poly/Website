@@ -5,6 +5,8 @@ import { error as throwError, type Handle, type HandleServerError } from "@svelt
 import { Roles } from "$lib/userPermissions";
 import type { User } from "$gtypes";
 import { logger } from "$lib/server/logger";
+import { preload_settings } from "$lib/server/settings";
+import { preloadGSheet } from "$lib/server/gsheetClient";
 
 //Handle is fired before each request, it handles authentification already connected clients.
 export const handle: Handle = async function ({ event, resolve }) {
@@ -69,3 +71,8 @@ export const handleError: HandleServerError = ({ error, event }) => {
 		};
 	}
 };
+
+// Preload some data
+
+preloadGSheet();
+preload_settings();

@@ -141,9 +141,9 @@
 						{
 							element: {
 								prefix_icon: "material-symbols:outgoing-mail-outline",
-								text: "Envoyer un code",
+								text: "Codes Membres",
 							},
-							link: "/admin/membership",
+							link: "/admin/codes",
 						},
 						{
 							element: {
@@ -159,16 +159,15 @@
 							},
 							link: "/admin/users",
 						},
-						{
-							element: {
-								prefix_icon: "material-symbols:build",
-								text: "Codes Membres",
-							},
-							link: "/admin/codes",
-						},
 					],
 				}}
 			/>
+		{/if}
+		{#if hasRolePermission(UserPermission.SETTINGS_PANEL, data.user?.role)}
+			<a href="/admin/settings" class="nav-link nav-button" on:click={closeNavBar}>
+				<Icon icon="material-symbols:build" style="font-size: 24px;margin-right: 2px;" />
+				<p>Settings</p>
+			</a>
 		{/if}
 		<div id="user-div">
 			<Dropdown

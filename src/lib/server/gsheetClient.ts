@@ -6,6 +6,7 @@ import { building } from "$app/environment";
 import { google } from "googleapis";
 import { send_or_extend_membership } from "./membership";
 import { logger } from "./logger";
+import { global_settings } from "./settings";
 
 //The !building trick prevent call to env ($env/dynamic/private) while doing prerendering, thus preventing a crash.
 const auth_options = !building
@@ -23,19 +24,19 @@ const auth = new google.auth.JWT(auth_options);
 
 const gsheet = google.sheets({ version: "v4", auth: auth});
 
-const spreadsheetId = !building ? env.GSHEETS_ID : "<none>";
-
 async function send_member_codes() {
     // Are we in start or end of year
 	const now = new Date(Date.now());
 	const is_first_year_half: boolean = now.getMonth() <= 6;
     const year = now.getFullYear() + (is_first_year_half ? -1 : 0);
 
+    const spreadsheetId = global_settings.gsheet_id;
+
     let result = await gsheet.spreadsheets.values.get({
         spreadsheetId,
         range: "C:G"
     }).catch(() => {
-        logger.warning("Could not get code data from spreadsheet");
+        logger.warn("Could not get code data from spreadsheet");
         return Error("");
     });
 
@@ -66,7 +67,7 @@ async function send_member_codes() {
                         })
                     })
                     .catch((err) => {
-                        logger.warning(`Could not extend membership for ${email} over ${semester} ${year}: ${err.message}`);
+                        logger.warn(`Could not extend membership for ${email} over ${semester} ${year}: ${err.name}`);
                     });
             }
         }
@@ -81,7 +82,7 @@ async function send_member_codes() {
         spreadsheetId,
         requestBody: resource,
     }).catch(() => {
-        logger.warning("Could not update codes to sent ('oui') in spreadsheet")
+        logger.warn("Could not update codes to sent ('oui') in spreadsheet");
     });
 
     return update_ranges.length;
@@ -96,13 +97,16 @@ async function preloadGSheet() {
 
 
     logger.info("Setting up ghsheet sync");
-    cron.schedule('7 0 * * *', async () => {
-        logger.info("Checking for new members...");
-        const sent = await send_member_codes();
-        if (sent === 0)
-            logger.info(`No codes to send at ${new Date(Date.now()).toLocaleDateString()}`)
-        else
-            logger.info(`Sent ${sent} codes at ${new Date(Date.now()).toLocaleDateString()}`);
+    cron.schedule('* * * * *', async () => {
+
+        if (global_settings.gsheet_sync_enabled) {
+            logger.info("Checking for new members...");
+            const sent = await send_member_codes();
+            if (sent === 0)
+                logger.info(`No codes to send at ${new Date(Date.now()).toLocaleDateString()}`)
+            else
+                logger.info(`Sent ${sent} codes at ${new Date(Date.now()).toLocaleDateString()}`);
+        }
     });
 }
 

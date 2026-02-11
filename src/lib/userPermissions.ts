@@ -19,6 +19,8 @@ enum UserPermission {
 	MODIFY_BOOKS,
 	SEE_USERS_PROFILE,
 	MODIFY_USER_DISCORD,
+	SETTINGS_PANEL,
+	MODIFY_SETTINGS,
 }
 
 /**
@@ -130,6 +132,8 @@ const Roles: Record<string, Role> = {
 			UserPermission.GRANT_ROLE_COMMITTEE,
 			UserPermission.GRANT_ROLE_HONORARY_MEMBER,
 			UserPermission.MODIFY_COMMITTEE_PAGE,
+			UserPermission.SETTINGS_PANEL,
+			UserPermission.MODIFY_SETTINGS,
 		],
 		["COMMITTEE"],
 	),
