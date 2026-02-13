@@ -5,7 +5,7 @@ import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { v4 as uuid } from "uuid";
-import { AlreadyMemberError, extend_membership, send_membership_code, send_or_extend_membership } from "$lib/server/membership";
+import { AlreadyMemberError, delete_code, extend_membership, send_membership_code, send_or_extend_membership } from "$lib/server/membership";
 
 /**
  * Get all membership codes
@@ -64,4 +64,25 @@ export const POST = (async ({ request, locals }) => {
 					throw error(500);
 			}
 		});
+}) satisfies RequestHandler;
+
+/**
+ * Delete a membership code
+ *
+ * @param {string} id the public id associated to a validation token
+ */
+export const DELETE = (async ({ request, locals }) => {
+	if (!locals.authenticated) throw error(401);
+	if (!hasRolePermission(UserPermission.GRANT_ROLE_MEMBER, locals.user?.role)) throw error(403);
+
+	const data = await request.json();
+	const id: number = data.id;
+
+	if (!id) {
+		throw error(400, "Missing id parameter");
+	}
+
+	await delete_code(id);
+
+	return new Response(null, { status: 204 });
 }) satisfies RequestHandler;

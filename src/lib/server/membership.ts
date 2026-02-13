@@ -75,7 +75,7 @@ export async function validate_code(user_id: Id, email: string, code: string) {
         .then(async (res) => {
             return extend_membership(user_id, email, res.period, res.year, true)
                 .then(async (period) => {
-                    await db.none("DELETE FROM membership_code WHERE id=$1", res.id); //Delete now invalid token
+                    await delete_code(res.id); //Delete now invalid code
                     return period
                 });
         })
@@ -85,6 +85,14 @@ export async function validate_code(user_id: Id, email: string, code: string) {
             else
                 throw new InvalidMemberCodeError();
         });
+}
+
+/**
+ * Delete a membership code
+ * @param id id of the membership code
+ */
+export async function delete_code(id: Id) {
+    await db.none("DELETE FROM membership_code WHERE id=$1", id);
 }
 
 

@@ -11,7 +11,7 @@
 	import * as Table from "$lib/components/ui/table";
 	import { addPagination, addSortBy, addTableFilter } from "svelte-headless-table/plugins";
 	import { Button } from "$lib/components/ui/button";
-	import { ArrowUpDown, RotateCw } from "lucide-svelte";
+	import { ArrowUpDown, RotateCw, Trash } from "lucide-svelte";
 	import { Input } from "$lib/components/ui/input";
 	import { error, info } from "$lib/stores";
 	import { invalidateAll } from "$app/navigation";
@@ -96,7 +96,7 @@
 		}),
 		table.column({
 			accessor: "id",
-			id: "resend_email",
+			id: "actions",
 			header: "Actions",
 			plugins: {
 				sort: {
@@ -148,6 +148,42 @@
 			});
 		}
 	}
+
+	async function handleDelete(id: number) {
+		resendingTokens.update((set) => {
+			set.add(id);
+			return new Set(set);
+		});
+		
+
+		try {
+			const response = await fetch(`/api/codes`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					id
+				}),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				$error = `Erreur: ${errorData.message || "Échec de la suppression"}`;
+			} else {
+				// Reload the page
+				invalidateAll();
+				$info = "Code supprimé avec succès!";
+			}
+		} catch (err) {
+			$error = "Erreur lors de la suppression du code";
+		} finally {
+			resendingTokens.update((set) => {
+				set.delete(id);
+				return new Set(set);
+			});
+		}
+	}
 </script>
 
 <div class="flex items-center py-4 justify-between">
@@ -189,7 +225,7 @@
 						{#each row.cells as cell (cell.id)}
 							<Subscribe attrs={cell.attrs()} let:attrs>
 								<Table.Cell {...attrs}>
-									{#if cell.id === "resend_email"}
+									{#if cell.id === "actions"}
 										{@const id = cell.render()}
 										<Button
 											variant="outline"
@@ -199,6 +235,15 @@
 										>
 											<RotateCw class={`mr-2 h-4 w-4 ${$resendingTokens.has(Number(id)) ? "animate-spin" : ""}`} />
 											Renvoyer
+										</Button>
+										<Button
+											variant="destructive"
+											size="sm"
+											disabled={$resendingTokens.has(Number(id))}
+											on:click={() => handleDelete(Number(id))}
+										>
+											<Trash class={`mr-2 h-4 w-4 ${$resendingTokens.has(Number(id)) ? "animate-spin" : ""}`} />
+											Supprimer
 										</Button>
 									{:else}
 										<Render of={cell.render()} />
