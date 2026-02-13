@@ -12,9 +12,9 @@ import { __envDir } from "$lib/utils";
 import type { PageServerLoad } from "./$types";
 import { validateToken } from "$lib/server/utilsServer";
 
-export const load = (({ locals }) => {
+export const load = (({ locals, url }) => {
 	if (locals.authenticated && locals.user?.is_email_validated) {
-		throw redirect(307, "/");
+		throw redirect(307, `/?${url.searchParams}`);
 	} else if (locals.authenticated) {
 		throw redirect(307, "/auth/validate-email");
 	}
