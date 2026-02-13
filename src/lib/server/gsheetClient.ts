@@ -97,7 +97,7 @@ async function preloadGSheet() {
 
 
     logger.info("Setting up ghsheet sync");
-    cron.schedule('* * * * *', async () => {
+    cron.schedule('7 0 * * *', async () => {
 
         if (global_settings.gsheet_sync_enabled) {
             logger.info("Checking for new members...");
