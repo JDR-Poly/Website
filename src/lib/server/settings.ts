@@ -12,7 +12,7 @@ const {ColumnSet, insert} = pgp.helpers;
 const default_settings: GlobalSettings = {
     gsheet_id: "",
     gsheet_sync_enabled: false,
-    code_validity_days: 7
+    code_validity_days: 14
 }
 
 let global_settings: GlobalSettings = default_settings;
