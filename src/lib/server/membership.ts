@@ -4,6 +4,9 @@ import { sendMail } from "./mailClient";
 import { db } from "./postgresClient";
 import { readFile } from "fs";
 import { v4 as uuid } from "uuid";
+import { global_settings } from "./settings";
+import { schedule } from "node-cron";
+import { logger } from "./logger";
 
 export class MembershipError extends Error {};
 export class AlreadyMemberError extends MembershipError {};
@@ -130,3 +133,12 @@ export async function extend_membership(
 
     return { member_start, member_stop }
 }
+
+/** Delete expired membership codes */
+schedule("0 1 * * *", () => {
+	db.none(
+        `DELETE FROM membership_code WHERE NOW() > (email_sent + ($[valid_days] * INTERVAL '1 DAY'))`,
+        { valid_days: global_settings.code_validity_days }
+    );
+	logger.info(`Deleted membership codes that timed_out after ${global_settings.code_validity_days} days`);
+});
