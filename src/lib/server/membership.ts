@@ -4,6 +4,9 @@ import { sendMail } from "./mailClient";
 import { db } from "./postgresClient";
 import { readFile } from "fs";
 import { v4 as uuid } from "uuid";
+import { global_settings } from "./settings";
+import { schedule } from "node-cron";
+import { logger } from "./logger";
 
 export class MembershipError extends Error {};
 export class AlreadyMemberError extends MembershipError {};
@@ -72,7 +75,7 @@ export async function validate_code(user_id: Id, email: string, code: string) {
         .then(async (res) => {
             return extend_membership(user_id, email, res.period, res.year, true)
                 .then(async (period) => {
-                    await db.none("DELETE FROM membership_code WHERE id=$1", res.id); //Delete now invalid token
+                    await delete_code(res.id); //Delete now invalid code
                     return period
                 });
         })
@@ -82,6 +85,14 @@ export async function validate_code(user_id: Id, email: string, code: string) {
             else
                 throw new InvalidMemberCodeError();
         });
+}
+
+/**
+ * Delete a membership code
+ * @param id id of the membership code
+ */
+export async function delete_code(id: Id) {
+    await db.none("DELETE FROM membership_code WHERE id=$1", id);
 }
 
 
@@ -130,3 +141,12 @@ export async function extend_membership(
 
     return { member_start, member_stop }
 }
+
+/** Delete expired membership codes */
+schedule("0 1 * * *", () => {
+	db.none(
+        `DELETE FROM membership_code WHERE NOW() > (email_sent + ($[valid_days] * INTERVAL '1 DAY'))`,
+        { valid_days: global_settings.code_validity_days }
+    );
+	logger.info(`Deleted membership codes that timed_out after ${global_settings.code_validity_days} days`);
+});

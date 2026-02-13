@@ -6,12 +6,8 @@ import { error, fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load = (async ({ locals }) => {
-	// Check authentication (inherited from parent layout, but verify)
-	if (!locals.user) {
-		throw redirect(307, "/auth/login");
-	}
-	// Check permissions
-	if (!hasRolePermission(UserPermission.SETTINGS_PANEL, locals.user.role)) {
+	if (!locals.authenticated) throw error(401);
+	if (!hasRolePermission(UserPermission.SETTINGS_PANEL, locals.user?.role)) {
 		throw error(403);
 	}
 
