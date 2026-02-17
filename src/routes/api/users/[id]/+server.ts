@@ -18,11 +18,18 @@ export const GET = (async ({ params, locals }) => {
 		locals.authenticated && hasRolePermission(UserPermission.SEE_MAIL, locals.user?.role)
 			? "email, "
 			: "";
+	const discordSQLText =
+		locals.authenticated && (
+			hasRolePermission(UserPermission.SEE_USER_DISCORD, locals.user?.role)
+			|| locals.user?.id === Number(id)
+		)
+			? "discord_id, discord_username, "
+			: "";
 
 	return db
 		.one(
 			` SELECT 
-			id, ${mailSQLText}name, role, account_creation, discord_id, member_start, member_stop, discord_username  
+			id, ${mailSQLText}name, role, account_creation, ${discordSQLText}member_start, member_stop
 			FROM users_memberships_view WHERE id = $1`,
 			[id],
 		)

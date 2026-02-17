@@ -42,7 +42,7 @@
 			Fin de membre: <strong>{dateFormater.format(Date.parse(data.profile.member_stop))}</strong>
 		</p>
 	{/if}
-	{#if data.user?.id.toString() == id && data.profile.discord_username}
+	{#if data.profile.discord_username}
 		<p>
 			Discord Username: <strong>{data.profile.discord_username}</strong>
 		</p>
