@@ -25,7 +25,7 @@ export const GET = (async ({ locals, url }) => {
 	if (!locals.authenticated) throw error(401);
 	if (
 		!hasRolePermission(UserPermission.SEE_USERS_PROFILE, locals.user?.role) ||
-		!hasRolePermission(UserPermission.MODIFY_USER_DISCORD, locals.user?.role)
+		!hasRolePermission(UserPermission.SEE_USER_DISCORD, locals.user?.role)
 	)
 		throw error(403);
 
