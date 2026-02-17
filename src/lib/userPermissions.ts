@@ -18,7 +18,7 @@ enum UserPermission {
 	MODIFY_COMMITTEE_PAGE,
 	MODIFY_BOOKS,
 	SEE_USERS_PROFILE,
-	MODIFY_USER_DISCORD,
+	SEE_USER_DISCORD,
 	SETTINGS_PANEL,
 	MODIFY_SETTINGS,
 }
@@ -106,7 +106,7 @@ const Roles: Record<string, Role> = {
 	),
 	HONORARY_MEMBER: Role.createRole("HONORARY_MEMBER", [], ["MEMBER"]),
 	DISCORD_BOT: Role.createRole("DISCORD_BOT", [
-		UserPermission.MODIFY_USER_DISCORD,
+		UserPermission.SEE_USER_DISCORD,
 		UserPermission.SEE_USERS_PROFILE,
 	]),
 	COMMITTEE: Role.createRole(
@@ -123,6 +123,7 @@ const Roles: Record<string, Role> = {
 			UserPermission.REMOVE_USER_FROM_EVENT,
 			UserPermission.MODIFY_BOOKS,
 			UserPermission.SEE_MAIL,
+			UserPermission.SEE_USER_DISCORD,
 		],
 		["MEMBER"],
 	),
