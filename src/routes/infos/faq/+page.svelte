@@ -30,7 +30,19 @@
         {
             question: "Can I come as an English speaker?",
             answer: "Yes, you can come even if you don't speak French. However, as our game masters are volunteers, we can't guarantee that there will always be a game in English."
-        }
+        },
+        {
+            question: "Devenir membre, pourquoi?",
+            answer: "Toute personne qui le désire peut devenir membre de JDR-Poly, moyennant une cotisation semestrielle de 5CHF. Être membre de JDR-Poly offre plusieurs avantages exclusifs tels que l'accès à nos événements et soirées réservées aux membres (soirées jeux de sociétés, loups-garous ambiancés, GNs, Murder Parties, etc.), la possibilité de consulter et d'emprunter les livres de nôtre bibliothèque, un accès à nôtre serveur Discord et plus encore !"
+        },
+        {
+            question: "Comment puis-je devenir membre?",
+            answer: "Lors des nocturnes, il est possible de devenir membre pour la modique somme de 5.- CHF par semestre. Pour s'inscrire à des évènements membres sur ce site, il faut aussi activer votre compte en tant que compte membre. Cela grâce au mail que vous allez recevoir, si tout va bien aux plus tard 1 jour après votre inscription."
+        },
+        {
+            question: "Comment puis-je accèder au serveur discord de JDR-Poly?",
+            answer: "Un lien d'invitation devrait se trouver sur le bas de cette page. De plus, pour avoir accès à plus que les annonces du discord, il faut également être membre de JDR-Poly et avoir lié son compte discord avec son compte (membre) sur ce site."
+        },
 	];
 
 	// Indices des questions ouvertes
