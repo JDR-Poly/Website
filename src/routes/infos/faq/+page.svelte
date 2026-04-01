@@ -37,7 +37,7 @@
         },
         {
             question: "Comment puis-je devenir membre?",
-            answer: "Lors des nocturnes, il est possible de devenir membre pour la modique somme de 5.- CHF par semestre. Pour s'inscrire à des évènements membres sur ce site, il faut aussi activer votre compte en tant que compte membre. Cela grâce au mail que vous aller recevoir, si tout va bien aux plus tard 1 jour après votre inscription."
+            answer: "Lors des nocturnes, il est possible de devenir membre pour la modique somme de 5.- CHF par semestre. Pour s'inscrire à des évènements membres sur ce site, il faut aussi activer votre compte en tant que compte membre. Cela grâce au mail que vous allez recevoir, si tout va bien aux plus tard 1 jour après votre inscription."
         },
         {
             question: "Comment puis-je accèder au serveur discord de JDR-Poly?",
