@@ -40,6 +40,9 @@ schedule("0 1 * * *", () => {
 	);
 	db.none(`DELETE FROM email_validation e USING users u WHERE e.user_id = u.id AND u.is_email_validated`);
 	db.none(`DELETE FROM sessions WHERE NOW() > expiration_date`);
+	db.none(
+		`DELETE FROM event_inscription WHERE event_id IN (SELECT id FROM events WHERE date < NOW() - INTERVAL '1 month')`,
+	);
 	logger.info(`Cleaned database for expired data at ${new Date(Date.now()).toLocaleDateString()}`);
 });
 
