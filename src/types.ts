@@ -87,12 +87,14 @@ type Id = number;
 type DateString = string; //A date stored as string
 
 /**
- * Global settings 
+ * Global settings
  */
 type GlobalSettings = {
 	gsheet_id: string,
 	gsheet_sync_enabled: boolean,
-	code_validity_days: number
+	code_validity_days: number,
+	discord_link: string,
+	telegram_link: string
 }
 
 export type { User, Event, Id, Semesters, DateString, Committee, HonorMember, Book, MembershipCode, GlobalSettings };

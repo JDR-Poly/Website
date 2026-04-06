@@ -1,5 +1,5 @@
 <!-- @format -->
-<script type="ts">
+<script lang="ts">
 	import { applyAction, enhance } from "$app/forms";
 	import { error, info } from "$lib/stores";
 	import { Turnstile } from "svelte-turnstile";
@@ -10,6 +10,9 @@
 		PUBLIC_TURNSTILE_KEY,
 		PUBLIC_WEBSITE_VERSION,
 	} from '$env/static/public';
+
+	export let discord_link: string = "";
+	export let telegram_link: string = "";
 
 	let isEmailInvalid = true;
 	let email = "";
@@ -73,21 +76,25 @@
 					<a href="mailto:comite@jdrpoly.ch">comite@jdrpoly.ch</a>
 				</div>
 				<!-- Telegram -->
-				<div class="mb-3">
-					<Icon icon="mdi:telegram" inline={true} class="inline-block mr-2 icon-bigger" />
-					<a href="https://t.me/+XJqT8pjC3RQwNzFk" target="_blank" rel="noopener noreferrer">@jdrpoly</a>
-				</div>
+				{#if telegram_link}
+					<div class="mb-3">
+						<Icon icon="mdi:telegram" inline={true} class="inline-block mr-2 icon-bigger" />
+						<a href={telegram_link} target="_blank" rel="noopener noreferrer">@jdrpoly</a>
+					</div>
+				{/if}
 				<!-- Discord -->
-				<div>
-					<Icon
-						icon="mdi:discord"
-						inline={true}
-						class="inline-block mr-2 icon-bigger"
-					/>
-					<a href="https://discord.gg/FaRaH6Jwq2" target="_blank" rel="noopener noreferrer">
-						Rejoignez notre Discord
-					</a>
-				</div>
+				{#if discord_link}
+					<div>
+						<Icon
+							icon="mdi:discord"
+							inline={true}
+							class="inline-block mr-2 icon-bigger"
+						/>
+						<a href={discord_link} target="_blank" rel="noopener noreferrer">
+							Rejoignez notre Discord
+						</a>
+					</div>
+				{/if}
 			</section>
 			<!-- Catégorie "Social" -->
 			<section class="pt-5 pl-8">
