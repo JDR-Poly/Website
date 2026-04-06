@@ -4,6 +4,7 @@
 	import { page } from "$app/stores";
 	import { onMount } from "svelte";
 	import type { PageData } from "./$types";
+	import { info } from "$lib/stores";
 
 	const { uuid } = $page.params;
 
@@ -11,6 +12,9 @@
 
 	onMount(() => {
 		if (data.success) {
+			if (data.message) {
+				$info = data.message;
+			}
 			setTimeout(() => {
 				invalidateAll();
 			}, 3000);
