@@ -12,7 +12,9 @@ const {ColumnSet, insert} = pgp.helpers;
 const default_settings: GlobalSettings = {
     gsheet_id: "",
     gsheet_sync_enabled: false,
-    code_validity_days: 14
+    code_validity_days: 14,
+    discord_link: "",
+    telegram_link: ""
 }
 
 let global_settings: GlobalSettings = default_settings;
@@ -29,6 +31,8 @@ async function load_settings() {
         gsheet_id: "gsheet_id" in data ? data.gsheet_id as string : default_settings.gsheet_id,
         gsheet_sync_enabled: "gsheet_sync_enabled" in data ? (data.gsheet_sync_enabled === "true") : default_settings.gsheet_sync_enabled,
         code_validity_days: "code_validity_days" in data ? Number(data.code_validity_days) : default_settings.code_validity_days,
+        discord_link: "discord_link" in data ? data.discord_link as string : default_settings.discord_link,
+        telegram_link: "telegram_link" in data ? data.telegram_link as string : default_settings.telegram_link,
     }
 }
 

@@ -34,6 +34,9 @@ export const actions = {
 		const _code_validity_days = form.get("code_validity_days")?.toString();
 		const code_validity_days = _code_validity_days ? parseInt(_code_validity_days) : global_settings.code_validity_days
 
+		const discord_link = form.get("discord_link")?.toString();
+		const telegram_link = form.get("telegram_link")?.toString();
+
 		// Validate
 		if (code_validity_days < 1) {
 			return fail(400, { message: "Code validity must be at least 1 day" });
@@ -45,6 +48,8 @@ export const actions = {
 				gsheet_id,
 				gsheet_sync_enabled,
 				code_validity_days,
+				discord_link: ((discord_link === undefined) ? global_settings.discord_link : discord_link),
+				telegram_link: ((telegram_link === undefined) ? global_settings.telegram_link : telegram_link),
 			});
 			return { success: true };
 		} catch (err: any) {

@@ -15,7 +15,7 @@
 
 <slot></slot>
 
-<Footer></Footer>
+<Footer discord_link={data.discord_link} telegram_link={data.telegram_link}></Footer>
 
 <AlertDisplay></AlertDisplay>
 
