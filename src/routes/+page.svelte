@@ -11,12 +11,11 @@
 	import { goto, invalidateAll, replaceState } from "$app/navigation";
 
 	async function loadEvents() {
-		return fetch("/api/events?limit=3")
+		return fetch("/api/events?limit=4")
 			.then(async (res) => {
 				return (res.ok ? await res.json() : []) as Event[];
 			})
 			.then((res) => {
-				if (res.length > 3) res.splice(3, res.length - 3);
 				return res;
 			})
 			.catch((err) => {
@@ -129,9 +128,16 @@
 				{#if events.length == 0}
 					<h1>Il n'y a aucun événement prévu pour le moment</h1>
 				{/if}
-				{#each events as event}
+				{#each events.slice(0, 3) as event}
 					<EventCard {event} />
 				{/each}
+			{/await}
+			{#await loadEvents() then events}
+				{#if events.length > 3}
+					<div id="view-all-wrapper">
+						<a href="/events" id="view-all-events">Voir tous les événements</a>
+					</div>
+				{/if}
 			{/await}
 		</div>
 	</div>
@@ -297,6 +303,33 @@
 			color: $secondary;
 			background-color: #000c37;
 			transform: translateX(-50%);
+		}
+
+		#view-all-wrapper {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			margin-top: 2em;
+		}
+
+		#view-all-events {
+			text-align: center;
+			padding: 0.8em 1.8em;
+			color: $secondary;
+			background-color: rgba(0, 12, 55, 0.5);
+			border: 2px solid $secondary;
+			border-radius: 8px;
+			text-decoration: none;
+			font-weight: 700;
+			font-size: 0.9em;
+			letter-spacing: 0.15em;
+			text-transform: uppercase;
+			transition: all 0.3s ease;
+
+			&:hover {
+				background-color: rgba(21, 137, 209, 0.3);
+				border-color: rgba(21, 137, 209, 1);
+			}
 		}
 	}
 
