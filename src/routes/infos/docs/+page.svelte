@@ -84,7 +84,8 @@
 	<h2>Documents officiels :</h2>
 
 	<ul class="list-disc">
-		<li><a href="/files/Règlement_Interne_2024.pdf">Règlement interne</a></li>
+		<li><a href="/files/Règlement_Interne_2026.pdf">Règlement interne</a></li>
+		<li><a href="/files/Règlement_Interne_2024.pdf">Ancien règlement interne (2024-2026)</a></li>
 		<li><a href="/files/Organigramme_2021.pdf">Organigramme</a></li>
 	</ul>
 
