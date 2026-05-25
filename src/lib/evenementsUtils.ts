@@ -12,9 +12,9 @@ const categories = [
 	"Weekend jeu de rôle",
 ];
 
-const crypticActivities = [7];//[159];
-const secretHolders = [8,9];//[33, 41, 389];
-const frozenAccounts = [9];//[389];
+const crypticActivities = [159];
+const secretHolders = [33, 41, 389];
+const frozenAccounts = [389];
 
 /**
  * Get string of type of roles that can be set
