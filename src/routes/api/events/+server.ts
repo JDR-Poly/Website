@@ -2,6 +2,7 @@
 
 import { db } from "$lib/server/postgresClient";
 import { hasRolePermission, Roles, UserPermission } from "$lib/userPermissions";
+import { secretHolders, crypticActivities } from "$lib/evenementsUtils";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { __envDir, getByteArrayFromBase64 } from "$lib/utils";
@@ -60,23 +61,30 @@ export const POST = (async ({ request, locals }) => {
  * @param {number} url.searchParams.limit how many events to search for
  * @return {Event[]} list of events
  * */
-export const GET = (async ({ url }) => {
+export const GET = (async ({ url, locals }) => {
+	console.log(url.searchParams)
 	const excludeExpiredEventsString = !(url.searchParams.get("excludeExpiredEvents") === "false")
 		? "WHERE date >= $[date]"
 		: "";
+	const excludeCrypticActivities = !locals.authenticated || !secretHolders.includes(locals.user?.id || -1)
+		? `${excludeExpiredEventsString === "" ? "WHERE" : "AND"} id != ANY(coalesce($[cryptic_activities], array[]::int[]))`
+		: "";
+
 	const noImage = url.searchParams.get("noImage") === "true" ? "" : ", image";
 	const limit = parseInt(url.searchParams.get("limit") || "null") || null;
 
 	const nowLenient = new Date(Date.now());
 	nowLenient.setHours(nowLenient.getHours() - 3);
 	const db_req = `SELECT id, title, author, category, date, inscription, inscription_group, inscription_limit, inscription_start, inscription_stop, description${noImage} FROM events
-					${excludeExpiredEventsString}
+					${excludeExpiredEventsString} ${excludeCrypticActivities}
 					ORDER BY date LIMIT $[limit];
 					`;
+	console.log(db_req);
 	return db
 		.any(db_req, {
 			date: nowLenient,
 			limit: limit,
+			cryptic_activities: crypticActivities 
 		})
 		.then((res) => {
 			res.forEach((v) => {
@@ -91,6 +99,7 @@ export const GET = (async ({ url }) => {
 			return json(result);
 		})
 		.catch((err) => {
+			console.log(err);
 			throw error(500, err.message);
 		});
 }) satisfies RequestHandler;

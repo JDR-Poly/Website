@@ -12,6 +12,9 @@ const categories = [
 	"Weekend jeu de rôle",
 ];
 
+const crypticActivities = [7];//[159];
+const secretHolders = [8,9];//[33, 41, 389];
+
 /**
  * Get string of type of roles that can be set
  * as filter for subscribing to an event
@@ -27,4 +30,4 @@ function returnJoinEventRoles(): string[] {
 	return res;
 }
 
-export { categories, returnJoinEventRoles };
+export { categories, returnJoinEventRoles, secretHolders, crypticActivities };

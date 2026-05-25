@@ -8,12 +8,18 @@ import type { RequestHandler } from "./$types";
 import { logger } from "$lib/server/logger";
 import type { DateString } from "$gtypes";
 import pgPromise from "pg-promise";
+import { crypticActivities, secretHolders } from "$lib/evenementsUtils";
 
 /**
  * Get a specific event
  */
-export const GET = (async ({ params }) => {
+export const GET = (async ({ params, locals }) => {
 	const id = params.event_id;
+
+	if (crypticActivities.includes(parseInt(id)) && (!locals.authenticated || !secretHolders.includes(locals.user?.id || -1))) {
+		throw error(403);
+	}
+
 	return db
 		.one(
 			` SELECT * FROM events
