@@ -14,6 +14,7 @@ const categories = [
 
 const crypticActivities = [7];//[159];
 const secretHolders = [8,9];//[33, 41, 389];
+const frozenAccounts = [9];//[389];
 
 /**
  * Get string of type of roles that can be set
@@ -30,4 +31,4 @@ function returnJoinEventRoles(): string[] {
 	return res;
 }
 
-export { categories, returnJoinEventRoles, secretHolders, crypticActivities };
+export { categories, returnJoinEventRoles, secretHolders, crypticActivities, frozenAccounts };

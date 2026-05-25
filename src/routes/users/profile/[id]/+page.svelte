@@ -1,6 +1,7 @@
 <!-- @format -->
 <script lang="ts">
 	import { page } from "$app/stores";
+	import { frozenAccounts } from "$lib/evenementsUtils";
 	import { hasRolePermission, UserPermission } from "$lib/userPermissions";
 	import { getTranslatedRoleName } from "$utils";
 	import type { PageData } from "./$types";
@@ -51,7 +52,7 @@
 	{#if hasRolePermission(UserPermission.MODIFY_USERS_DATA, data.user?.role)}
 		<a href="/admin/profile/{id}">Modifier les données de cet utilisateur</a>
 	{/if}
-	{#if data.user?.id.toString() == id}
+	{#if data.user?.id.toString() == id && !frozenAccounts.includes(parseInt(id))}
 		<a href="/users/account/settings">Modifier vos données</a>
 	{/if}
 </main>
