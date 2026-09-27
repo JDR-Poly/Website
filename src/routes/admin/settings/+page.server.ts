@@ -36,6 +36,7 @@ export const actions = {
 
 		const discord_link = form.get("discord_link")?.toString();
 		const telegram_link = form.get("telegram_link")?.toString();
+		const instagram_link = form.get("instagram_link")?.toString();
 
 		// Validate
 		if (code_validity_days < 1) {
@@ -50,6 +51,7 @@ export const actions = {
 				code_validity_days,
 				discord_link: ((discord_link === undefined) ? global_settings.discord_link : discord_link),
 				telegram_link: ((telegram_link === undefined) ? global_settings.telegram_link : telegram_link),
+				instagram_link: ((instagram_link === undefined) ? global_settings.instagram_link : instagram_link),
 			});
 			return { success: true };
 		} catch (err: any) {
