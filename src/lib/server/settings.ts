@@ -14,7 +14,8 @@ const default_settings: GlobalSettings = {
     gsheet_sync_enabled: false,
     code_validity_days: 14,
     discord_link: "",
-    telegram_link: ""
+    telegram_link: "",
+    instagram_link: ""
 }
 
 let global_settings: GlobalSettings = default_settings;
@@ -33,6 +34,7 @@ async function load_settings() {
         code_validity_days: "code_validity_days" in data ? Number(data.code_validity_days) : default_settings.code_validity_days,
         discord_link: "discord_link" in data ? data.discord_link as string : default_settings.discord_link,
         telegram_link: "telegram_link" in data ? data.telegram_link as string : default_settings.telegram_link,
+        instagram_link: "instagram_link" in data ? data.instagram_link as string : default_settings.instagram_link,
     }
 }
 

@@ -16,6 +16,7 @@
 	let code_validity_days = String(data.settings.code_validity_days);
 	let discord_link = data.settings.discord_link;
 	let telegram_link = data.settings.telegram_link;
+	let instagram_link = data.settings.instagram_link;
 
 	// Track if settings have been modified
 	$: hasChanges =
@@ -23,7 +24,8 @@
 		gsheet_sync_enabled !== data.settings.gsheet_sync_enabled ||
 		code_validity_days !== String(data.settings.code_validity_days) ||
 		discord_link !== data.settings.discord_link ||
-		telegram_link !== data.settings.telegram_link;
+		telegram_link !== data.settings.telegram_link ||
+		instagram_link !== data.settings.instagram_link;
 </script>
 
 <svelte:head>
@@ -105,6 +107,18 @@
 					id="telegram_link"
 					name="telegram_link"
 					bind:value={telegram_link}
+				/>
+			</div>
+		</div>
+		<!-- Instagram link input -->
+		<div class="grid grid-cols-4 items-center gap-4">
+			<Label for="instagram_link" class="text-right">Instagram Link</Label>
+			<div class="col-span-3 max-w-md">
+				<Input
+					type="text"
+					id="instagram_link"
+					name="instagram_link"
+					bind:value={instagram_link}
 				/>
 			</div>
 		</div>

@@ -94,7 +94,8 @@ type GlobalSettings = {
 	gsheet_sync_enabled: boolean,
 	code_validity_days: number,
 	discord_link: string,
-	telegram_link: string
+	telegram_link: string,
+	instagram_link: string
 }
 
 export type { User, Event, Id, Semesters, DateString, Committee, HonorMember, Book, MembershipCode, GlobalSettings };

@@ -13,6 +13,7 @@
 
 	export let discord_link: string = "";
 	export let telegram_link: string = "";
+	export let instagram_link: string = "";
 
 	let isEmailInvalid = true;
 	let email = "";
@@ -80,6 +81,15 @@
 					<div class="mb-3">
 						<Icon icon="mdi:telegram" inline={true} class="inline-block mr-2 icon-bigger" />
 						<a href={telegram_link} target="_blank" rel="noopener noreferrer">@jdrpoly</a>
+					</div>
+				{/if}
+				<!-- Instagram -->
+				{#if instagram_link}
+					<div class="mb-3">
+						<Icon icon="mdi:instagram" inline={true} class="inline-block mr-2 icon-bigger" />
+						<a href={instagram_link} target="_blank" rel="noopener noreferrer">
+							Suivez-nous sur Instagram
+						</a>
 					</div>
 				{/if}
 				<!-- Discord -->

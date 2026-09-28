@@ -10,5 +10,6 @@ export async function load({ locals }: RequestEvent) {
 		user: locals.user,
 		discord_link: global_settings.discord_link,
 		telegram_link: global_settings.telegram_link,
+		instagram_link: global_settings.instagram_link,
 	};
 }

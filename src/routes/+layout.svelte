@@ -15,7 +15,11 @@
 
 <slot></slot>
 
-<Footer discord_link={data.discord_link} telegram_link={data.telegram_link}></Footer>
+<Footer 
+    discord_link={data.discord_link} 
+    telegram_link={data.telegram_link} 
+    instagram_link={data.instagram_link}
+></Footer>
 
 <AlertDisplay></AlertDisplay>
 
